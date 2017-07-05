@@ -2,8 +2,15 @@
 
 package com.example.nzar.toyotarfid;
 
+import android.content.Context;
+import android.test.mock.MockContext;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
+
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 
 /**
  * Created by cravers on 6/29/2017.
@@ -29,9 +36,9 @@ public class DatabaseConnector {
     private static String LoggingTable = "";
     private static String TechTable = "";
 
-    private enum Engine {mySQL, PostGreSQL, SQLServer, ODBC, MariaDB, Oracle, Auto}
+    private enum Engine {MySQL, PostGreSQL, SQLServer, ODBC}
 
-    private static Engine engine = null;
+    private static Engine engine = Engine.MySQL;
 
     //Employee class is to store the information about the employee gathered from the database to minimize database hits
     public static class Employee {
@@ -103,11 +110,31 @@ public class DatabaseConnector {
      */
     static boolean EmployeeAuthorized(String badgeNumber) throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
 
-        Class.forName("com.mysql.jdbc.Driver");
+        /*
+            This switch will use the database engine given by the user to establish the connection.
+         */
+        switch (engine) {
+            case MySQL:
+                Class.forName("com.mysql.jdbc.Driver");
+                break;
+            case PostGreSQL:
+                Class.forName("org.postgresql.Driver");
+                break;
+            case SQLServer:
+                Class.forName("com.microsoft.sqlserver.jdbc");
+                break;
+            case ODBC:
+                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                break;
+            default:
+                Log.d(TAG, "no driver specified");
+                throw new ClassNotFoundException();
+        }
 
-
+        /*
+            Try with resources clause will attempt to establish a connection before throwing an exception
+         */
         try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
-            DriverManager.registerDriver(DriverManager.getDriver(DatabaseRoot));
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT * FROM employeeinfo WHERE id='" + badgeNumber + "';");
             results.next();
