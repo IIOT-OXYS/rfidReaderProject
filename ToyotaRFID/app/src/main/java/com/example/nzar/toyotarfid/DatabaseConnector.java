@@ -11,8 +11,13 @@ import java.sql.*;
 
 public class DatabaseConnector {
 
-    private static final String TAG = "DBConnectorLib";
+    private static final String TAG = "DBConnectorLib"; //set Logging tag
 
+    /*
+        These private strings are the settings used to connect the database, they all have public
+        setters to make sure they can be over-written, but can never be read to prevent unauthorized
+        database access.
+     */
     private static String DatabaseRoot = "jdbc:mysql://192.168.0.200:3306/dummyemployee";
     private static String DatabaseUser = "OXYSMakerSafe";
     private static String DatabasePasswd = "1234";
@@ -28,6 +33,7 @@ public class DatabaseConnector {
 
     private static Engine engine = null;
 
+    //Employee class is to store the information about the employee gathered from the database to minimize database hits
     public static class Employee {
         String FirstName;
         String LastName;
@@ -91,11 +97,14 @@ public class DatabaseConnector {
     }
 
 
-    public static boolean EmployeeAuthorized(byte[] badge) throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
+    /*
+        This method will query the database specified to see if the user that just badged in is
+        authorized to use the device. It will also set up the currentEmployee to the row obtained.
+     */
+    static boolean EmployeeAuthorized(String badgeNumber) throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
 
         Class.forName("com.mysql.jdbc.Driver");
 
-        String badgeNumber = new String(badge, "UTF-8").trim();
 
         try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
             DriverManager.registerDriver(DriverManager.getDriver(DatabaseRoot));

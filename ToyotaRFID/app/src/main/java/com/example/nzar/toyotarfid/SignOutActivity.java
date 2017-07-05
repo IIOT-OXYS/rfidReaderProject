@@ -23,14 +23,15 @@ import java.util.HashMap;
 
 public class SignOutActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = "SignOutActivity";
-    private UsbSerialDevice rfidReader;
+    private final String TAG = "SignOutActivity";     //set debugging tag
+    private UsbSerialDevice rfidReader;    //initialize serial device so all methods can access it
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_out);
-        Button Contact = (Button) findViewById(R.id.Contact);
+        Button Contact = (Button) findViewById(R.id.Contact);   //initialize the contact button
         Contact.setOnClickListener(this);
     }
 
@@ -38,6 +39,10 @@ public class SignOutActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
 
+        /*
+         this block sets up all of the prerequisites for the USB Serial device library,
+         then sets the serial device using the configuration used by the main activity.
+         */
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         UsbDevice device = deviceList.get(MainActivity.UsbDeviceName);
@@ -65,6 +70,9 @@ public class SignOutActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /*
+        This callback uses the currentEmployee set in the DatabaseConnector
+     */
     private UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() {
         @Override
         public void onReceivedData(byte[] bytes) {
@@ -92,6 +100,7 @@ public class SignOutActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        rfidReader.close();
         Intent contact = new Intent(this, TechContact.class);
         contact.putExtra("return", "SignOutActivity");
         this.startActivity(contact);

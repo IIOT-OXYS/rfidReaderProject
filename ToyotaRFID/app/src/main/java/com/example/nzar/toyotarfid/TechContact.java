@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class TechContact extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = "TechContact";
+    private final String TAG = "TechContact";   // set Log tag
 
 
     @Override
@@ -24,9 +24,14 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
 
         String context = getIntent().getStringExtra("return");
-
+        /*
+            In this particular onClickListener, we grab a StringExtra that every activity sets
+            before sending the intent to get to this activity. We use that extra as a context
+            to go back exactly to the activity that created the Intent.
+         */
         if (context != null) {
-            switch (getIntent().getStringExtra("return")) {
+            Log.d(TAG, context);
+            switch (context) {
                 case "MainActivity":
                     startActivity(new Intent(this, MainActivity.class));
                     break;
@@ -41,12 +46,13 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     break;
                 case "SignOutActivity":
                     startActivity(new Intent(this, SignOutActivity.class));
+                    break;
                 default:
                     startActivity(new Intent(this, MainActivity.class));
                     break;
             }
         } else {
-            Log.d(TAG, "null intent extra");
+            Log.d(TAG, "null intent extra"); // hopefully this doesn't happen, but if it does, we're ready
             startActivity(new Intent(this, MainActivity.class));
 
         }

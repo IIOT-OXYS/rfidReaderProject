@@ -58,11 +58,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+
+        /*
+          this block sets up all of the prerequisites for the USB Serial device library,
+          then sets the serial device using the local method 'LogUsbDevices', which also
+          sets a static variable to be used to configure the same device in the sign out activity.
+         */
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         String deviceName = LogUsbDevices(deviceList);
         PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
 
+        /*
+            these ifs all make sure that LogUsbDevices did not return a bad device to prevent
+            any null pointer exceptions. If the connection seems okay we set a few parameters
+            specific to the device.
+         */
         if (!deviceName.equals("none")) {
             UsbDevice device = deviceList.get(deviceName);
             UsbDeviceName = deviceName;
@@ -81,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     rfidReader.setParity(UsbSerialInterface.PARITY_ODD);
                     rfidReader.setDTR(false);
                     rfidReader.setRTS(false);
-                    rfidReader.read(mCallback);
+                    rfidReader.read(mCallback); //this registers the device to a threaded callback
                 } else {
                     Log.d(TAG, "could not open rfid reader");
                 }
@@ -111,14 +122,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
+    /*
+        This threaded callback is where we read any data coming back from our device.
+        In our case, the reader gives three distinct messages, where the data of interest
+        is padded by some sets of parity bits. For our case we filter out those parity bits
+        and listen only for messages above a certain length.
+        Then we use the DatabaseConnector class to handle the query and find the employee that
+        the badgeNumber belongs to.
+     */
     private UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() {
         @Override
         public void onReceivedData(byte[] bytes) {
             try {
                 if (bytes.length > 2) {
                     rfidReader.close();
+                    String badgeNumber = new String(bytes, "ASCII").trim();
 
-                    boolean AccessGranted = DatabaseConnector.EmployeeAuthorized(bytes);
+                    boolean AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
                     Log.d(TAG, AccessGranted ? "True" : "False");
                     if (AccessGranted) {
                         Log.d(TAG, "employee authorized");
@@ -130,10 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //Intent i = new Intent(MainActivity.this, CheckActivity.class);
                         MainActivity.this.startActivity(i);//go to access denied
                     }
-                    // Toast.makeText(MainActivity.this, "read data: " + readString, Toast.LENGTH_SHORT).show();
-                    //query
-                } else {
-                    //Log.v(TAG, "parity bits: " + bytes.toString());
                 }
 
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException se) {
@@ -142,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+
+    /*
+        This method will iterate and log all attached USB devices, and filter them for known-working
+        PIDs. Then we return the key for that device to access it from the HashMap.
+     */
     private String LogUsbDevices(HashMap<String, UsbDevice> deviceList) {
         int UsbIndex = 0;
         String targetDevice = "none";
@@ -161,14 +182,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
         return targetDevice;
     }
 
+    /*
+        Standard onClick to move between activities using the buttons.
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Contact:
+                rfidReader.close();
                 Intent contact = new Intent(this, TechContact.class);
                 contact.putExtra("return", "MainActivity");
                 this.startActivity(contact);
@@ -181,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 }
 
 
-/***
- *   this function will allow the use of an intent filter to open the app on connection to USB
+/*
+    this function will allow the use of an intent filter to open the app on connection to USB.
 
  */
 //    private final BroadcastReceiver mUSBReceiver = new BroadcastReceiver() {
