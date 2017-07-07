@@ -39,7 +39,6 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
 
         //setting up the toggle button for agree
-        findViewById(R.id.toggleButton);
         toggleAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //if the agree button has been pressed yes becomes active otherwise false

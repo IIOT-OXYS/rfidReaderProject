@@ -25,7 +25,6 @@
         <activity android:name=".DeniedActivity" />
         <activity android:name=".TechContact" />
 
-        <activity android:name=".SignOutActivity" />
     </application>
 
 </manifest>

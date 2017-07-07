@@ -44,9 +44,6 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                 case "DeniedActivity":
                     startActivity(new Intent(this, DeniedActivity.class));
                     break;
-                case "SignOutActivity":
-                    startActivity(new Intent(this, SignOutActivity.class));
-                    break;
                 default:
                     startActivity(new Intent(this, MainActivity.class));
                     break;
