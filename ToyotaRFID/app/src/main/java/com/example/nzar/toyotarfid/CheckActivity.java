@@ -33,22 +33,11 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         final ToggleButton toggleAgree = (ToggleButton) findViewById(R.id.toggleButton);
 
         //set the yes button to disabled so you have to agree
-        yes.setEnabled(false);
-        cancel.setEnabled(true);
-        contact.setEnabled(true);
+//        yes.setEnabled(false);
+//        cancel.setEnabled(true);
+//        contact.setEnabled(true);
+        //disabled temporarily for incorporating imagebuttons
 
-
-        //setting up the toggle button for agree
-        toggleAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //if the agree button has been pressed yes becomes active otherwise false
-                if (isChecked) {
-                    yes.setEnabled(true);
-                } else {
-                    yes.setEnabled(false);
-                }
-            }
-        });
 
     }
 
