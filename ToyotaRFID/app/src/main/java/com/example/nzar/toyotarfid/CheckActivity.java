@@ -30,7 +30,6 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
-        final ToggleButton toggleAgree = (ToggleButton) findViewById(R.id.toggleButton);
 
         //set the yes button to disabled so you have to agree
 //        yes.setEnabled(false);
