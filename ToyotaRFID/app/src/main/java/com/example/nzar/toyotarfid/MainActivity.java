@@ -1,33 +1,22 @@
 package com.example.nzar.toyotarfid;
 
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.hardware.usb.UsbConfiguration;
-import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbEndpoint;
-import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
-import android.hardware.usb.UsbRequest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDebugger;
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.sql.*;
@@ -38,7 +27,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private final String TAG = "MainActivity";
     private UsbSerialDevice rfidReader;
-    public static String UsbDeviceName;
+    private UsbSerialDevice relayController;
+    public static String relayDeviceName = null;
+    public static String rfidDeviceName = null;
 
     //private View mDecorView = getWindow().getDecorView();
 
@@ -53,59 +44,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Button Settings = (Button) findViewById(R.id.Settings);
         Settings.setOnClickListener(this);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        /*
-          this block sets up all of the prerequisites for the USB Serial device library,
-          then sets the serial device using the local method 'LogUsbDevices', which also
-          sets a static variable to be used to configure the same device in the sign out activity.
-         */
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-        String deviceName = LogUsbDevices(deviceList);
-        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
 
-        /*
-            these ifs all make sure that LogUsbDevices did not return a bad device to prevent
-            any null pointer exceptions. If the connection seems okay we set a few parameters
-            specific to the device.
-         */
-        if (!deviceName.equals("none")) {
-            UsbDevice device = deviceList.get(deviceName);
-            UsbDeviceName = deviceName;
-            manager.requestPermission(device, mPermissionIntent);
-            UsbDeviceConnection connection = manager.openDevice(device);
-            Log.d(TAG, "Connection: " + connection.toString());
-            rfidReader = UsbSerialDevice.createUsbSerialDevice(device, connection);
-            Log.d(TAG, UsbSerialDebugger.ENCODING);
-
-            if (rfidReader != null) {
-                if (rfidReader.open()) {
-                    rfidReader.setBaudRate(9600);
-                    rfidReader.setDataBits(UsbSerialInterface.DATA_BITS_8);
-                    rfidReader.setStopBits(UsbSerialInterface.STOP_BITS_1);
-                    rfidReader.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
-                    rfidReader.setParity(UsbSerialInterface.PARITY_ODD);
-                    rfidReader.setDTR(false);
-                    rfidReader.setRTS(false);
-                    rfidReader.read(mCallback); //this registers the device to a threaded callback
-                } else {
-                    Log.d(TAG, "could not open rfid reader");
-                }
-            } else {
-                Log.d(TAG, "driver incorrect for rfid reader");
-            }
-
-        } else {
-            Log.d(TAG, "no viable target device was found");
+        if (rfidDeviceName == null || relayDeviceName == null) {
+            LogUsbDevices(deviceList);
         }
 
+        if (rfidDeviceName != null) {
+            rfidReader = attachUsbSerial(rfidDeviceName, deviceList, manager);
+
+            if (rfidReader != null) {
+                rfidReader.setBaudRate(9600);
+                rfidReader.setDataBits(UsbSerialInterface.DATA_BITS_8);
+                rfidReader.setStopBits(UsbSerialInterface.STOP_BITS_1);
+                rfidReader.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+                rfidReader.setParity(UsbSerialInterface.PARITY_ODD);
+                rfidReader.setDTR(false);
+                rfidReader.setRTS(false);
+                rfidReader.read(mCallback); //this registers the device to a threaded callback
+            }
+        }
 
     }
+
 
     // This snippet hides the system bars.
 //    private void hideSystemUI() {
@@ -163,16 +125,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         This method will iterate and log all attached USB devices, and filter them for known-working
         PIDs. Then we return the key for that device to access it from the HashMap.
      */
-    private String LogUsbDevices(HashMap<String, UsbDevice> deviceList) {
+    private void LogUsbDevices(HashMap<String, UsbDevice> deviceList) {
         int UsbIndex = 0;
-        String targetDevice = "none";
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
         Log.d(TAG, "Devices: " + deviceList.keySet());
         while (deviceIterator.hasNext()) {
             UsbDevice device = deviceIterator.next();
 
             if (device.getProductId() == 24577) {
-                targetDevice = device.getDeviceName();
+                rfidDeviceName = device.getDeviceName();
+                Log.d(TAG, "rfid device recognized");
+            } else if (device.getProductId() == 1155) {
+                relayDeviceName = device.getDeviceName();
+                Log.d(TAG, "relay device recognized");
             }
 
 
@@ -182,8 +147,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        return targetDevice;
     }
+
+    private UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
+        if (deviceName != null) {
+
+            UsbDevice device = deviceList.get(deviceName);
+            UsbDeviceConnection connection = manager.openDevice(device);
+            UsbSerialDevice serialDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
+
+
+
+            if (serialDevice != null) {
+                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                manager.requestPermission(device, mPermissionIntent);
+
+                try {
+                    serialDevice.open();
+
+                    return serialDevice;
+                } catch (NullPointerException se) {
+                    se.printStackTrace();
+                    return null;
+                }
+            } else {
+                Log.d(TAG, "driver incorrect for rfid reader");
+                return null;
+            }
+
+        } else {
+            Log.d(TAG, "no viable target device was found");
+            return null;
+        }
+    }
+
 
     /*
         Standard onClick to move between activities using the buttons.
@@ -192,7 +189,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Contact:
-                rfidReader.close();
+                if (rfidReader != null) {
+                    rfidReader.close();
+                }
                 Intent contact = new Intent(this, TechContact.class);
                 contact.putExtra("return", "MainActivity");
                 this.startActivity(contact);
