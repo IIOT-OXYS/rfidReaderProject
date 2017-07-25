@@ -10,7 +10,6 @@ import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.annotation.Platform;
 
 
-@Platform(include = "pcProxAPI.h")
 public class RfidConnector {
     final static String TAG = "RfidConnector";
 
