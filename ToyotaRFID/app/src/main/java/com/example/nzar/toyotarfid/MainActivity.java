@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.startActivity(contact);
                 break;
             case R.id.Settings:
-                //this.startActivity(new Intent(this, SettingsActivity.class));
+                this.startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
     }
