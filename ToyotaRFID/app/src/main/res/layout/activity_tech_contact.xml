@@ -6,26 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.nzar.toyotarfid.TechContact">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/contact_info"
-        android:contentDescription=""
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/imageView"
-        tools:ignore="ContentDescription"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0"/>
-
     <TextClock
         android:id="@+id/textClock"
-        android:layout_width="124dp"
-        android:layout_height="40dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:background="@android:color/darker_gray"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
@@ -34,15 +20,27 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlHardcoded"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:contentDescription=""
+        android:src="@drawable/toyota_template"
+        tools:ignore="ContentDescription"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="16dp" />
-
     <Button
         android:id="@+id/Back"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="110dp"
-        android:layout_height="73dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:background="@android:color/holo_orange_dark"
@@ -50,10 +48,31 @@
         android:text="@string/back"
         android:textStyle="bold"
         android:typeface="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:ignore="MissingConstraints,RtlHardcoded"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        tools:layout_constraintBottom_creator="1" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="49dp"
+        android:text="Tech Contact Info"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="16dp"
+        android:text="Page Working Technician"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/Back" />
 
 </android.support.constraint.ConstraintLayout>

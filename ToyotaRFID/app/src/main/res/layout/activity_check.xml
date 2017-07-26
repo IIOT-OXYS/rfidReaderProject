@@ -5,90 +5,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.nzar.toyotarfid.CheckActivity">
+    tools:context="com.example.nzar.toyotarfid.CheckActivity"
+    tools:layout_editor_absoluteY="25dp"
+    tools:layout_editor_absoluteX="0dp">
 
-
-
-    <ImageView
-        android:src="@drawable/toyota_check_temp"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/toyota_check_temp"
-        tools:ignore="MissingConstraints,RtlHardcoded"
-        android:id="@+id/imageView2"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/cancel_action"
-        android:layout_width="111dp"
-        android:layout_height="73dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
         android:background="@android:color/darker_gray"
         android:text="@string/cancel"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
-        tools:ignore="MissingConstraints,RtlHardcoded"/>
+        tools:ignore="MissingConstraints,RtlHardcoded"
+        app:layout_constraintRight_toRightOf="@+id/Yes"
+        app:layout_constraintLeft_toLeftOf="@+id/Yes"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/Yes" />
 
     <Button
         android:id="@+id/Yes"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="110dp"
-        android:layout_height="91dp"
-        android:layout_marginBottom="81dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="81dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
         android:background="@android:color/holo_green_dark"
         android:text="@string/y"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cancel_action"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints,RtlHardcoded"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/Contact" />
+        app:layout_constraintRight_toRightOf="@+id/Contact"
+        app:layout_constraintLeft_toLeftOf="@+id/Contact"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/Contact" />
 
     <Button
         android:id="@+id/Contact"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="110dp"
-        android:layout_height="73dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/holo_orange_dark"
         android:filterTouchesWhenObscured="false"
         android:text="@string/tech"
         android:textStyle="bold"
         android:typeface="normal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="MissingConstraints,RtlHardcoded"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
-
+        tools:ignore="MissingConstraints,RtlHardcoded"
+        tools:layout_editor_absoluteX="16dp" />
 
 
     <TextClock
         android:id="@+id/textClock"
-        android:layout_width="124dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:background="@android:color/darker_gray"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
@@ -96,43 +68,36 @@
         android:textAllCaps="true"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlHardcoded"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintRight_toRightOf="@+id/cancel_action"
+        app:layout_constraintLeft_toLeftOf="@+id/cancel_action"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/gloves_on"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="148dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton3"
-        android:layout_marginEnd="146dp"
-        app:layout_constraintRight_toRightOf="@+id/imageButton3"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="@+id/imageButton3" />
+        app:layout_constraintRight_toLeftOf="@+id/imageButton3"
+        app:layout_constraintLeft_toRightOf="@+id/imageButton2"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton6" />
 
     <ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ear_protection"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton4"
-        android:layout_marginEnd="301dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageButton4" />
+        app:layout_constraintRight_toLeftOf="@+id/imageButton4"
+        app:layout_constraintLeft_toRightOf="@+id/imageButton"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton6" />
 
     <ImageButton
         android:id="@+id/imageButton4"
@@ -141,88 +106,90 @@
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/apron"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="17dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="150dp"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton3" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/imageButton3"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton7" />
 
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/gloves_off"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton7"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="239dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        android:layout_marginEnd="240dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageButton" />
+        app:layout_constraintRight_toLeftOf="@+id/imageButton"
+        app:layout_constraintLeft_toRightOf="@+id/cancel_action"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton5" />
 
     <ImageButton
         android:id="@+id/imageButton5"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/no_loose"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="70dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton6"
-        android:layout_marginEnd="78dp"
-        app:layout_constraintRight_toRightOf="@+id/imageButton"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="@+id/imageButton6"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintHorizontal_bias="1.0" />
+        app:layout_constraintRight_toLeftOf="@+id/imageButton6"
+        app:layout_constraintLeft_toRightOf="@+id/Yes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp" />
 
     <ImageButton
         android:id="@+id/imageButton6"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/face_mask"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="148dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton7"
-        android:layout_marginEnd="150dp"
-        app:layout_constraintRight_toRightOf="@+id/imageButton7"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/imageButton5"
-        app:layout_constraintTop_toTopOf="@+id/imageButton7" />
+        app:layout_constraintRight_toLeftOf="@+id/imageButton7"
+        app:layout_constraintLeft_toRightOf="@+id/imageButton5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp" />
 
     <ImageButton
         android:id="@+id/imageButton7"
         android:layout_width="128dp"
-        android:layout_height="0dp"
+        android:layout_height="128dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/eye_protection"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="74dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/imageButton6"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="71dp"
-        app:layout_constraintRight_toRightOf="@+id/imageButton4"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton3"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="17dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageButton3" />
+        android:layout_marginBottom="16dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="200dp"
+        android:layout_height="86dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/toyota_template"
+        android:layout_marginRight="16dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="20dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="714dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="101dp"
+        android:text="Verify that you are following the PPE requirements of this device"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="16dp" />
 
 </android.support.constraint.ConstraintLayout>
 
