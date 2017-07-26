@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rfidReader.read(mCallback); //this registers the device to a threaded callback
             }
         } else {
-            while (RfidConnector.lastReadID == null) {
-                RfidConnector.getActiveId32();
-            }
+
         }
 
     }
