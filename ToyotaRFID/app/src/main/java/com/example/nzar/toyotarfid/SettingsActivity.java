@@ -3,11 +3,17 @@ package com.example.nzar.toyotarfid;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+
+    final static boolean ENABLED = true;
+    final static boolean DISABLED = false;
+    static boolean settingsEnabled = ENABLED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,9 +21,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_settings);
         Button setButton = (Button) findViewById(R.id.set_button);
         Button BackButton = (Button) findViewById(R.id.back_button);
+        Button disableButton = (Button) findViewById(R.id.settings_disable);
 
         setButton.setOnClickListener(this);
         BackButton.setOnClickListener(this);
+        disableButton.setOnClickListener(this);
     }
 
     @Override
@@ -34,6 +42,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 DatabaseConnector.setDatabaseUser(dbUser.getText().toString());
                 DatabaseConnector.setDatabasePasswd(dbPasswd.getText().toString());
                 //DatabaseConnector.setStaticIP();
+                Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            case R.id.settings_disable:
+                Toast.makeText(this, "To regain settings access, app must be reinstalled", Toast.LENGTH_LONG).show();
+                settingsEnabled = DISABLED;
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
     }

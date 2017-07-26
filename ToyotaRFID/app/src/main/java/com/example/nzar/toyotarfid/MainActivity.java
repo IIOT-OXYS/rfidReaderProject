@@ -40,9 +40,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         //hideSystemUI();
         final Button Contact = (Button) findViewById(R.id.Contact);
-        Contact.setOnClickListener(this);
         final Button Settings = (Button) findViewById(R.id.Settings);
-        Settings.setOnClickListener(this);
+
+        Contact.setOnClickListener(this);
+        if (SettingsActivity.settingsEnabled) {
+            Settings.setOnClickListener(this);
+        } else {
+            Settings.setVisibility(View.INVISIBLE);
+        }
 
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
@@ -64,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rfidReader.setRTS(false);
                 rfidReader.read(mCallback); //this registers the device to a threaded callback
             }
-        } else {
-
         }
 
     }
