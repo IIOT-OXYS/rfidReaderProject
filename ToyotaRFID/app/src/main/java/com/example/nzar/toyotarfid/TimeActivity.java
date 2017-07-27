@@ -2,6 +2,8 @@ package com.example.nzar.toyotarfid;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
@@ -20,6 +22,8 @@ import com.felhr.usbserial.UsbSerialInterface;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+
+import static android.graphics.Color.GREEN;
 
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,10 +54,14 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             se.printStackTrace();
         }
 
+        fin.setBackgroundColor(Color.CYAN);
+
+
         fin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    fin.setBackgroundColor(Color.GREEN);
                     UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
                     HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
                     rfidReader = attachUsbSerial(MainActivity.rfidDeviceName, deviceList, manager);
@@ -62,6 +70,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                 } else {
+                    fin.setBackgroundColor(Color.CYAN);
 
                     rfidReader.close();
                     //stop USB reader

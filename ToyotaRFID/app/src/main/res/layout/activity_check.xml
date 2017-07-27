@@ -12,7 +12,7 @@
 
     <Button
         android:id="@+id/cancel_action"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="16dp"
@@ -26,12 +26,15 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/Yes"
-        tools:ignore="MissingConstraints,RtlHardcoded" />
+        tools:ignore="MissingConstraints,RtlHardcoded"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/Yes"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
@@ -43,7 +46,10 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/Contact"
-        tools:ignore="MissingConstraints,RtlHardcoded" />
+        tools:ignore="MissingConstraints,RtlHardcoded"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/Contact"
@@ -60,15 +66,16 @@
         android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="MissingConstraints,RtlHardcoded" />
+        tools:ignore="MissingConstraints,RtlHardcoded"
+        android:layout_marginStart="16dp" />
 
 
     <TextClock
         android:id="@+id/textClock"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="14dp"
         android:background="@android:color/darker_gray"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
@@ -80,95 +87,205 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/cancel_action"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/gloves_on_button"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_height="100dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/gloves_on"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton3"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton2"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton6" />
+        app:layout_constraintRight_toLeftOf="@+id/ear_protection_button"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="15dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintTop_toTopOf="@+id/gloves_off_button"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/gloves_off_button"
+        android:layout_marginBottom="0dp" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/ear_protection_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="invisible"
         android:maxWidth="100dp"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/ear_protection"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton4"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton6" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/respiratory_protection_button"
+        android:layout_marginStart="127dp"
+        android:layout_marginEnd="117dp"
+        app:layout_constraintRight_toRightOf="@+id/no_jewelery_button"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.52" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/face_shield_button"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/apron"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton3"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton7" />
+        app:srcCompat="@drawable/face_shield"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/welding_mask_button"
+        android:layout_marginStart="15dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintLeft_toRightOf="@+id/no_jewelery_button"
+        android:layout_marginLeft="15dp" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/welding_mask_button"
+        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="32dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/gloves_off"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton"
-        app:layout_constraintLeft_toRightOf="@+id/cancel_action"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton5" />
-
-    <ImageButton
-        android:id="@+id/imageButton5"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:maxWidth="100dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/no_loose"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton6"
-        app:layout_constraintLeft_toRightOf="@+id/Yes"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:srcCompat="@drawable/welding_mask"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/face_shield_button"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/face_shield_button"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageButton
-        android:id="@+id/imageButton6"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/long_hair_button"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/face_mask"
-        app:layout_constraintRight_toLeftOf="@+id/imageButton7"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton5"
+        app:srcCompat="@drawable/long_hair"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/protective_clothing_button"
+        android:layout_marginStart="117dp"
+        android:layout_marginEnd="104dp"
+        app:layout_constraintRight_toRightOf="@+id/textView"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintLeft_toLeftOf="@+id/face_shield_button"
+        app:layout_constraintHorizontal_bias="0.529" />
+
+    <ImageButton
+        android:id="@+id/protective_clothing_button"
+        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="32dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:srcCompat="@drawable/protective_clothing"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/long_hair_button"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/long_hair_button"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageButton
-        android:id="@+id/imageButton7"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:id="@+id/no_jewelery_button"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
+        app:srcCompat="@drawable/no_jewelery"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/eye_protection_button"
+        android:layout_marginStart="244dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        android:layout_marginLeft="244dp" />
+
+    <ImageButton
+        android:id="@+id/gloves_off_button"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_height="100dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/no_gloves"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/footware_button"
+        app:layout_constraintRight_toRightOf="@+id/gloves_on_button"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintLeft_toLeftOf="@+id/gloves_on_button"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/footware_button"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_height="100dp"
+        android:layout_marginBottom="32dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/protective_footware"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/gloves_off_button"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/gloves_off_button"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/respiratory_protection_button"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_height="0dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/respiratory_protection"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="@+id/footware_button"
+        app:layout_constraintRight_toRightOf="@+id/ear_protection_button"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/ear_protection_button"
+        app:layout_constraintTop_toTopOf="@+id/footware_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageButton
+        android:id="@+id/eye_protection_button"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_height="100dp"
+        android:layout_marginBottom="32dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/eye_protection"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/imageButton6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/no_jewelery_button"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/no_jewelery_button"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="86dp"
         android:layout_marginTop="16dp"
         app:layout_constraintHorizontal_bias="0.0"
@@ -176,26 +293,30 @@
         app:layout_constraintRight_toRightOf="@+id/textClock"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/toyota_template"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="680dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="17dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="33dp"
+        android:layout_marginLeft="33dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginStart="33dp"
         android:layout_marginTop="16dp"
-        android:text="Verify that you are following the PPE requirements of this device"
+        android:gravity="center"
+        android:text="Verify that you are following the PPE requirements of this device:"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textSize="36sp"
+        android:textSize="50sp"
+        app:layout_constraintHorizontal_bias="0.53"
         app:layout_constraintLeft_toRightOf="@+id/imageView2"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="382dp"
-        app:layout_constraintHorizontal_bias="0.53"
-        android:gravity="center"/>
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
 </android.support.constraint.ConstraintLayout>
 
