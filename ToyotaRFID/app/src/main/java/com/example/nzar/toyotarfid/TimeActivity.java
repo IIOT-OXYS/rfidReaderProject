@@ -121,7 +121,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (UnsupportedEncodingException se) {
                     se.printStackTrace();
                 }
-                if (id != null && id.trim().equals(DatabaseConnector.getCurrentEmployee().ID)) {
+                if (id != null && id.trim().equals(DatabaseConnector.getCurrentLabPerson().ID)) {
                     //shut off relay
                     relayController.write("off".getBytes());
                     rfidReader.close();

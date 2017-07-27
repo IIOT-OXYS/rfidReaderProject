@@ -144,7 +144,7 @@ public class DatabaseConnector {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
                                                         + "JOIN personcert ON labperson.ID = personcert.LabPersonID"
-                                                        + "WHERE labperson.ID = " + badgeNumber);
+                                                        + "WHERE labperson.ID = " + badgeNumber + ";");
 
             if(results.next()) {
 

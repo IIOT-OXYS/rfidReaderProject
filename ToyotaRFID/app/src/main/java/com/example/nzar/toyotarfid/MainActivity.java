@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDebugger;
 import com.felhr.usbserial.UsbSerialDevice;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 AccessGranted = DatabaseConnector.EmployeeAuthorized(Integer.parseInt(badgeNumber));
             } catch (SQLException e) {
+                Toast.makeText(this, "Issue connecting to database", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
