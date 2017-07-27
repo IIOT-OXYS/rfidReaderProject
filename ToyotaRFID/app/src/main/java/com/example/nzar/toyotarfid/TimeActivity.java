@@ -2,15 +2,15 @@ package com.example.nzar.toyotarfid;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -18,12 +18,9 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.felhr.usbserial.UsbSerialDevice;
-import com.felhr.usbserial.UsbSerialInterface;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-
-import static android.graphics.Color.GREEN;
 
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,8 +28,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
 
     private Chronometer chron;
-    private UsbSerialDevice rfidReader;    //initialize serial device so all methods can access it
     private UsbSerialDevice relayController;
+    private StringBuilder ID = new StringBuilder();
+    private static boolean Finished;
 
 
     @Override
@@ -47,6 +45,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         chron.start();
         Contact.setOnClickListener(this);
 
+        ID.delete(0, ID.length());
+
         try {
             relayController = attachUsbSerial(MainActivity.relayDeviceName, deviceList, manager);
             relayController.write("on".getBytes("ascii"));
@@ -56,27 +56,39 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
         fin.setBackgroundColor(Color.CYAN);
 
+        Finished = false;
 
         fin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     fin.setBackgroundColor(Color.GREEN);
-                    UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
-                    HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-                    rfidReader = attachUsbSerial(MainActivity.rfidDeviceName, deviceList, manager);
-                    if (rfidReader != null) {
-                        rfidReader.read(mCallback);
-                    }
-
                 } else {
                     fin.setBackgroundColor(Color.CYAN);
-
-                    rfidReader.close();
-                    //stop USB reader
+                    ID.delete(0,ID.length());
                 }
+                Finished = isChecked;
+
             }
         });
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (Finished) {
+            if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
+
+                if (ID.toString().equals(MainActivity.ID.toString())) {
+                    startActivity(new Intent(this, MainActivity.class));
+                }
+
+            } else {
+                char c = (char) event.getUnicodeChar();
+                ID.append(c);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
 
     }
 
@@ -110,32 +122,6 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             return null;
         }
     }
-
-    private UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() {
-        @Override
-        public void onReceivedData(byte[] bytes) {
-            if (bytes.length > 2) {
-                String id = null;
-                try {
-                    id = new String(bytes, "ascii");
-                } catch (UnsupportedEncodingException se) {
-                    se.printStackTrace();
-                }
-                if (id != null && id.trim().equals(DatabaseConnector.getCurrentLabPerson().ID)) {
-                    //shut off relay
-                    relayController.write("off".getBytes());
-                    rfidReader.close();
-                    chron.stop();
-
-                    startActivity(new Intent(TimeActivity.this, MainActivity.class));
-                } else {
-                    Log.d(TAG, "something went wrong signing out");
-                }
-            }
-        }
-
-
-    };
 
 
     @Override

@@ -143,8 +143,8 @@ public class DatabaseConnector {
         try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
-                                                        + "JOIN personcert ON labperson.ID = personcert.LabPersonID"
-                                                        + "WHERE labperson.ID = " + badgeNumber + ";");
+                                                        + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
+                                                        + " WHERE labperson.ID = " + badgeNumber + ";");
 
             if(results.next()) {
 
