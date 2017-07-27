@@ -9,6 +9,7 @@ import android.hardware.usb.UsbManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private UsbSerialDevice relayController;
     public static String relayDeviceName = null;
     public static String rfidDeviceName = null;
+    private static StringBuilder ID = new StringBuilder();
 
     //private View mDecorView = getWindow().getDecorView();
 
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //hideSystemUI();
         final Button Contact = (Button) findViewById(R.id.Contact);
 
+        if (ID != null) {
+            ID.delete(0, ID.length());
+        }
         Contact.setOnClickListener(this);
 
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -66,6 +71,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
+            String badgeNumber = ID.toString().trim();
+            Log.d(TAG, badgeNumber);
+
+            boolean AccessGranted = false;
+            try {
+                AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, AccessGranted ? "True" : "False");
+            if (AccessGranted) {
+                Log.d(TAG, "employee authorized");
+                Intent intent = new Intent(MainActivity.this, CheckActivity.class);
+                MainActivity.this.startActivity(intent);//go to PPE
+            } else {
+                Log.d(TAG, "employee denied");
+                Intent i = new Intent(MainActivity.this, DeniedActivity.class);
+                //Intent i = new Intent(MainActivity.this, CheckActivity.class);
+                MainActivity.this.startActivity(i);//go to access denied
+            }
+
+        } else {
+            char c = (char) event.getUnicodeChar();
+            ID.append(c);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
