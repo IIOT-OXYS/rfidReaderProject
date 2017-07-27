@@ -9,6 +9,7 @@ import android.hardware.usb.UsbManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -40,14 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         //hideSystemUI();
         final Button Contact = (Button) findViewById(R.id.Contact);
-        final Button Settings = (Button) findViewById(R.id.Settings);
 
         Contact.setOnClickListener(this);
-        if (SettingsActivity.settingsEnabled) {
-            Settings.setOnClickListener(this);
-        } else {
-            Settings.setVisibility(View.INVISIBLE);
-        }
 
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
@@ -73,6 +68,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getPointerCount() == 4) {
+            if (rfidReader != null) rfidReader.close();
+            this.startActivity(new Intent(this, SettingsActivity.class));
+            return super.onTouchEvent(event);
+
+        } else {
+            return super.onTouchEvent(event);
+        }
+
+
+    }
 
     // This snippet hides the system bars.
 //    private void hideSystemUI() {
@@ -187,6 +196,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
+
     /*
         Standard onClick to move between activities using the buttons.
      */
@@ -200,9 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent contact = new Intent(this, TechContact.class);
                 contact.putExtra("return", "MainActivity");
                 this.startActivity(contact);
-                break;
-            case R.id.Settings:
-                this.startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
     }

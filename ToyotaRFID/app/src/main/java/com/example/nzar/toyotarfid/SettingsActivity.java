@@ -19,13 +19,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        View Focus = getCurrentFocus();
+
         Button setButton = (Button) findViewById(R.id.set_button);
         Button BackButton = (Button) findViewById(R.id.back_button);
-        Button disableButton = (Button) findViewById(R.id.settings_disable);
 
         setButton.setOnClickListener(this);
         BackButton.setOnClickListener(this);
-        disableButton.setOnClickListener(this);
+
+
+        if (Focus != null) {
+            Focus.clearFocus();
+        }
     }
 
     @Override
@@ -45,11 +51,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 break;
-            case R.id.settings_disable:
-                Toast.makeText(this, "To regain settings access, app must be reinstalled", Toast.LENGTH_LONG).show();
-                settingsEnabled = DISABLED;
-                startActivity(new Intent(this, MainActivity.class));
-                break;
+
         }
     }
 }
