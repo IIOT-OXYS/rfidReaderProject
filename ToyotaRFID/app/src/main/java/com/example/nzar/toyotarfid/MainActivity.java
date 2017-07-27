@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rfidReader.setParity(UsbSerialInterface.PARITY_ODD);
                 rfidReader.setDTR(false);
                 rfidReader.setRTS(false);
-                rfidReader.read(mCallback); //this registers the device to a threaded callback
+               // rfidReader.read(mCallback); //this registers the device to a threaded callback
             }
         }
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             boolean AccessGranted = false;
             try {
-                AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
+                AccessGranted = DatabaseConnector.EmployeeAuthorized(Integer.parseInt(badgeNumber));
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -146,33 +146,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Then we use the DatabaseConnector class to handle the query and find the employee that
         the badgeNumber belongs to.
      */
-    private UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() {
-        @Override
-        public void onReceivedData(byte[] bytes) {
-            try {
-                if (bytes.length > 2) {
-                    rfidReader.close();
-                    String badgeNumber = new String(bytes, "ASCII").trim();
-
-                    boolean AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
-                    Log.d(TAG, AccessGranted ? "True" : "False");
-                    if (AccessGranted) {
-                        Log.d(TAG, "employee authorized");
-                        Intent intent = new Intent(MainActivity.this, CheckActivity.class);
-                        MainActivity.this.startActivity(intent);//go to PPE
-                    } else {
-                        Log.d(TAG, "employee denied");
-                        Intent i = new Intent(MainActivity.this, DeniedActivity.class);
-                        //Intent i = new Intent(MainActivity.this, CheckActivity.class);
-                        MainActivity.this.startActivity(i);//go to access denied
-                    }
-                }
-
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException se) {
-                se.printStackTrace();
-            }
-        }
-    };
+//    private UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() {
+//        @Override
+//        public void onReceivedData(byte[] bytes) {
+//            try {
+//                if (bytes.length > 2) {
+//                    rfidReader.close();
+//                    String badgeNumber = new String(bytes, "ASCII").trim();
+//
+//                    boolean AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
+//                    Log.d(TAG, AccessGranted ? "True" : "False");
+//                    if (AccessGranted) {
+//                        Log.d(TAG, "employee authorized");
+//                        Intent intent = new Intent(MainActivity.this, CheckActivity.class);
+//                        MainActivity.this.startActivity(intent);//go to PPE
+//                    } else {
+//                        Log.d(TAG, "employee denied");
+//                        Intent i = new Intent(MainActivity.this, DeniedActivity.class);
+//                        //Intent i = new Intent(MainActivity.this, CheckActivity.class);
+//                        MainActivity.this.startActivity(i);//go to access denied
+//                    }
+//                }
+//
+//            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException se) {
+//                se.printStackTrace();
+//            }
+//        }
+//    };
 
 
     /*

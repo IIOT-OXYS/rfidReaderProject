@@ -6,7 +6,7 @@ import android.content.Context;
 import android.test.mock.MockContext;
 import android.util.Log;
 import android.widget.Toast;
-
+import java.util.Date;
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
 
@@ -25,9 +25,9 @@ public class DatabaseConnector {
         setters to make sure they can be over-written, but can never be read to prevent unauthorized
         database access.
      */
-    private static String DatabaseRoot = "jdbc:mysql://192.168.0.200:3306/dummyemployee";
-    private static String DatabaseUser = "OXYSMakerSafe";
-    private static String DatabasePasswd = "1234";
+    private static String DatabaseRoot = "jdbc:mysql://192.168.0.200:3306/toyotamockupfinal";
+    private static String DatabaseUser = "Connor";
+    private static String DatabasePasswd = "password";
     private static String authorizationProceedure = null;
     private static String loggingProceedure = null;
     private static String machineType = null;
@@ -41,23 +41,29 @@ public class DatabaseConnector {
     private static Engine engine = Engine.MySQL;
 
     //Employee class is to store the information about the employee gathered from the database to minimize database hits
-    public static class Employee {
-        String FirstName;
-        String LastName;
-        String ID;
-        int training;
+    public static class LabPerson {
+        int ID;
+        int CertID;
+    }
+
+    public static class Equipment{
+        int EquipID;
+        int EquipCertID;
+        int PPE;
+        String IP;
 
     }
 
-    private static Employee currentEmployee;
+    private static LabPerson currentLabPerson;
 
-    private static void setCurrentEmployee(Employee currentEmployee) {
-        DatabaseConnector.currentEmployee = currentEmployee;
+    private static void setCurrentEmployee(LabPerson currentEmployee) {
+        DatabaseConnector.currentLabPerson = currentEmployee;
     }
 
-    public static Employee getCurrentEmployee() {
-        return currentEmployee;
+    public static LabPerson getCurrentLabPerson() {
+        return currentLabPerson;
     }
+
 
     public static void setEngine(Engine engine) {
         DatabaseConnector.engine = engine;
@@ -108,7 +114,7 @@ public class DatabaseConnector {
         This method will query the database specified to see if the user that just badged in is
         authorized to use the device. It will also set up the currentEmployee to the row obtained.
      */
-    static boolean EmployeeAuthorized(String badgeNumber) throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
+    static boolean EmployeeAuthorized(int badgeNumber) throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
 
         /*
             This switch will use the database engine given by the user to establish the connection.
@@ -136,28 +142,30 @@ public class DatabaseConnector {
          */
         try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM employeeinfo WHERE id='" + badgeNumber + "';");
-            results.next();
+            ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
+                                                        + "JOIN personcert ON labperson.ID = personcert.LabPersonID"
+                                                        + "WHERE labperson.ID = " + badgeNumber);
 
-            DatabaseConnector.Employee employee = new DatabaseConnector.Employee();
+            if(results.next()) {
 
-            employee.FirstName = results.getString(1);
-            employee.ID = results.getString(2);
-            employee.training = results.getInt(3);
 
-            DatabaseConnector.setCurrentEmployee(employee);
+                DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
 
-            if (results.getInt(3) == 1) {
-                connection.close();
+                labPerson.ID = results.getInt(1);
+                labPerson.CertID = results.getInt(2);
+                DatabaseConnector.setCurrentEmployee(labPerson);
                 return true;
-            } else {
+            }
+            else {
                 connection.close();
                 return false;
             }
         }
+            }
 
 
-    }
+
+
 
     public static void LogDeviceActivity() {
 
