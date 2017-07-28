@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static StringBuilder ID = new StringBuilder();
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private final String TAG = "MainActivity";
-    private UsbSerialDevice relayController;
 
     //private View mDecorView = getWindow().getDecorView();
 
