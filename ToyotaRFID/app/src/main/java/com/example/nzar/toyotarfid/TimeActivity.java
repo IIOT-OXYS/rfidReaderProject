@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 import com.felhr.usbserial.UsbSerialDevice;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /*
@@ -127,8 +128,20 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (UnsupportedEncodingException | NullPointerException e) {
                         e.printStackTrace();
                     }
+                    try {
+                        DatabaseConnector.insertData();
+                        startActivity(new Intent(this, MainActivity.class));
+                    }
+                    catch (SQLException ex){
+                       ex.printStackTrace();
+                    }
+                    catch (ClassNotFoundException ex1){
+                        ex1.printStackTrace();
+                    }
+                    catch (UnsupportedEncodingException ex2){
+                        ex2.printStackTrace();
+                    }
 
-                    startActivity(new Intent(this, MainActivity.class));
                 }
 
             } else {
