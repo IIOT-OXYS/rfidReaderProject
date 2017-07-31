@@ -6,7 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+/*
+TechContact:
+This class provides contact information about how to contact the working technician.
+The user also has the ability to ping a tech using email (no current implementation)
+ */
 public class TechContact extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = "TechContact";   // set Log tag
@@ -16,6 +22,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tech_contact);
+        //setup UI elements for interaction
         Button back = (Button) findViewById(R.id.Back);
         back.setOnClickListener(this);
     }
@@ -46,11 +53,13 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     break;
                 default:
                     startActivity(new Intent(this, MainActivity.class));
+                    Toast.makeText(this, "Something happened, contact OXYS and tell them \"contact tech got confused\".", Toast.LENGTH_SHORT).show();
                     break;
             }
         } else {
             Log.d(TAG, "null intent extra"); // hopefully this doesn't happen, but if it does, we're ready
             startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "Something really bad happened, contact OXYS and tell them \"contact tech went rogue\"", Toast.LENGTH_SHORT).show();
 
         }
 

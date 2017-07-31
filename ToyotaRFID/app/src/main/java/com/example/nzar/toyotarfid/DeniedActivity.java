@@ -6,12 +6,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/*
+This activity is where the user is placed if their ID does not match the training required for the device.
+If the users ID is not found in the database, they will also land there.
+ */
+
 public class DeniedActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_denied);
+
+        //set up button click listeners
         Button ret = (Button) findViewById(R.id.Return);
         ret.setOnClickListener(this);
         Button Contact = (Button) findViewById(R.id.Contact);
@@ -20,7 +27,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-
+        //switch to navigate based on button pressed
         switch (v.getId()) {
             case R.id.Return :
                 Intent main = new Intent(DeniedActivity.this, MainActivity.class);

@@ -9,19 +9,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/*
+SettingsActivity:
+This class is intended to allow system administrators to set many key parameters to work with their systems.
+ */
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    final static boolean ENABLED = true;
-    final static boolean DISABLED = false;
-    static boolean settingsEnabled = ENABLED;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        //setup UI elements for interaction
         View Focus = getCurrentFocus();
-
         Button setButton = (Button) findViewById(R.id.set_button);
         Button BackButton = (Button) findViewById(R.id.back_button);
 
@@ -34,6 +36,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /*
+    onClick:
+    simple interupt method that detects UI interaction.
+    This is used to navigate between activities using on-screen buttons.
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

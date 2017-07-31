@@ -36,6 +36,13 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 //        cancel.setEnabled(true);
 //        contact.setEnabled(true);
         //disabled temporarily for incorporating imagebuttons
+        //TODO implement imagebuttons with query
+        /*
+        currently all imagebuttons are set to invisible.
+        There will be a query that happens at startup that determines the PPE of the device.
+        At that point those PPE buttons will be made visible, and have their onclicklisteners implemented.
+        The Yes button will then be disabled until the appropriate buttons have been checked
+         */
 
 
     }
@@ -49,12 +56,12 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 Intent i = new Intent(CheckActivity.this, TimeActivity.class);
                 startActivity(i);
                 break;
-            //currently a place holder for bringing you back to badge reader
+            //brings you back to the main screen (employee is not following PPE guidelines)
             case R.id.cancel_action:
                 Intent x = new Intent(CheckActivity.this, MainActivity.class);
                 startActivity(x);
                 break;
-            //will eventually contact a system tech
+            //goes to the contact tech page
             case R.id.Contact:
                 Intent contact = new Intent(CheckActivity.this, TechContact.class);
                 contact.putExtra("return", "CheckActivity");

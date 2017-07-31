@@ -25,8 +25,25 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/*
+TimeActivity:
+This class is where the user goes when all checks have passed, and the user is actively using the equipment.
+In this activity, the relay is closed, and the elapsed time is shown on the UI.
+When the user is finished with the equipement, they hit the finish button, and are prompted to re-scan
+their badge to prevent accidental logout
+ */
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /*
+    TAG: An immutable tag used for debugging using Log methods
+    ACTION_USB_PERMISSION: immutable used to obtain permission to interact with USB devices
+    chron: object used to track elapsed time
+    ID: string builder used to capture input from the RFID reader
+    Finished: used to track the state of the togglebutton
+    relayDevice: declared here to allow class-wide manipulation
+    RELAY_ON: string that the relay device expects in order to close
+    RELAY_OFF: string that the relay device expects in order to open
+     */
     final private String TAG = "TimeActivity";
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private Chronometer chron;
@@ -40,10 +57,12 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time);
+        //these objects are used to iterate through the active USB devices
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-
+        //this iterates the hashmap and looks for a supported USB device
         for (UsbDevice device : deviceList.values()) {
+            //if a compatible device is found, we ask for permission and attempt to close the relay
             if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
                 PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
                 manager.requestPermission(device, mPermissionIntent);
@@ -60,28 +79,29 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+        //set up our UI elements
         chron = (Chronometer) findViewById(R.id.chronometer2);
         final ToggleButton fin = (ToggleButton) findViewById(R.id.fin);
         final Button Contact = (Button) findViewById(R.id.Contact);
         chron.start();
         Contact.setOnClickListener(this);
 
+        //reset the string builder
         ID.delete(0, ID.length());
 
-
+        //set disabled color to togglebutton
         fin.setBackgroundColor(Color.CYAN);
-
         Finished = false;
-
         fin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (isChecked) {//user wants to log out
                     fin.setBackgroundColor(Color.GREEN);
-                } else {
+                } else {//user is still working
                     fin.setBackgroundColor(Color.CYAN);
                     ID.delete(0,ID.length());
                 }
+                //track the state of the toggle button for other methods
                 Finished = isChecked;
 
             }
@@ -89,11 +109,18 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /*
+    onKeyDown:
+    This method grabs any keypresses to the system and runs this code when the key is pressed.
+    This is used to get the badge scan from the RFID reader without a UI object to collect it.
+    Once a specific delimiter character is detected, the method launches the query which checks
+    if the user has the clearances to proceed, then launches either the check or denied activities.
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
-
+                //we store the ID in mainactivity and check if they are the same
                 if (ID.toString().equals(MainActivity.ID.toString())) {
                     try {
                         relayDevice.write(RELAY_OFF.getBytes("ASCII"));
@@ -113,6 +140,10 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /*
+    attachUsbSerial:
+    Uses a library to set up a serial terminal with the relay device
+     */
     private UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
         if (deviceName != null) {
 
@@ -120,10 +151,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             UsbDeviceConnection connection = manager.openDevice(device);
             UsbSerialDevice serialDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
 
-
             if (serialDevice != null) {
-                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                manager.requestPermission(device, mPermissionIntent);
 
                 try {
                     serialDevice.open();
@@ -145,7 +173,11 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    /*
+    onClick:
+    simple interrupt method that detects UI interaction.
+    This is used to navigate between activities using on-screen buttons.
+    */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
