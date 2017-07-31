@@ -1,9 +1,9 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,14 +13,19 @@ import android.widget.Toast;
 SettingsActivity:
 This class is intended to allow system administrators to set many key parameters to work with their systems.
  */
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    static SharedPreferences settings;
 
+    public static void setSettings(SharedPreferences settings) {
+        SettingsActivity.settings = settings;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        settings.registerOnSharedPreferenceChangeListener(this);
 
         //setup UI elements for interaction
         View Focus = getCurrentFocus();
@@ -34,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (Focus != null) {
             Focus.clearFocus();
         }
+
     }
 
     /*
@@ -51,14 +57,37 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 EditText dbUrl = (EditText) findViewById(R.id.db_url);
                 EditText dbUser = (EditText) findViewById(R.id.db_user);
                 EditText dbPasswd = (EditText) findViewById(R.id.db_pw);
-                DatabaseConnector.setDatabaseRoot(dbUrl.getText().toString());
-                DatabaseConnector.setDatabaseUser(dbUser.getText().toString());
-                DatabaseConnector.setDatabasePasswd(dbPasswd.getText().toString());
-                //DatabaseConnector.setStaticIP();
+                EditText dbPort = (EditText) findViewById(R.id.db_port);
+                EditText dbName = (EditText) findViewById(R.id.db_name);
+                EditText dbEngine = (EditText) findViewById(R.id.db_engine);
+                EditText StaticIP = (EditText) findViewById(R.id.static_ip);
+                EditText SubnetMask = (EditText) findViewById(R.id.netmask);
+                EditText WirelessSSID = (EditText) findViewById(R.id.wifi_ssid);
+                EditText WirelessPasswd = (EditText) findViewById(R.id.wifi_pw);
+                SharedPreferences.Editor settingsEditor = settings.edit();
+                settingsEditor.putString("dbUrl", dbUrl.toString());
+                settingsEditor.putString("dbPasswd", dbPasswd.toString());
+                settingsEditor.putString("dbUser", dbUser.toString());
+                settingsEditor.putString("dbPort", dbPort.toString());
+                settingsEditor.putString("dbName", dbName.toString());
+                settingsEditor.putString("dbEngine", dbEngine.toString());
+                settingsEditor.putString("StaticIP", StaticIP.toString());
+                settingsEditor.putString("SubnetMask", SubnetMask.toString());
+                settingsEditor.putString("WirelessSSID", WirelessSSID.toString());
+                settingsEditor.putString("WirelessPasswd", WirelessPasswd.toString());
+                settingsEditor.apply();
+
+
+
                 Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 break;
 
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //run DB query to set equiment specs
     }
 }

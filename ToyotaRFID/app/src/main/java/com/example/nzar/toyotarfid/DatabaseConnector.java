@@ -2,15 +2,15 @@
 
 package com.example.nzar.toyotarfid;
 
-import android.content.Context;
-import android.test.mock.MockContext;
+import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
-import java.util.Date;
-import java.io.UnsupportedEncodingException;
-import java.sql.*;
 
-import static android.content.Context.CONTEXT_IGNORE_SECURITY;
+import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Created by cravers on 6/29/2017.
@@ -25,20 +25,20 @@ public class DatabaseConnector {
         setters to make sure they can be over-written, but can never be read to prevent unauthorized
         database access.
      */
-    private static String DatabaseRoot = "jdbc:mysql://192.168.0.200:3306/toyotamockupfinal";
-    private static String DatabaseUser = "Connor";
-    private static String DatabasePasswd = "password";
-    private static String authorizationProceedure = null;
-    private static String loggingProceedure = null;
-    private static String machineType = null;
-    private static String[] Schemas = {"dummyemployee"};
-    private static String EmployeeTable = "employeeinfo";
-    private static String LoggingTable = "";
-    private static String TechTable = "";
+    private static SharedPreferences settings;
+    private static String dbUrl;
+    private static String dbPort;
+    private static String dbUser;
+    private static String dbPasswd;
+    private static String dbName;
+    private static String dbEngine;
+    private static String StaticIP;
+    private static String SubnetMask;
 
-    private enum Engine {MySQL, PostGreSQL, SQLServer, ODBC}
+    private static String WirelessSSID;
+    private static String WirelessPasswd;
 
-    private static Engine engine = Engine.MySQL;
+
 
     //Employee class is to store the information about the employee gathered from the database to minimize database hits
     public static class LabPerson {
@@ -53,60 +53,27 @@ public class DatabaseConnector {
 
     }
 
-    private static LabPerson currentLabPerson;
+    public static LabPerson currentLabPerson;
 
     private static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
     }
 
-    public static LabPerson getCurrentLabPerson() {
-        return currentLabPerson;
+    static void setSettings(SharedPreferences settings) {
+        DatabaseConnector.settings = settings;
+        DatabaseConnector.dbUrl = settings.getString("dbUrl", "192.168.0.200");
+        DatabaseConnector.dbPort = settings.getString("dbPort", "3306");
+        DatabaseConnector.dbUser = settings.getString("dbUser", "Connor");
+        DatabaseConnector.dbPasswd = settings.getString("dbPasswd", "password");
+        DatabaseConnector.dbName = settings.getString("dbName", "toyotamockupfinal");
+        DatabaseConnector.dbEngine = settings.getString("dbEngine", "mysql");
+        DatabaseConnector.StaticIP = settings.getString("StaticIP", "192.168.0.235");
+        DatabaseConnector.SubnetMask = settings.getString("SubnetMask", "255.255.255.0");
+        DatabaseConnector.WirelessSSID = settings.getString("WirelessSSID", "MedSpace");
+        DatabaseConnector.WirelessPasswd = settings.getString("WirelessPasswd", "Harvard2MIT");
     }
 
 
-    public static void setEngine(Engine engine) {
-        DatabaseConnector.engine = engine;
-    }
-
-    public static void setAuthorizationProceedure(String authorizationProceedure) {
-        DatabaseConnector.authorizationProceedure = authorizationProceedure;
-    }
-
-    public static void setDatabasePasswd(String databasePasswd) {
-        DatabasePasswd = databasePasswd;
-    }
-
-    public static void setDatabaseRoot(String databaseRoot) {
-        DatabaseRoot = databaseRoot;
-    }
-
-    public static void setDatabaseUser(String databaseUser) {
-        DatabaseUser = databaseUser;
-    }
-
-    public static void setEmployeeTable(String employeeTable) {
-        EmployeeTable = employeeTable;
-    }
-
-    public static void setLoggingProceedure(String loggingProceedure) {
-        DatabaseConnector.loggingProceedure = loggingProceedure;
-    }
-
-    public static void setLoggingTable(String loggingTable) {
-        LoggingTable = loggingTable;
-    }
-
-    public static void setMachineType(String machineType) {
-        DatabaseConnector.machineType = machineType;
-    }
-
-    public static void setSchemas(String[] schemas) {
-        Schemas = schemas;
-    }
-
-    public static void setTechTable(String techTable) {
-        TechTable = techTable;
-    }
 
 
     /*
@@ -118,17 +85,21 @@ public class DatabaseConnector {
         /*
             This switch will use the database engine given by the user to establish the connection.
          */
-        switch (engine) {
-            case MySQL:
+        String dbFullUrl = "";
+
+        switch (dbEngine.toLowerCase().trim()) {
+            case "mysql":
                 Class.forName("com.mysql.jdbc.Driver");
+                dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
                 break;
-            case PostGreSQL:
+            case "postgressql":
                 Class.forName("org.postgresql.Driver");
                 break;
-            case SQLServer:
+            case "mssql":
+            case "sqlserver":
                 Class.forName("com.microsoft.sqlserver.jdbc");
                 break;
-            case ODBC:
+            case "odbc":
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 break;
             default:
@@ -139,7 +110,7 @@ public class DatabaseConnector {
         /*
             Try with resources clause will attempt to establish a connection before throwing an exception
          */
-        try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
+        try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
                                                         + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
