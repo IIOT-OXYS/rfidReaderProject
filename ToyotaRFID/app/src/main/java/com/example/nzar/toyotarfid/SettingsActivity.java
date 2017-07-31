@@ -66,28 +66,37 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 EditText WirelessPasswd = (EditText) findViewById(R.id.wifi_pw);
                 SharedPreferences.Editor settingsEditor = settings.edit();
 
-                if (dbUrl.toString().length() > 2)
+                if (dbUrl.toString().length() > 2) {
                     settingsEditor.putString("dbUrl", dbUrl.toString());
-                if (dbPasswd.toString().length() > 2)
+                }
+                if (dbPasswd.getText().toString().length() > 2) {
                     settingsEditor.putString("dbPasswd", dbPasswd.toString());
-                if (dbUser.toString().length() > 2)
+                }
+                if (dbUser.getText().toString().length() > 2) {
                     settingsEditor.putString("dbUser", dbUser.toString());
-                if (dbPort.toString().length() > 1)
+                }
+                if (dbPort.getText().toString().length() > 1) {
                     settingsEditor.putString("dbPort", dbPort.toString());
-                if (dbName.toString().length() > 2)
+                }
+                if (dbName.getText().toString().length() > 2) {
                     settingsEditor.putString("dbName", dbName.toString());
-                if (dbEngine.toString().length() > 2)
+                }
+                if (dbEngine.getText().toString().length() > 2) {
                     settingsEditor.putString("dbEngine", dbEngine.toString());
-                if (StaticIP.toString().length() > 2)
+                }
+                if (StaticIP.getText().toString().length() > 2) {
                     settingsEditor.putString("StaticIP", StaticIP.toString());
-                if (SubnetMask.toString().length() > 2)
+                }
+                if (SubnetMask.getText().toString().length() > 2) {
                     settingsEditor.putString("SubnetMask", SubnetMask.toString());
-                if (WirelessSSID.toString().length() > 2)
+                }
+                if (WirelessSSID.getText().toString().length() > 2) {
                     settingsEditor.putString("WirelessSSID", WirelessSSID.toString());
-                if (WirelessPasswd.toString().length() > 2)
+                }
+                if (WirelessPasswd.getText().toString().length() > 2) {
                     settingsEditor.putString("WirelessPasswd", WirelessPasswd.toString());
+                }
                 settingsEditor.apply();
-
 
 
                 Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
