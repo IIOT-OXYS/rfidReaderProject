@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
@@ -66,9 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (ID.length() == 0) {//inform the user their tap was registered
+            TextView tv = (TextView) findViewById(R.id.main_activity_text);
+            tv.setText("Checking certifications. . .");
+        }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {//checks for ascii delimiter
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             Log.d(TAG, badgeNumber);//log it for debugging
+
             AsyncTask<String, Integer, Boolean> Job = new DatabaseJob(); //set our custom asynctask
             Job.execute(badgeNumber);//execute the query on a separate thread
 
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return AccessGranted;
 
         }
+
     }
 }
 
