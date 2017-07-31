@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
@@ -24,7 +23,6 @@ import com.felhr.usbserial.UsbSerialDevice;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /*
 TimeActivity:
@@ -35,6 +33,7 @@ their badge to prevent accidental logout
  */
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static boolean Finished;
     /*
     TAG: An immutable tag used for debugging using Log methods
     ACTION_USB_PERMISSION: immutable used to obtain permission to interact with USB devices
@@ -47,12 +46,11 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
      */
     final private String TAG = "TimeActivity";
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
-    private Chronometer chron;
-    private StringBuilder ID = new StringBuilder();
-    private static boolean Finished;
-    private UsbSerialDevice relayDevice;
     private final String RELAY_ON = "relay on 0\r";
     private final String RELAY_OFF = "relay off 0\r";
+    private Chronometer chron;
+    private StringBuilder ID = new StringBuilder();
+    private UsbSerialDevice relayDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +70,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     relayDevice.write(RELAY_ON.getBytes("ASCII"));
                     Log.d(TAG, RELAY_ON);
-                }
-                catch (UnsupportedEncodingException | NullPointerException e) {
+                } catch (UnsupportedEncodingException | NullPointerException e) {
                     Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
@@ -101,7 +98,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     fin.setBackgroundColor(Color.GREEN);
                 } else {//user is still working
                     fin.setBackgroundColor(Color.CYAN);
-                    ID.delete(0,ID.length());
+                    ID.delete(0, ID.length());
                 }
                 //track the state of the toggle button for other methods
                 Finished = isChecked;
@@ -122,8 +119,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
-                //we store the ID in mainactivity and check if they are the same
-                if (ID.toString().equals(MainActivity.ID.toString())) {
+                //we store the active ID in the database connector and check if they are the same
+                if (ID.toString().trim().equals(String.valueOf(DatabaseConnector.currentLabPerson.ID))) {
                     try {
                         relayDevice.write(RELAY_OFF.getBytes("ASCII"));
                         Log.d(TAG, RELAY_OFF);

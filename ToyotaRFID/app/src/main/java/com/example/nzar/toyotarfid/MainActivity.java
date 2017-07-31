@@ -1,11 +1,7 @@
 package com.example.nzar.toyotarfid;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbManager;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.felhr.usbserial.UsbSerialDevice;
-import com.felhr.usbserial.UsbSerialInterface;
-
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 /*
@@ -38,13 +29,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ID: a string builder that gets the keystrokes from the RFID reader to be parsed and queried
     TAG: the debug tag used in Log statements
      */
-    public static StringBuilder ID = new StringBuilder();
+    private StringBuilder ID = new StringBuilder();
     private final String TAG = "MainActivity";
+    SharedPreferences settings;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settings = getPreferences(0);
         setContentView(R.layout.activity_main);
 
         //set up buttons with click listeners
@@ -56,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
+        DatabaseConnector.setSettings(settings);
     }
 
     /*
@@ -107,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getPointerCount() == 4) {
+            SettingsActivity.setSettings(settings);
             this.startActivity(new Intent(this, SettingsActivity.class));
             return super.onTouchEvent(event);
 
@@ -158,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+
 }
 
 
