@@ -9,6 +9,8 @@ import android.widget.Toast;
 import java.util.Date;
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
+import java.util.Random;
+import java.util.UUID;
 
 import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 
@@ -54,6 +56,17 @@ public class DatabaseConnector {
     }
 
     private static LabPerson currentLabPerson;
+    private static java.sql.Timestamp logIn;
+
+    public static void setTime(){
+       java.util.Date login = new java.util.Date();
+       java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
+        logIn = logtime;
+    }
+
+    public static java.sql.Timestamp getTime(){
+        return logIn;
+    }
 
     private static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
@@ -168,11 +181,44 @@ public class DatabaseConnector {
             return false;
     }
 
+    static void insertData() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
+        java.util.Date login = new java.util.Date();
+        java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
+        DatabaseConnector.Equipment equipment = new DatabaseConnector.Equipment();
+        try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
+                                                    "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID)" +
+                                                        "VALUES (?, ?, ?, ?, ?, ?, ?)");
+            int logID = uniqueID();
+            int badge = currentLabPerson.ID;
+            String session = UUID.randomUUID().toString();
+            session = session.replaceAll("-", "");
+            preparedStatement.setInt(1,logID);
+            preparedStatement.setTimestamp(2, logIn);
+            preparedStatement.setString(3, session);
+            preparedStatement.setTimestamp(4, logtime);
+            preparedStatement.setBoolean(5, false);
+            preparedStatement.setInt(6, badge);
+            preparedStatement.setInt(7, equipment.EquipID);
 
+        }
 
-
-
-
+    }
+    static int uniqueID() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
+        Random rand = new Random();
+        int n = rand.nextInt(1999999999);
+        try (Connection connection = DriverManager.getConnection(DatabaseRoot, DatabaseUser, DatabasePasswd)) {
+            Statement statement = connection.createStatement();
+            ResultSet results = statement.executeQuery("SELECT * FROM lablog WHERE lablog.LogID = " + n + ";");
+            if(!results.next()) {
+            return n;
+            }
+            else{
+                uniqueID();
+            }
+        }
+            return n;
+    }
     public static void LogDeviceActivity() {
 
     }
@@ -184,6 +230,7 @@ public class DatabaseConnector {
     public static void getTechContact() {
 
     }
+
 
 
 }

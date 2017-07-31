@@ -8,6 +8,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -61,6 +62,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         //this iterates the hashmap and looks for a supported USB device
+        DatabaseConnector.setTime();
         for (UsbDevice device : deviceList.values()) {
             //if a compatible device is found, we ask for permission and attempt to close the relay
             if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
@@ -128,6 +130,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (UnsupportedEncodingException | NullPointerException e) {
                         e.printStackTrace();
                     }
+
                     startActivity(new Intent(this, MainActivity.class));
                 }
 
