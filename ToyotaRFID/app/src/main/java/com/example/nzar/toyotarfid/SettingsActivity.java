@@ -67,34 +67,34 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 SharedPreferences.Editor settingsEditor = settings.edit();
 
                 if (notNull(dbUrl)) {
-                    settingsEditor.putString("dbUrl", dbUrl.toString());
+                    settingsEditor.putString("dbUrl", dbUrl.getText().toString());
                 }
                 if (notNull(dbPasswd)) {
-                    settingsEditor.putString("dbPasswd", dbPasswd.toString());
+                    settingsEditor.putString("dbPasswd", dbPasswd.getText().toString());
                 }
                 if (notNull(dbUser)) {
-                    settingsEditor.putString("dbUser", dbUser.toString());
+                    settingsEditor.putString("dbUser", dbUser.getText().toString());
                 }
                 if (notNull(dbPort)) {
-                    settingsEditor.putString("dbPort", dbPort.toString());
+                    settingsEditor.putString("dbPort", dbPort.getText().toString());
                 }
                 if (notNull(dbName)) {
-                    settingsEditor.putString("dbName", dbName.toString());
+                    settingsEditor.putString("dbName", dbName.getText().toString());
                 }
                 if (notNull(dbEngine)) {
-                    settingsEditor.putString("dbEngine", dbEngine.toString());
+                    settingsEditor.putString("dbEngine", dbEngine.getText().toString());
                 }
                 if (notNull(StaticIP)) {
-                    settingsEditor.putString("StaticIP", StaticIP.toString());
+                    settingsEditor.putString("StaticIP", StaticIP.getText().toString());
                 }
                 if (notNull(SubnetMask)) {
-                    settingsEditor.putString("SubnetMask", SubnetMask.toString());
+                    settingsEditor.putString("SubnetMask", SubnetMask.getText().toString());
                 }
                 if (notNull(WirelessSSID)) {
-                    settingsEditor.putString("WirelessSSID", WirelessSSID.toString());
+                    settingsEditor.putString("WirelessSSID", WirelessSSID.getText().toString());
                 }
                 if (notNull(WirelessPasswd)) {
-                    settingsEditor.putString("WirelessPasswd", WirelessPasswd.toString());
+                    settingsEditor.putString("WirelessPasswd", WirelessPasswd.getText().toString());
                 }
                 settingsEditor.apply();
 
