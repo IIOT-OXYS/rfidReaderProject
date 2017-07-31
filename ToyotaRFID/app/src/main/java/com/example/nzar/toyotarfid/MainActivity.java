@@ -155,7 +155,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         protected Boolean doInBackground(String... params) {
             boolean AccessGranted = false;
-
+            try{
+            DatabaseConnector.setEquipment();
+            }
+            catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+             }
             int badgeNumber = Integer.parseInt(params[0]);
             try {
                 AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);

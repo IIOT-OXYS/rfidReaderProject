@@ -129,18 +129,7 @@ public class DatabaseConnector {
             This switch will use the database engine given by the user to establish the connection.
          */
         String dbFullUrl = getFullUrl();
-        DatabaseConnector.Equipment equip = new DatabaseConnector.Equipment();
-        try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
-            Statement stmt = con.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
-                    + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
-                    + " WHERE equipment.IPAddress = " + "\"" + equip.IP + "\"" + ";");
-            res.next();
-            equip.EquipID = res.getInt(1);
-            equip.PPE = res.getInt(2);
-            DatabaseConnector.setCurrentEquipment(equip);
-            con.close();
-        }
+
 
         /*
             Try with resources clause will attempt to establish a connection before throwing an exception
@@ -159,7 +148,7 @@ public class DatabaseConnector {
                     labPerson.CertID = results.getInt(2);
                     DatabaseConnector.setCurrentEmployee(labPerson);
                     Statement statement1 = connection.createStatement();
-                    ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + equip.EquipID +
+                    ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + currentEquipment.EquipID +
                             " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
                     if (results1.next()) {
                         connection.close();
@@ -243,7 +232,21 @@ public class DatabaseConnector {
 
         }
     }
-
+    public static void setEquipment() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
+        String dbFullUrl = getFullUrl();
+        DatabaseConnector.Equipment equip = new DatabaseConnector.Equipment();
+        try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
+                    + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
+                    + " WHERE equipment.IPAddress = " + "\"" + equip.IP + "\"" + ";");
+            res.next();
+            equip.EquipID = res.getInt(1);
+            equip.PPE = res.getInt(2);
+            DatabaseConnector.setCurrentEquipment(equip);
+            con.close();
+        }
+    }
     public static void LogDeviceActivity() {
 
     }
