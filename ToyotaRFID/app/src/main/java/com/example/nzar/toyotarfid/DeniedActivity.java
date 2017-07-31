@@ -22,7 +22,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_denied);
         //set up button click listeners
-        AsyncTask<Void, Void, Void> insertLog = new DatabaseDeniedtLog();
+        AsyncTask<Void, Void, Void> insertLog = new DatabaseDeniedLog();
         insertLog.execute();
         Button ret = ( Button ) findViewById(R.id.Return);
         ret.setOnClickListener(this);
@@ -47,7 +47,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private static class DatabaseDeniedtLog extends AsyncTask<Void, Void, Void> {
+    private static class DatabaseDeniedLog extends AsyncTask<Void, Void, Void> {
 
         protected Void doInBackground(Void... params) {
 
