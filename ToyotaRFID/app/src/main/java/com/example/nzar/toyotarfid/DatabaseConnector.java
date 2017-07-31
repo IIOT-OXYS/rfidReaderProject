@@ -221,6 +221,7 @@ public class DatabaseConnector {
             preparedStatement.setInt(1, logID);
             preparedStatement.setTimestamp(2, logtime);
             preparedStatement.setString(3, session);
+            preparedStatement.setTimestamp(4, null);
             preparedStatement.setBoolean(5, x);
             preparedStatement.setInt(6, badge);
             preparedStatement.setInt(7, equipment.EquipID);
