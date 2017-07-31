@@ -49,9 +49,9 @@ public class DatabaseConnector {
     }
 
     public static class Equipment{
-        int EquipID = 20202020;
-        int PPE = 88888888;
-        String IP = "192.168.0.235";
+        int EquipID;
+        int PPE;
+        String IP = StaticIP;
 
     }
     private static java.sql.Timestamp logIn;
@@ -91,6 +91,11 @@ public class DatabaseConnector {
     }
 
     public static LabPerson currentLabPerson;
+    public static Equipment currentEquipment;
+
+    private  static void setCurrentEquipment(Equipment currentEquipment){
+        DatabaseConnector.currentEquipment = currentEquipment;
+    }
 
 
     private static void setCurrentEmployee(LabPerson currentEmployee) {
@@ -124,45 +129,52 @@ public class DatabaseConnector {
             This switch will use the database engine given by the user to establish the connection.
          */
         String dbFullUrl = getFullUrl();
-
-
+        DatabaseConnector.Equipment equip = new DatabaseConnector.Equipment();
+        try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
+                    + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
+                    + " WHERE equipment.IPAddress = " + equip.IP + ";");
+            equip.EquipID = res.getInt(1);
+            equip.PPE = res.getInt(2);
+            DatabaseConnector.setCurrentEquipment(equip);
+        }
 
         /*
             Try with resources clause will attempt to establish a connection before throwing an exception
          */
-        try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
-            Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
-                                                        + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
-                                                        + " WHERE labperson.ID = " + badgeNumber + ";");
-            DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-            DatabaseConnector.Equipment  equipment = new DatabaseConnector.Equipment();
-            labPerson.ID = badgeNumber;
-            DatabaseConnector.setCurrentEmployee(labPerson);
-            if(results.next()) {
-
-                labPerson.ID = results.getInt(1);
-                labPerson.CertID = results.getInt(2);
+            try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+                Statement statement = connection.createStatement();
+                ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
+                        + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
+                        + " WHERE labperson.ID = " + badgeNumber + ";");
+                DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
+                labPerson.ID = badgeNumber;
                 DatabaseConnector.setCurrentEmployee(labPerson);
-                Statement statement1 = connection.createStatement();
-                ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + equipment.EquipID +
-                                                            " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
-                if (results1.next()){
+                if (results.next()) {
+
+                    labPerson.ID = results.getInt(1);
+                    labPerson.CertID = results.getInt(2);
+                    DatabaseConnector.setCurrentEmployee(labPerson);
+                    Statement statement1 = connection.createStatement();
+                    ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + equip.EquipID +
+                            " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
+                    if (results1.next()) {
+                        connection.close();
+                        return true;
+                    }
+                } else {
                     connection.close();
-                    return true;
+                    return false;
                 }
             }
-            else{
-                connection.close();
-                return false;
-            }}
             return false;
-    }
+        }
+
 
     static void insertData() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
         java.util.Date login = new java.util.Date();
         java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
-        DatabaseConnector.Equipment equipment = new DatabaseConnector.Equipment();
         String dbFullUrl = getFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
@@ -178,7 +190,7 @@ public class DatabaseConnector {
             preparedStatement.setTimestamp(4, logtime);
             preparedStatement.setBoolean(5, false);
             preparedStatement.setInt(6, badge);
-            preparedStatement.setInt(7, equipment.EquipID);
+            preparedStatement.setInt(7, currentEquipment.EquipID);
             preparedStatement.executeUpdate();
 
             connection.close();
@@ -207,7 +219,6 @@ public class DatabaseConnector {
     static void deniedData() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
         java.util.Date login = new java.util.Date();
         java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
-        DatabaseConnector.Equipment equipment = new DatabaseConnector.Equipment();
         String dbFullUrl = getFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
@@ -224,7 +235,7 @@ public class DatabaseConnector {
             preparedStatement.setTimestamp(4, null);
             preparedStatement.setBoolean(5, x);
             preparedStatement.setInt(6, badge);
-            preparedStatement.setInt(7, equipment.EquipID);
+            preparedStatement.setInt(7, currentEquipment.EquipID);
             preparedStatement.executeUpdate();
             connection.close();
 
