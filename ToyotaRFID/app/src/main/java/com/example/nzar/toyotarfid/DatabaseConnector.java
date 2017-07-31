@@ -135,12 +135,12 @@ public class DatabaseConnector {
             ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
                                                         + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
                                                         + " WHERE labperson.ID = " + badgeNumber + ";");
-
+            DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
+            DatabaseConnector.Equipment  equipment = new DatabaseConnector.Equipment();
+            labPerson.ID = badgeNumber;
+            DatabaseConnector.setCurrentEmployee(labPerson);
             if(results.next()) {
 
-
-                DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-                DatabaseConnector.Equipment  equipment = new DatabaseConnector.Equipment();
                 labPerson.ID = results.getInt(1);
                 labPerson.CertID = results.getInt(2);
                 DatabaseConnector.setCurrentEmployee(labPerson);
@@ -203,6 +203,33 @@ public class DatabaseConnector {
         }
             return n;
     }
+
+    static void deniedData() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
+        java.util.Date login = new java.util.Date();
+        java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
+        DatabaseConnector.Equipment equipment = new DatabaseConnector.Equipment();
+        String dbFullUrl = getFullUrl();
+        try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
+                    "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)");
+            int logID = uniqueID();
+            int badge = currentLabPerson.ID;
+            boolean x = true;
+            String session = UUID.randomUUID().toString();
+            session = session.replaceAll("-", "");
+            preparedStatement.setInt(1, logID);
+            preparedStatement.setTimestamp(2, logtime);
+            preparedStatement.setString(3, session);
+            preparedStatement.setBoolean(5, x);
+            preparedStatement.setInt(6, badge);
+            preparedStatement.setInt(7, equipment.EquipID);
+            preparedStatement.executeUpdate();
+            connection.close();
+
+        }
+    }
+
     public static void LogDeviceActivity() {
 
     }
