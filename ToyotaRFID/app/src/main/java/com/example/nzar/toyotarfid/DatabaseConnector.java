@@ -134,10 +134,12 @@ public class DatabaseConnector {
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
                     + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
-                    + " WHERE equipment.IPAddress = " + equip.IP + ";");
+                    + " WHERE equipment.IPAddress = " + "\"" + equip.IP + "\"" + ";");
+            res.next();
             equip.EquipID = res.getInt(1);
             equip.PPE = res.getInt(2);
             DatabaseConnector.setCurrentEquipment(equip);
+            con.close();
         }
 
         /*
