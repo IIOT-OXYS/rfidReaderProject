@@ -47,10 +47,9 @@ public class DatabaseConnector {
     }
 
     public static class Equipment{
-        int EquipID;
-        int EquipCertID;
-        int PPE;
-        String IP;
+        int EquipID = 20202020;
+        int PPE = 88888888;
+        String IP = "192.168.0.235";
 
     }
 
@@ -150,18 +149,25 @@ public class DatabaseConnector {
 
 
                 DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-
+                DatabaseConnector.Equipment  equipment = new DatabaseConnector.Equipment();
                 labPerson.ID = results.getInt(1);
                 labPerson.CertID = results.getInt(2);
                 DatabaseConnector.setCurrentEmployee(labPerson);
-                return true;
+                Statement statement1 = connection.createStatement();
+                ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + equipment.EquipID +
+                                                            " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
+                if (results1.next()){
+                    connection.close();
+                    return true;
+                }
             }
-            else {
+            else{
                 connection.close();
                 return false;
-            }
-        }
-            }
+            }}
+            return false;
+    }
+
 
 
 
