@@ -5,20 +5,15 @@ package com.example.nzar.toyotarfid;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import android.widget.Toast;
-import java.util.Date;
-import java.io.UnsupportedEncodingException;
-import java.sql.*;
-import java.util.Random;
-import java.util.UUID;
-
-
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by cravers on 6/29/2017.
@@ -42,7 +37,6 @@ public class DatabaseConnector {
     private static String dbEngine;
     private static String StaticIP;
     private static String SubnetMask;
-
     private static String WirelessSSID;
     private static String WirelessPasswd;
 
@@ -61,6 +55,30 @@ public class DatabaseConnector {
 
     }
     private static java.sql.Timestamp logIn;
+
+    private static String getFullUrl() throws ClassNotFoundException {
+        String dbFullUrl = null;
+        switch (dbEngine.toLowerCase().trim()) {
+            case "mysql":
+                Class.forName("com.mysql.jdbc.Driver");
+                dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
+                break;
+            case "postgressql":
+                Class.forName("org.postgresql.Driver");
+                break;
+            case "mssql":
+            case "sqlserver":
+                Class.forName("com.microsoft.sqlserver.jdbc");
+                break;
+            case "odbc":
+                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                break;
+            default:
+                Log.d(TAG, "no driver specified");
+                throw new ClassNotFoundException();
+        }
+        return dbFullUrl;
+    }
 
     public static void setTime(){
        java.util.Date login = new java.util.Date();
@@ -105,27 +123,9 @@ public class DatabaseConnector {
         /*
             This switch will use the database engine given by the user to establish the connection.
          */
-        String dbFullUrl = "";
+        String dbFullUrl = getFullUrl();
 
-        switch (dbEngine.toLowerCase().trim()) {
-            case "mysql":
-                Class.forName("com.mysql.jdbc.Driver");
-                dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
-                break;
-            case "postgressql":
-                Class.forName("org.postgresql.Driver");
-                break;
-            case "mssql":
-            case "sqlserver":
-                Class.forName("com.microsoft.sqlserver.jdbc");
-                break;
-            case "odbc":
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                break;
-            default:
-                Log.d(TAG, "no driver specified");
-                throw new ClassNotFoundException();
-        }
+
 
         /*
             Try with resources clause will attempt to establish a connection before throwing an exception
@@ -163,7 +163,7 @@ public class DatabaseConnector {
         java.util.Date login = new java.util.Date();
         java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
         DatabaseConnector.Equipment equipment = new DatabaseConnector.Equipment();
-        String dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
+        String dbFullUrl = getFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
                                                     "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID)" +
@@ -186,7 +186,7 @@ public class DatabaseConnector {
     static int uniqueID() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
         Random rand = new Random();
         int n = rand.nextInt(1999999999);
-        String dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
+        String dbFullUrl = getFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT * FROM lablog WHERE lablog.LogID = " + n + ";");
