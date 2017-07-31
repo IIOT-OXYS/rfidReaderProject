@@ -74,7 +74,7 @@ public class DatabaseConnector {
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 break;
             default:
-                Log.d(TAG, "no driver specified");
+                Log.d(TAG, "driver " + dbEngine + " is not supported");
                 throw new ClassNotFoundException();
         }
         return dbFullUrl;
@@ -179,7 +179,9 @@ public class DatabaseConnector {
             preparedStatement.setBoolean(5, false);
             preparedStatement.setInt(6, badge);
             preparedStatement.setInt(7, equipment.EquipID);
+            preparedStatement.executeUpdate();
 
+            connection.close();
         }
 
     }
@@ -191,9 +193,11 @@ public class DatabaseConnector {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT * FROM lablog WHERE lablog.LogID = " + n + ";");
             if(!results.next()) {
-            return n;
+                connection.close();
+                return n;
             }
             else{
+                connection.close();
                 uniqueID();
             }
         }

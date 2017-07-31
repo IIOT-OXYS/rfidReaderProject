@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,7 +34,6 @@ their badge to prevent accidental logout
  */
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static boolean Finished;
     /*
     TAG: An immutable tag used for debugging using Log methods
     ACTION_USB_PERMISSION: immutable used to obtain permission to interact with USB devices
@@ -51,6 +50,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     private final String RELAY_OFF = "relay off 0\r";
     private Chronometer chron;
     private StringBuilder ID = new StringBuilder();
+    private static boolean Finished;
     private UsbSerialDevice relayDevice;
 
     @Override
@@ -128,19 +128,11 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (UnsupportedEncodingException | NullPointerException e) {
                         e.printStackTrace();
                     }
-                    try {
-                        DatabaseConnector.insertData();
-                        startActivity(new Intent(this, MainActivity.class));
-                    }
-                    catch (SQLException ex){
-                       ex.printStackTrace();
-                    }
-                    catch (ClassNotFoundException ex1){
-                        ex1.printStackTrace();
-                    }
-                    catch (UnsupportedEncodingException ex2){
-                        ex2.printStackTrace();
-                    }
+                    AsyncTask<Void, Void, Void> insertLog = new DatabaseInsertLog();
+
+                    insertLog.execute();
+
+                    startActivity(new Intent(this, MainActivity.class));
 
                 }
 
@@ -204,4 +196,21 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    private static class DatabaseInsertLog extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... params) {
+
+            try {
+                DatabaseConnector.insertData();
+            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
 }
+
+
