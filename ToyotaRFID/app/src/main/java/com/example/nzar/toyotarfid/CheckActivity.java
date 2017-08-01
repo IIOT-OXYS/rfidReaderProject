@@ -1,5 +1,7 @@
 package com.example.nzar.toyotarfid;
 
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -11,6 +13,12 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 import static android.R.string.yes;
 
@@ -30,6 +38,16 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
+        AsyncTask<Void, Void, String> setPPE = new CheckActivity.PPEJob();
+        setPPE.execute();
+        try{
+            String PPE = setPPE.get();
+            TextView requirements = (TextView) findViewById(R.id.PPERequirements);
+            requirements.setText(PPE);
+        }
+        catch (InterruptedException | ExecutionException | NullPointerException e){
+            e.printStackTrace();
+        }
 
         //set the yes button to disabled so you have to agree
 //        yes.setEnabled(false);
@@ -71,7 +89,21 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+    private class PPEJob extends AsyncTask< Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+               String PPE = DatabaseConnector.getPPE();
+                return PPE;
+            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
 }
+
 
 
 

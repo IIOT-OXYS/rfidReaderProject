@@ -5,7 +5,6 @@ package com.example.nzar.toyotarfid;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -245,6 +244,18 @@ class DatabaseConnector extends AppCompatActivity {
             DatabaseConnector.setCurrentEquipment();
 
             con.close();
+        }
+    }
+
+    public static String getPPE() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
+        String dbFullUrl = getFullUrl();
+        try(Connection con = DriverManager.getConnection(dbFullUrl,dbUser, dbPasswd)){
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT ppe.PPE FROM ppe WHERE ppe.PPEID = " + currentEquipment.PPE + ";");
+            res.next();
+            String PPE = res.getString(1);
+            return PPE;
+
         }
     }
     public static void LogDeviceActivity() {

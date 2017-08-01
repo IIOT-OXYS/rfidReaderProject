@@ -106,7 +106,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="15dp"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintLeft_toLeftOf="@+id/PPERequirements"
         app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintTop_toTopOf="@+id/gloves_off_button"
         android:layout_marginTop="0dp"
@@ -129,7 +129,7 @@
         app:layout_constraintRight_toRightOf="@+id/no_jewelery_button"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="46dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintLeft_toLeftOf="@+id/PPERequirements"
         app:layout_constraintHorizontal_bias="0.52" />
 
     <ImageButton
@@ -177,7 +177,7 @@
         app:layout_constraintBottom_toTopOf="@+id/protective_clothing_button"
         android:layout_marginStart="117dp"
         android:layout_marginEnd="104dp"
-        app:layout_constraintRight_toRightOf="@+id/textView"
+        app:layout_constraintRight_toRightOf="@+id/PPERequirements"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="46dp"
         app:layout_constraintLeft_toLeftOf="@+id/face_shield_button"
@@ -212,7 +212,7 @@
         android:layout_marginStart="244dp"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="46dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView"
+        app:layout_constraintLeft_toLeftOf="@+id/PPERequirements"
         android:layout_marginLeft="244dp" />
 
     <ImageButton
@@ -299,7 +299,7 @@
         tools:layout_constraintLeft_creator="1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/PPERequirements"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="33dp"
