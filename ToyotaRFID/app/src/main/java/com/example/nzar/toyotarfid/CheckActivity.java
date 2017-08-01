@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -48,7 +49,26 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         catch (InterruptedException | ExecutionException | NullPointerException e){
             e.printStackTrace();
         }
-
+        ImageButton glovesOn = (ImageButton) findViewById(R.id.gloves_on_button);
+        ImageButton earProtection = (ImageButton) findViewById(R.id.ear_protection_button);
+        ImageButton noJewelery = (ImageButton) findViewById(R.id.no_jewelery_button);
+        ImageButton faceShield = (ImageButton) findViewById(R.id.face_shield_button);
+        ImageButton longHair = (ImageButton) findViewById(R.id.long_hair_button);
+        ImageButton footWare = (ImageButton) findViewById(R.id.footware_button);
+        ImageButton respiratoryProtection = (ImageButton) findViewById(R.id.respiratory_protection_button);
+        ImageButton eyeProtection = (ImageButton) findViewById(R.id.eye_protection_button);
+        ImageButton weldingMask = (ImageButton) findViewById(R.id.welding_mask_button);
+        ImageButton protectiveClothing = (ImageButton) findViewById(R.id.protective_clothing_button);
+        glovesOn.setVisibility(View.VISIBLE);
+        earProtection.setVisibility(View.VISIBLE);
+        noJewelery.setVisibility(View.VISIBLE);
+        faceShield.setVisibility(View.VISIBLE);
+        longHair.setVisibility(View.VISIBLE);
+        footWare.setVisibility(View.VISIBLE);
+        respiratoryProtection.setVisibility(View.VISIBLE);
+        eyeProtection.setVisibility(View.VISIBLE);
+        weldingMask.setVisibility(View.VISIBLE);
+        protectiveClothing.setVisibility(View.VISIBLE);
         //set the yes button to disabled so you have to agree
 //        yes.setEnabled(false);
 //        cancel.setEnabled(true);
