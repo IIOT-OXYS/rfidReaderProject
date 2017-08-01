@@ -113,5 +113,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //run DB query to set equiment specs
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("hasEquipmentData", false);
+        editor.putBoolean("hasNetworkConfig", false);
     }
 }
