@@ -3,6 +3,7 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
@@ -19,7 +20,7 @@ import java.util.UUID;
  * Created by cravers on 6/29/2017.
  */
 
-public class DatabaseConnector {
+class DatabaseConnector extends AppCompatActivity {
 
     private static final String TAG = "DBConnectorLib"; //set Logging tag
 
@@ -28,17 +29,14 @@ public class DatabaseConnector {
         setters to make sure they can be over-written, but can never be read to prevent unauthorized
         database access.
      */
-    private static SharedPreferences settings;
+    static SharedPreferences settings;
     private static String dbUrl;
     private static String dbPort;
     private static String dbUser;
     private static String dbPasswd;
     private static String dbName;
     private static String dbEngine;
-    private static String StaticIP;
-    private static String SubnetMask;
-    private static String WirelessSSID;
-    private static String WirelessPasswd;
+
 
 
 
@@ -51,7 +49,7 @@ public class DatabaseConnector {
     public static class Equipment{
         int EquipID;
         int PPE;
-        String IP = StaticIP;
+        String IP;
 
     }
     private static java.sql.Timestamp logIn;
@@ -93,8 +91,12 @@ public class DatabaseConnector {
     public static LabPerson currentLabPerson;
     public static Equipment currentEquipment;
 
-    private  static void setCurrentEquipment(Equipment currentEquipment){
-        DatabaseConnector.currentEquipment = currentEquipment;
+    static void setCurrentEquipment() {
+        Equipment equip = new Equipment();
+        equip.EquipID = settings.getInt("EquipID", 0);
+        equip.IP = settings.getString("StaticIP", "192.168.0.235");
+        equip.PPE = settings.getInt("PPE", 0);
+        currentEquipment = equip;
     }
 
 
@@ -110,12 +112,8 @@ public class DatabaseConnector {
         DatabaseConnector.dbPasswd = settings.getString("dbPasswd", "password");
         DatabaseConnector.dbName = settings.getString("dbName", "toyotamockupfinal");
         DatabaseConnector.dbEngine = settings.getString("dbEngine", "mysql");
-        DatabaseConnector.StaticIP = settings.getString("StaticIP", "192.168.0.235");
-        DatabaseConnector.SubnetMask = settings.getString("SubnetMask", "255.255.255.0");
-        DatabaseConnector.WirelessSSID = settings.getString("WirelessSSID", "MedSpace");
-        DatabaseConnector.WirelessPasswd = settings.getString("WirelessPasswd", "Harvard2MIT");
-    }
 
+    }
 
 
 
@@ -234,16 +232,18 @@ public class DatabaseConnector {
     }
     public static void setEquipment() throws SQLException, ClassNotFoundException, UnsupportedEncodingException{
         String dbFullUrl = getFullUrl();
-        DatabaseConnector.Equipment equip = new DatabaseConnector.Equipment();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
                     + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
-                    + " WHERE equipment.IPAddress = " + "\"" + equip.IP + "\"" + ";");
+                    + " WHERE equipment.IPAddress = " + "\"" + currentEquipment.IP + "\"" + ";");
             res.next();
-            equip.EquipID = res.getInt(1);
-            equip.PPE = res.getInt(2);
-            DatabaseConnector.setCurrentEquipment(equip);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("EquipID", res.getInt(1));
+            editor.putInt("PPE", res.getInt(2));
+            editor.apply();
+            DatabaseConnector.setCurrentEquipment();
+
             con.close();
         }
     }

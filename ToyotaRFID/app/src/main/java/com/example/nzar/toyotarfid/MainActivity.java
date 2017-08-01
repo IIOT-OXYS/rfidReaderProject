@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -52,8 +53,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
 
-        AsyncTask<Void, Void, Void> setNetworkJob = new setupNetwork();
-        setNetworkJob.execute();
+
+        if (!settings.getBoolean("hasNetworkConfig", false)) {
+            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
+            setNetworkJob.execute();
+            try {
+                if (setNetworkJob.get())
+                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        DatabaseConnector.setSettings(settings);
+        DatabaseConnector.setCurrentEquipment();
+
+
+        if (!settings.getBoolean("hasEquipmentData", false)) {
+            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
+            setEquipment.execute();
+            try {
+                if (setEquipment.get())
+                    settings.edit().putBoolean("hasEquipmentData", true).apply();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
@@ -64,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
-        DatabaseConnector.setSettings(settings);
     }
 
     /*
@@ -155,12 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         protected Boolean doInBackground(String... params) {
             boolean AccessGranted = false;
-            try{
-            DatabaseConnector.setEquipment();
-            }
-            catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-             }
+
             int badgeNumber = Integer.parseInt(params[0]);
             try {
                 AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
@@ -174,9 +197,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private class setupNetwork extends AsyncTask<Void, Void, Void> {
+    private class setEquipmentData extends AsyncTask<Void, Void, Boolean> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
+            try {
+                DatabaseConnector.setEquipment();
+            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+    }
+
+    private class setupNetwork extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
 
             WifiConfiguration wifiConf = null;
             WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -196,9 +233,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 wifiManager.saveConfiguration(); //Save it
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
 
-            return null;
+            return true;
         }
     }
 
