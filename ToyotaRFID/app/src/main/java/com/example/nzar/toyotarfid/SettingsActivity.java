@@ -116,5 +116,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("hasEquipmentData", false);
         editor.putBoolean("hasNetworkConfig", false);
+        editor.apply();
     }
 }
