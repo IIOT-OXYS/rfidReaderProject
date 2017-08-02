@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             int badgeNumber = Integer.parseInt(params[0]);
             try {
-                AccessGranted = DatabaseConnector.EmployeeAuthorized(badgeNumber);
+                AccessGranted = DatabaseConnector.getEmployeeAuthorization(badgeNumber);
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

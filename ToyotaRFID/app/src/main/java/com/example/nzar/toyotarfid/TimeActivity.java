@@ -208,7 +208,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         protected Void doInBackground(Void... params) {
 
             try {
-                DatabaseConnector.insertData();
+                DatabaseConnector.insertLoginData();
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
