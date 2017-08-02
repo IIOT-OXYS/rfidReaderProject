@@ -31,6 +31,7 @@ class DatabaseConnector extends AppCompatActivity {
     private static final String TAG = "DBConnectorLib"; //set Logging tag
     public static LabPerson currentLabPerson;
     public static Equipment currentEquipment;
+    public static ArrayList<Integer> LabTechBadgeNumbers;
     /*
         These private strings are the settings used to connect the database, they all have public
         setters to make sure they can be over-written, but can never be read to prevent unauthorized
@@ -45,42 +46,10 @@ class DatabaseConnector extends AppCompatActivity {
     private static String dbEngine;
     private static java.sql.Timestamp logIn;
 
-    private static String generateFullUrl() throws ClassNotFoundException {
-        String dbFullUrl = null;
-        switch (dbEngine.toLowerCase().trim()) {
-            case "mysql":
-                Class.forName("com.mysql.jdbc.Driver");
-                dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
-                break;
-            case "postgressql":
-                Class.forName("org.postgresql.Driver");
-                break;
-            case "mssql":
-            case "sqlserver":
-                Class.forName("com.microsoft.sqlserver.jdbc");
-                break;
-            case "odbc":
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                break;
-            default:
-                Log.d(TAG, "driver " + dbEngine + " is not supported");
-                throw new ClassNotFoundException();
-        }
-        return dbFullUrl;
-    }
-
     public static void setTime() {
         java.util.Date login = new java.util.Date();
         logIn = new java.sql.Timestamp(login.getTime());
     }
-
-    public static java.sql.Timestamp getTime() {
-        return logIn;
-    }
-
-    public static LabPerson currentLabPerson;
-    public static Equipment currentEquipment;
-    public static ArrayList<Integer> LabTechBadgeNumbers;
 
     static void setCurrentEquipment() {
         Equipment equip = new Equipment();
@@ -89,7 +58,6 @@ class DatabaseConnector extends AppCompatActivity {
         equip.PPE = settings.getInt("PPE", 0);
         currentEquipment = equip;
     }
-
 
     private static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
@@ -105,8 +73,6 @@ class DatabaseConnector extends AppCompatActivity {
         DatabaseConnector.dbEngine = settings.getString("dbEngine", "mysql");
 
     }
-
-
 
     /*
         This method will query the database specified to see if the user that just badged in is
@@ -220,35 +186,45 @@ class DatabaseConnector extends AppCompatActivity {
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT ppe.PPE FROM ppe WHERE ppe.PPEID = " + currentEquipment.PPE + ";");
             res.next();
-            String PPE = res.getString(1);
-            return PPE;
+            return res.getString(1);
 
         }
     }
 
     public static void fillLabTech() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
-        String dbFullUrl = getFullUrl();
+        String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT labtech.LabTech_BadgeID FROM labtech;");
-            int i = 1;
             while (res.next()) {
-                LabTechBadgeNumbers.add(res.getInt(i));
-                i++;
+                LabTechBadgeNumbers.add(res.getInt(1));
             }
         }
     }
 
-    public static void LogDeviceActivity() {
 
-    }
-
-    public static void getDeviceType() {
-
-    }
-
-    public static void getTechContact() {
-
+    private static String generateFullUrl() throws ClassNotFoundException {
+        String dbFullUrl = null;
+        switch (dbEngine.toLowerCase().trim()) {
+            case "mysql":
+                Class.forName("com.mysql.jdbc.Driver");
+                dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + dbName;
+                break;
+            case "postgressql":
+                Class.forName("org.postgresql.Driver");
+                break;
+            case "mssql":
+            case "sqlserver":
+                Class.forName("com.microsoft.sqlserver.jdbc");
+                break;
+            case "odbc":
+                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                break;
+            default:
+                Log.d(TAG, "driver " + dbEngine + " is not supported");
+                throw new ClassNotFoundException();
+        }
+        return dbFullUrl;
     }
 
     //Employee class is to store the information about the employee gathered from the database to minimize database hits
@@ -258,21 +234,21 @@ class DatabaseConnector extends AppCompatActivity {
         boolean Authorized;
     }
 
-    static class Equipment {
+    private static class Equipment {
         int EquipID;
         int PPE;
         String IP;
 
     }
 
-    public static class NetworkConfigurator {
+    static class NetworkConfigurator {
 
-        public static void setIpAssignment(String assign, WifiConfiguration wifiConf)
+        static void setIpAssignment(String assign, WifiConfiguration wifiConf)
                 throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
             setEnumField(wifiConf, assign, "ipAssignment");
         }
 
-        public static void setIpAddress(InetAddress addr, int prefixLength, WifiConfiguration wifiConf)
+        static void setIpAddress(InetAddress addr, int prefixLength, WifiConfiguration wifiConf)
                 throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException,
                 NoSuchMethodException, ClassNotFoundException, InstantiationException, InvocationTargetException {
             Object linkProperties = getField(wifiConf, "linkProperties");
@@ -300,7 +276,7 @@ class DatabaseConnector extends AppCompatActivity {
             mRoutes.add(routeInfo);
         }
 
-        public static void setDNS(InetAddress dns, WifiConfiguration wifiConf)
+        static void setDNS(InetAddress dns, WifiConfiguration wifiConf)
                 throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
             Object linkProperties = getField(wifiConf, "linkProperties");
             if (linkProperties == null) return;
@@ -310,14 +286,14 @@ class DatabaseConnector extends AppCompatActivity {
             mDnses.add(dns);
         }
 
-        public static Object getField(Object obj, String name)
+        static Object getField(Object obj, String name)
                 throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field f = obj.getClass().getField(name);
             Object out = f.get(obj);
             return out;
         }
 
-        public static Object getDeclaredField(Object obj, String name)
+        static Object getDeclaredField(Object obj, String name)
                 throws SecurityException, NoSuchFieldException,
                 IllegalArgumentException, IllegalAccessException {
             Field f = obj.getClass().getDeclaredField(name);
@@ -326,7 +302,7 @@ class DatabaseConnector extends AppCompatActivity {
             return out;
         }
 
-        public static void setEnumField(Object obj, String value, String name)
+        static void setEnumField(Object obj, String value, String name)
                 throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field f = obj.getClass().getField(name);
             f.set(obj, Enum.valueOf((Class<Enum>) f.getType(), value));
