@@ -1,27 +1,18 @@
 package com.example.nzar.toyotarfid;
 
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
-
-import static android.R.string.yes;
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -114,8 +105,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected String doInBackground(Void... params) {
             try {
-               String PPE = DatabaseConnector.getPPE();
-                return PPE;
+                return DatabaseConnector.getPPE();
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
                 return null;

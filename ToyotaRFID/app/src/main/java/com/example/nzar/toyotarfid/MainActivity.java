@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private StringBuilder ID = new StringBuilder();
     private final String TAG = "MainActivity";
+    private long lastTechListUpdate = 0;
     SharedPreferences settings;
 
 
@@ -78,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {//checks for ascii delimiter
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             Log.d(TAG, badgeNumber);//log it for debugging
+
+            for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
+                if (badge.equals(Integer.getInteger(badgeNumber))) {
+                    startActivity(new Intent(this, CheckActivity.class));
+                }
+            }
 
             AsyncTask<String, Integer, Boolean> Job = new DatabaseJob(); //set our custom asynctask
             Job.execute(badgeNumber);//execute the query on a separate thread
@@ -167,6 +175,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
             }
         }
+
+       Date date = new Date();
+       long currentDate = date.getTime();
+        if (currentDate != lastTechListUpdate) {
+            AsyncTask<Void,Void,Boolean> refreshTechList = new refreshTechList();
+            refreshTechList.execute();
+        }
+
     }
 
     /*
@@ -238,6 +254,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private class refreshTechList extends AsyncTask<Void,Void,Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                DatabaseConnector.fillLabTech();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
 
 
 

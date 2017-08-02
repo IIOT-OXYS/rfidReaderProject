@@ -31,7 +31,7 @@ class DatabaseConnector extends AppCompatActivity {
     private static final String TAG = "DBConnectorLib"; //set Logging tag
     public static LabPerson currentLabPerson;
     public static Equipment currentEquipment;
-    public static ArrayList<Integer> LabTechBadgeNumbers;
+    public static ArrayList<Integer> LabTechBadgeNumbers = new ArrayList<>();
     /*
         These private strings are the settings used to connect the database, they all have public
         setters to make sure they can be over-written, but can never be read to prevent unauthorized
@@ -82,17 +82,17 @@ class DatabaseConnector extends AppCompatActivity {
 
         String dbFullUrl = generateFullUrl();
         DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
+        labPerson.Override = false;
+        labPerson.ID = badgeNumber;
+
 
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement statement = connection.createStatement();
             ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
                     + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
                     + " WHERE labperson.ID = " + badgeNumber + ";");
-            labPerson.ID = badgeNumber;
-            DatabaseConnector.setCurrentEmployee(labPerson);
             if (results.next()) {
 
-                labPerson.ID = results.getInt(1);
                 labPerson.CertID = results.getInt(2);
                 Statement statement1 = connection.createStatement();
                 ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + currentEquipment.EquipID +
@@ -104,16 +104,15 @@ class DatabaseConnector extends AppCompatActivity {
                     return true;
                 }
             } else {
-                labPerson.Authorized = true;
+                labPerson.Authorized = false;
                 setCurrentEmployee(labPerson);
                 connection.close();
                 return false;
             }
         }
-        labPerson.ID = 0;
-
         labPerson.CertID = 0;
         labPerson.Authorized = false;
+        setCurrentEmployee(labPerson);
 
         return false;
     }
@@ -124,8 +123,8 @@ class DatabaseConnector extends AppCompatActivity {
         String dbFullUrl = generateFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
-                    "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID, OverrideBadgeID)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             int logID = generateUniqueID();
 
             String session = UUID.randomUUID().toString();
@@ -134,9 +133,10 @@ class DatabaseConnector extends AppCompatActivity {
             preparedStatement.setTimestamp(2, currentLabPerson.Authorized ? logIn : logtime);
             preparedStatement.setString(3, session);
             preparedStatement.setTimestamp(4, currentLabPerson.Authorized ? logtime : null);
-            preparedStatement.setBoolean(5, currentLabPerson.Authorized);
+            preparedStatement.setBoolean(5, !currentLabPerson.Authorized);
             preparedStatement.setInt(6, currentLabPerson.ID);
             preparedStatement.setInt(7, currentEquipment.EquipID);
+            preparedStatement.setBoolean(8, currentLabPerson.Override);
             preparedStatement.executeUpdate();
 
             connection.close();
@@ -232,6 +232,7 @@ class DatabaseConnector extends AppCompatActivity {
         int ID;
         int CertID;
         boolean Authorized;
+        boolean Override;
     }
 
     private static class Equipment {
