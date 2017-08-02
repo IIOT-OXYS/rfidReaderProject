@@ -139,6 +139,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private synchronized void runSetup(SharedPreferences settings) {
+        if (!settings.getBoolean("hasNetworkConfig", false)) {
+            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
+            setNetworkJob.execute();
+            try {
+                if (setNetworkJob.get())
+                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        DatabaseConnector.setSettings(settings);
+        DatabaseConnector.setCurrentEquipment();
+
+
+        if (!settings.getBoolean("hasEquipmentData", false)) {
+            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
+            setEquipment.execute();
+            try {
+                if (setEquipment.get())
+                    settings.edit().putBoolean("hasEquipmentData", true).apply();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     /*
     DatabaseJob:
     This is an implementation of the AsyncTask class, used to perform tasks on alternate threads.
@@ -178,35 +208,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private synchronized void runSetup(SharedPreferences settings) {
-        if (!settings.getBoolean("hasNetworkConfig", false)) {
-            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
-            setNetworkJob.execute();
-            try {
-                if (setNetworkJob.get())
-                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        DatabaseConnector.setSettings(settings);
-        DatabaseConnector.setCurrentEquipment();
-
-
-        if (!settings.getBoolean("hasEquipmentData", false)) {
-            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
-            setEquipment.execute();
-            try {
-                if (setEquipment.get())
-                    settings.edit().putBoolean("hasEquipmentData", true).apply();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private class setupNetwork extends AsyncTask<Void, Void, Boolean> {
         @Override
