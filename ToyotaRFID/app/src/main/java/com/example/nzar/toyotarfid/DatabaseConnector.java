@@ -82,7 +82,6 @@ class DatabaseConnector extends AppCompatActivity {
 
         String dbFullUrl = generateFullUrl();
         DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-        labPerson.Override = false;
         labPerson.ID = badgeNumber;
 
 
@@ -136,7 +135,7 @@ class DatabaseConnector extends AppCompatActivity {
             preparedStatement.setBoolean(5, !currentLabPerson.Authorized);
             preparedStatement.setInt(6, currentLabPerson.ID);
             preparedStatement.setInt(7, currentEquipment.EquipID);
-            preparedStatement.setBoolean(8, currentLabPerson.Override);
+            preparedStatement.setInt(8, currentLabPerson.Override);
             preparedStatement.executeUpdate();
 
             connection.close();
@@ -232,7 +231,7 @@ class DatabaseConnector extends AppCompatActivity {
         int ID;
         int CertID;
         boolean Authorized;
-        boolean Override;
+        int Override;
     }
 
     private static class Equipment {

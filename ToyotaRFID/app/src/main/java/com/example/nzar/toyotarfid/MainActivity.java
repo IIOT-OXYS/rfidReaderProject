@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
                 if (badge.equals(badgeNumber)) {
                     DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-                    labPerson.Override = true;
+                    labPerson.Override = badge;
                     labPerson.ID = badge;
                     labPerson.CertID = 1;
                     labPerson.Authorized = true;

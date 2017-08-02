@@ -102,8 +102,17 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
+                 Integer badgeNumber = Integer.parseInt(ID.toString().trim());
                 //we store the active ID in the database connector and check if they are the same
-                if (ID.toString().trim().equals(String.valueOf(DatabaseConnector.currentLabPerson.ID))) {
+                boolean TechOverride = false;
+                for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
+                    if (badge.equals(badgeNumber)) {
+                        DatabaseConnector.currentLabPerson.Override = badgeNumber;
+                        TechOverride = true;
+                        break;
+                    }
+                }
+                if (badgeNumber == DatabaseConnector.currentLabPerson.ID || TechOverride) {
                     try {
                         relayDevice.write(RELAY_OFF.getBytes("ASCII"));
                         Log.d(TAG, RELAY_OFF);
