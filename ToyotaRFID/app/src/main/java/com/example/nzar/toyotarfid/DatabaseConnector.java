@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -89,6 +90,7 @@ class DatabaseConnector extends AppCompatActivity {
 
     public static LabPerson currentLabPerson;
     public static Equipment currentEquipment;
+    public static ArrayList<Integer> LabTechBadgeNumbers;
 
     static void setCurrentEquipment() {
         Equipment equip = new Equipment();
@@ -256,6 +258,19 @@ class DatabaseConnector extends AppCompatActivity {
             String PPE = res.getString(1);
             return PPE;
 
+        }
+    }
+
+    public static void fillLabTech() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
+        String dbFullUrl = getFullUrl();
+        try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT labtech.LabTech_BadgeID FROM labtech;");
+            int i = 1;
+            while (res.next()) {
+                LabTechBadgeNumbers.add(res.getInt(i));
+                i++;
+            }
         }
     }
     public static void LogDeviceActivity() {
