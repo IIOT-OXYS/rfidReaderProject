@@ -78,17 +78,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv.setText("Checking certifications. . .");
         }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {//checks for ascii delimiter
-            String badgeNumber = ID.toString().trim(); // builds the string from the string builder
-            Log.d(TAG, badgeNumber);//log it for debugging
+            Log.d(TAG, ID.toString().trim());//log ID for debugging
+            Integer badgeNumber = Integer.parseInt(ID.toString().trim()); // builds the string from the string builder
+
+            AsyncTask<Integer, Void, Boolean> Job = new runLabPersonAuthentication(); //set our custom asynctask
+            Job.execute(badgeNumber);//execute the query on a separate thread
 
             for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
-                if (badge.equals(Integer.getInteger(badgeNumber))) {
+                Log.d(TAG, "checking tech:" + String.valueOf(badge));
+                if (badgeNumber.compareTo(badge) == 0) {
+                    DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
+                    labPerson.Override = true;
+                    labPerson.ID = badge;
+                    labPerson.CertID = 1;
+                    labPerson.Authorized = true;
+                    DatabaseConnector.setCurrentEmployee(labPerson);
                     startActivity(new Intent(this, CheckActivity.class));
                 }
             }
-
-            AsyncTask<String, Integer, Boolean> Job = new DatabaseJob(); //set our custom asynctask
-            Job.execute(badgeNumber);//execute the query on a separate thread
 
             try {
                 Boolean Allowed = Job.get();
@@ -186,20 +193,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /*
-    DatabaseJob:
+    runLabPersonAuthentication:
     This is an implementation of the AsyncTask class, used to perform tasks on alternate threads.
     This implementation uses an Integer input, and provides a Boolean output.
     This allows our database interaction to take place asynchronously, such that it won't make
     the UI thread hang.
      */
-    private class DatabaseJob extends AsyncTask<String, Integer, Boolean> {
+    private class runLabPersonAuthentication extends AsyncTask<Integer, Void, Boolean> {
 
-        protected Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(Integer... params) {
             boolean AccessGranted = false;
 
-            int badgeNumber = Integer.parseInt(params[0]);
             try {
-                AccessGranted = DatabaseConnector.getEmployeeAuthorization(badgeNumber);
+                AccessGranted = DatabaseConnector.getEmployeeAuthorization(params[0]);
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

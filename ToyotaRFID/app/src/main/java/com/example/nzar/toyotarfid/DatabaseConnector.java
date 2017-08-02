@@ -29,8 +29,8 @@ import java.util.UUID;
 class DatabaseConnector extends AppCompatActivity {
 
     private static final String TAG = "DBConnectorLib"; //set Logging tag
-    public static LabPerson currentLabPerson;
-    public static Equipment currentEquipment;
+    public static LabPerson currentLabPerson = new LabPerson();
+    public static Equipment currentEquipment = new Equipment();
     public static ArrayList<Integer> LabTechBadgeNumbers = new ArrayList<>();
     /*
         These private strings are the settings used to connect the database, they all have public
@@ -59,7 +59,7 @@ class DatabaseConnector extends AppCompatActivity {
         currentEquipment = equip;
     }
 
-    private static void setCurrentEmployee(LabPerson currentEmployee) {
+     static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
     }
 
