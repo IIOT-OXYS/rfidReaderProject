@@ -57,27 +57,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time);
-        //these objects are used to iterate through the active USB devices
-        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-        //this iterates the hashmap and looks for a supported USB device
-        DatabaseConnector.setTime();
-        for (UsbDevice device : deviceList.values()) {
-            //if a compatible device is found, we ask for permission and attempt to close the relay
-            if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
-                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                manager.requestPermission(device, mPermissionIntent);
-                relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
-                try {
-                    relayDevice.write(RELAY_ON.getBytes("ASCII"));
-                    Log.d(TAG, RELAY_ON);
-                } catch (UnsupportedEncodingException | NullPointerException e) {
-                    Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
+
+        //ready the USB relay
+        setupRelay();
 
         //set up our UI elements
         chron = (Chronometer) findViewById(R.id.chronometer2);
@@ -146,6 +128,49 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /*
+  onClick:
+  simple interrupt method that detects UI interaction.
+  This is used to navigate between activities using on-screen buttons.
+  */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.Contact:
+                Intent contact = new Intent(TimeActivity.this, TechContact.class);
+                contact.putExtra("return", "TimeActivity");
+                TimeActivity.this.startActivity(contact);//go to tech screen
+                break;
+
+        }
+
+    }
+
+    private synchronized void setupRelay() {
+        //these objects are used to iterate through the active USB devices
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+        //this iterates the hashmap and looks for a supported USB device
+        DatabaseConnector.setTime();
+        for (UsbDevice device : deviceList.values()) {
+            //if a compatible device is found, we ask for permission and attempt to close the relay
+            if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
+                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                manager.requestPermission(device, mPermissionIntent);
+                relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
+                try {
+                    relayDevice.write(RELAY_ON.getBytes("ASCII"));
+                    Log.d(TAG, RELAY_ON);
+                } catch (UnsupportedEncodingException | NullPointerException e) {
+                    Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+
+    /*
     attachUsbSerial:
     Uses a library to set up a serial terminal with the relay device
      */
@@ -176,25 +201,6 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "no viable target device was found");
             return null;
         }
-    }
-
-    /*
-    onClick:
-    simple interrupt method that detects UI interaction.
-    This is used to navigate between activities using on-screen buttons.
-    */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.Contact:
-                Intent contact = new Intent(TimeActivity.this, TechContact.class);
-                contact.putExtra("return", "TimeActivity");
-                TimeActivity.this.startActivity(contact);//go to tech screen
-                break;
-
-        }
-
     }
 
     private static class DatabaseInsertLog extends AsyncTask<Void, Void, Void> {
