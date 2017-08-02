@@ -85,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Job.execute(badgeNumber);//execute the query on a separate thread
 
             for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
-                Log.d(TAG, "checking tech:" + String.valueOf(badge));
-                if (badgeNumber.compareTo(badge) == 0) {
+                if (badge.equals(badgeNumber)) {
                     DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
                     labPerson.Override = true;
                     labPerson.ID = badge;
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     labPerson.Authorized = true;
                     DatabaseConnector.setCurrentEmployee(labPerson);
                     startActivity(new Intent(this, CheckActivity.class));
+                    return super.onKeyDown(keyCode, event);
                 }
             }
 
