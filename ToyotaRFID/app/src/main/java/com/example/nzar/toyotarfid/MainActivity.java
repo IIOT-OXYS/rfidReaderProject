@@ -53,36 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
 
-
-        if (!settings.getBoolean("hasNetworkConfig", false)) {
-            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
-            setNetworkJob.execute();
-            try {
-                if (setNetworkJob.get())
-                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        DatabaseConnector.setSettings(settings);
-        DatabaseConnector.setCurrentEquipment();
-
-
-        if (!settings.getBoolean("hasEquipmentData", false)) {
-            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
-            setEquipment.execute();
-            try {
-                if (setEquipment.get())
-                    settings.edit().putBoolean("hasEquipmentData", true).apply();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
+        runSetup(settings);
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
@@ -209,6 +180,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
 
+    }
+
+    private synchronized void runSetup(SharedPreferences settings) {
+        if (!settings.getBoolean("hasNetworkConfig", false)) {
+            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
+            setNetworkJob.execute();
+            try {
+                if (setNetworkJob.get())
+                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        DatabaseConnector.setSettings(settings);
+        DatabaseConnector.setCurrentEquipment();
+
+
+        if (!settings.getBoolean("hasEquipmentData", false)) {
+            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
+            setEquipment.execute();
+            try {
+                if (setEquipment.get())
+                    settings.edit().putBoolean("hasEquipmentData", true).apply();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class setupNetwork extends AsyncTask<Void, Void, Boolean> {
