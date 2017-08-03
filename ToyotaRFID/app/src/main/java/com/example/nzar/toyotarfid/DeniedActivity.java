@@ -1,4 +1,6 @@
-//Written by Skyelar Craver and Connor Brennan 2017
+//Written by Skyelar Craver and Connor Brennan
+//OXYS Corp
+//2017
 package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
