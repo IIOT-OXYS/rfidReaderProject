@@ -1,8 +1,10 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -12,9 +14,13 @@ import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = "CzechActivity";
+    private static int PPECount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         //creating all the buttons and toggle button
         final Button yes = (Button) findViewById(R.id.Yes);
         yes.setOnClickListener(this);
+        yes.setEnabled(false);
         final Button cancel = (Button) findViewById(R.id.cancel_action);
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
@@ -40,39 +47,15 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         catch (InterruptedException | ExecutionException | NullPointerException e){
             e.printStackTrace();
         }
-        ImageButton glovesOn = (ImageButton) findViewById(R.id.gloves_on_button);
-        ImageButton earProtection = (ImageButton) findViewById(R.id.ear_protection_button);
-        ImageButton noJewelery = (ImageButton) findViewById(R.id.no_jewelery_button);
-        ImageButton faceShield = (ImageButton) findViewById(R.id.face_shield_button);
-        ImageButton longHair = (ImageButton) findViewById(R.id.long_hair_button);
-        ImageButton footWare = (ImageButton) findViewById(R.id.footware_button);
-        ImageButton respiratoryProtection = (ImageButton) findViewById(R.id.respiratory_protection_button);
-        ImageButton eyeProtection = (ImageButton) findViewById(R.id.eye_protection_button);
-        ImageButton weldingMask = (ImageButton) findViewById(R.id.welding_mask_button);
-        ImageButton protectiveClothing = (ImageButton) findViewById(R.id.protective_clothing_button);
-        glovesOn.setVisibility(View.VISIBLE);
-        earProtection.setVisibility(View.VISIBLE);
-        noJewelery.setVisibility(View.VISIBLE);
-        faceShield.setVisibility(View.VISIBLE);
-        longHair.setVisibility(View.VISIBLE);
-        footWare.setVisibility(View.VISIBLE);
-        respiratoryProtection.setVisibility(View.VISIBLE);
-        eyeProtection.setVisibility(View.VISIBLE);
-        weldingMask.setVisibility(View.VISIBLE);
-        protectiveClothing.setVisibility(View.VISIBLE);
-        //set the yes button to disabled so you have to agree
-//        yes.setEnabled(false);
-//        cancel.setEnabled(true);
-//        contact.setEnabled(true);
-        //disabled temporarily for incorporating imagebuttons
-        //TODO implement imagebuttons with query
-        /*
-        currently all imagebuttons are set to invisible.
-        There will be a query that happens at startup that determines the PPE of the device.
-        At that point those PPE buttons will be made visible, and have their onclicklisteners implemented.
-        The Yes button will then be disabled until the appropriate buttons have been checked
-         */
 
+
+        HashMap<String, ImageButton> PPEButtons = generatePPEButtons();
+        for (ImageButton PPEButton : PPEButtons.values()) {
+            PPEButton.setVisibility(View.VISIBLE);
+            PPEButton.setOnClickListener(this);
+            PPECount++;
+        }
+        PPECount--;
 
     }
 
@@ -87,19 +70,44 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 break;
             //brings you back to the main screen (employee is not following PPE guidelines)
             case R.id.cancel_action:
+                PPECount = 0;
                 Intent x = new Intent(CheckActivity.this, MainActivity.class);
                 startActivity(x);
                 break;
             //goes to the contact tech page
             case R.id.Contact:
+                PPECount = 0;
                 Intent contact = new Intent(CheckActivity.this, TechContact.class);
                 contact.putExtra("return", "CheckActivity");
                 startActivity(contact);
                 break;
             default:
+                if (findViewById(v.getId()).getVisibility() == View.VISIBLE) {
+                    v.setBackgroundColor(Color.GREEN);
+                    v.setEnabled(false);
+                    PPECount--;
+                    if (PPECount <= 0) {
+                        PPECount = 0;
+                        findViewById(R.id.Yes).setEnabled(true);
+                    }
+                }
                 break;
         }
     }
+
+    private HashMap<String, ImageButton> generatePPEButtons() {
+        HashMap<String, ImageButton> PPEButtons = new HashMap<>();
+        ConstraintLayout rootLayout = (ConstraintLayout) findViewById(R.id.check_activity_root_layout);
+        for (int i = 0; i < rootLayout.getChildCount(); i++) {
+            View child = rootLayout.getChildAt(i);
+            if (child instanceof ImageButton) {
+                ImageButton PPEButton = (ImageButton) child;
+                PPEButtons.put(PPEButton.toString().substring(PPEButton.toString().indexOf("id/") + 3, PPEButton.toString().length() - 1).trim(), PPEButton);
+            }
+        }
+        return PPEButtons;
+    }
+
     private class PPEJob extends AsyncTask< Void, Void, String> {
 
         @Override
@@ -112,6 +120,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
 }
 
 
