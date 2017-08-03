@@ -1,5 +1,4 @@
-//package name here
-
+//Written by Skyelar Craver and Connor Brennan 2017
 package com.example.nzar.toyotarfid;
 
 import android.content.SharedPreferences;
