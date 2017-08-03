@@ -34,16 +34,6 @@ their badge to prevent accidental logout
  */
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /*
-    TAG: An immutable tag used for debugging using Log methods
-    ACTION_USB_PERMISSION: immutable used to obtain permission to interact with USB devices
-    chron: object used to track elapsed time
-    ID: string builder used to capture input from the RFID reader
-    Finished: used to track the state of the togglebutton
-    relayDevice: declared here to allow class-wide manipulation
-    RELAY_ON: string that the relay device expects in order to close
-    RELAY_OFF: string that the relay device expects in order to open
-     */
     final private String TAG = "TimeActivity";
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private final String RELAY_ON = "relay on 0\r";
@@ -125,6 +115,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
                     startActivity(new Intent(this, MainActivity.class));
 
+                } else {
+                    ID.delete(0,ID.length());
                 }
 
             } else {
