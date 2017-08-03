@@ -97,7 +97,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 boolean TechOverride = false;
                 for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
                     if (badge.equals(badgeNumber)) {
-                        DatabaseConnector.currentLabPerson.Override = badgeNumber;
+                        DatabaseConnector.currentLabPerson.OverrideID = badgeNumber;
                         TechOverride = true;
                         break;
                     }

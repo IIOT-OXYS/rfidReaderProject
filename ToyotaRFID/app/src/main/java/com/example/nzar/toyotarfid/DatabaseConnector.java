@@ -135,7 +135,7 @@ class DatabaseConnector extends AppCompatActivity {
             preparedStatement.setBoolean(5, !currentLabPerson.Authorized);
             preparedStatement.setInt(6, currentLabPerson.ID);
             preparedStatement.setInt(7, currentEquipment.EquipID);
-            preparedStatement.setInt(8, currentLabPerson.Override);
+            preparedStatement.setInt(8, currentLabPerson.OverrideID);
             preparedStatement.executeUpdate();
 
             connection.close();
@@ -226,12 +226,11 @@ class DatabaseConnector extends AppCompatActivity {
         return dbFullUrl;
     }
 
-    //Employee class is to store the information about the employee gathered from the database to minimize database hits
     static class LabPerson {
         int ID;
         int CertID;
         boolean Authorized;
-        int Override;
+        int OverrideID;
     }
 
     private static class Equipment {
