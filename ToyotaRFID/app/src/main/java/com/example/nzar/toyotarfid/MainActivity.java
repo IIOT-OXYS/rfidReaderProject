@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             try {
                 DatabaseConnector.NetworkConfigurator.setIpAssignment("STATIC", wifiConf); //or "DHCP" for dynamic setting
-                DatabaseConnector.NetworkConfigurator.setIpAddress(InetAddress.getByName(settings.getString("StaticIP", "192.168.0.235")), 24, wifiConf);
+                DatabaseConnector.NetworkConfigurator.setIpAddress(InetAddress.getByName(settings.getString("static_ip", "192.168.0.235")), 24, wifiConf);
                 DatabaseConnector.NetworkConfigurator.setDNS(InetAddress.getByName("8.8.8.8"), wifiConf);
                 wifiManager.updateNetwork(wifiConf); //apply the setting
                 wifiManager.saveConfiguration(); //Save it

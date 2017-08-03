@@ -85,4 +85,17 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="tap_id_to_confirm">tap ID to confirm</string>
+    <string name="database_ip_domain">Database IP/Domain</string>
+    <string name="wireless_ssid">Wireless SSID</string>
+    <string name="database_username">Database Username</string>
+    <string name="database_engine">Database Engine</string>
+    <string name="wireless_password">Wireless Password</string>
+    <string name="subnet_mask">Subnet mask</string>
+    <string name="database_name">Database Name</string>
+    <string name="static_ip">Static IP</string>
+    <string name="set">Set</string>
+    <string name="back_settings">Back</string>
+    <string name="port">Port #</string>
+    <string name="database_password">Database Password</string>
+    <string name="tilt_lab_logo">tilt lab logo</string>
 </resources>

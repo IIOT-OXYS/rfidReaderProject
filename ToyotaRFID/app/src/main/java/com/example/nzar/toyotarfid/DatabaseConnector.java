@@ -54,7 +54,7 @@ class DatabaseConnector extends AppCompatActivity {
     static void setCurrentEquipment() {
         Equipment equip = new Equipment();
         equip.EquipID = settings.getInt("EquipID", 0);
-        equip.IP = settings.getString("StaticIP", "192.168.0.235");
+        equip.IP = settings.getString("static_ip", "192.168.0.235");
         equip.PPE = settings.getInt("PPE", 0);
         currentEquipment = equip;
     }
@@ -65,12 +65,12 @@ class DatabaseConnector extends AppCompatActivity {
 
     static void setSettings(SharedPreferences settings) {
         DatabaseConnector.settings = settings;
-        DatabaseConnector.dbUrl = settings.getString("dbUrl", "192.168.0.200");
-        DatabaseConnector.dbPort = settings.getString("dbPort", "3306");
-        DatabaseConnector.dbUser = settings.getString("dbUser", "Connor");
-        DatabaseConnector.dbPasswd = settings.getString("dbPasswd", "password");
-        DatabaseConnector.dbName = settings.getString("dbName", "toyotamockupfinal");
-        DatabaseConnector.dbEngine = settings.getString("dbEngine", "mysql");
+        DatabaseConnector.dbUrl = settings.getString("db_url", "192.168.0.200");
+        DatabaseConnector.dbPort = settings.getString("db_port", "3306");
+        DatabaseConnector.dbUser = settings.getString("db_user", "Connor");
+        DatabaseConnector.dbPasswd = settings.getString("db_pw", "password");
+        DatabaseConnector.dbName = settings.getString("db_name", "toyotamockupfinal");
+        DatabaseConnector.dbEngine = settings.getString("db_engine", "mysql");
 
     }
 

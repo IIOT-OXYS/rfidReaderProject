@@ -51,6 +51,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         HashMap<String, ImageButton> PPEButtons = generatePPEButtons();
         for (ImageButton PPEButton : PPEButtons.values()) {
+            //for final implementation, there will be logic to decide if the button should be enabled
+            //based on the database query
             PPEButton.setVisibility(View.VISIBLE);
             PPEButton.setOnClickListener(this);
             PPECount++;
