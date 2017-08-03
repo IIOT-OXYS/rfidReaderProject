@@ -55,7 +55,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             PPEButton.setOnClickListener(this);
             PPECount++;
         }
-        PPECount--;
+        if (PPECount > 10) PPECount--; // bad hack because two buttons overlap
 
     }
 
