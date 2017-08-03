@@ -25,6 +25,10 @@ import java.util.UUID;
  * Created by cravers on 6/29/2017.
  */
 
+
+//The Database Connector class is where all interactions with the designated database for this project will happen
+//This class grabs the data for the equipment being used, the person who is trying to badge in, the ppe requirements
+//and is also responsible for sending the appropriate data back to the database for keeping logs
 class DatabaseConnector extends AppCompatActivity {
 
     private static final String TAG = "DBConnectorLib"; //set Logging tag
@@ -45,11 +49,29 @@ class DatabaseConnector extends AppCompatActivity {
     private static String dbEngine;
     private static java.sql.Timestamp logIn;
 
+    //class to store information on person signing in
+    static class LabPerson {
+        int ID;
+        int CertID;
+        boolean Authorized;
+        int OverrideID;
+    }
+
+    //information on the equipment is stored here
+    private static class Equipment {
+        int EquipID;
+        int PPE;
+        String IP;
+
+    }
+
+
+    //sets the log in time
     public static void setTime() {
         java.util.Date login = new java.util.Date();
         logIn = new java.sql.Timestamp(login.getTime());
     }
-
+    //sets up the current equipment that this machine in running on
     static void setCurrentEquipment() {
         Equipment equip = new Equipment();
         equip.EquipID = settings.getInt("EquipID", 0);
@@ -57,11 +79,11 @@ class DatabaseConnector extends AppCompatActivity {
         equip.PPE = settings.getInt("PPE", 0);
         currentEquipment = equip;
     }
-
+    //sets information for whoever is trying to badge in
      static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
     }
-
+    //default values for database connectivity
     static void setSettings(SharedPreferences settings) {
         DatabaseConnector.settings = settings;
         DatabaseConnector.dbUrl = settings.getString("db_url", "192.168.0.200");
@@ -115,6 +137,7 @@ class DatabaseConnector extends AppCompatActivity {
         return false;
     }
 
+    //this method inserts the data into the database
     static void insertLoginData() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         java.util.Date login = new java.util.Date();
         java.sql.Timestamp logtime = new java.sql.Timestamp(login.getTime());
@@ -141,7 +164,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
 
     }
-
+    //method to generate the unique id for lablog
     static int generateUniqueID() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         Random rand = new Random();
         int n = rand.nextInt(1999999999);
@@ -160,6 +183,7 @@ class DatabaseConnector extends AppCompatActivity {
         return n;
     }
 
+        //method to set the information for the machine that is being used
     public static void setEquipment() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
@@ -177,7 +201,7 @@ class DatabaseConnector extends AppCompatActivity {
             con.close();
         }
     }
-
+    //method to grab the ppe for the machine that is being used
     public static String getPPE() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
@@ -188,7 +212,7 @@ class DatabaseConnector extends AppCompatActivity {
 
         }
     }
-
+    //fills the ArrayList with labtech badge ids
     public static void fillLabTech() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
@@ -200,7 +224,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-
+    //generates full URL for database connectivity
     private static String generateFullUrl() throws ClassNotFoundException {
         String dbFullUrl = null;
         switch (dbEngine.toLowerCase().trim()) {
@@ -223,20 +247,6 @@ class DatabaseConnector extends AppCompatActivity {
                 throw new ClassNotFoundException();
         }
         return dbFullUrl;
-    }
-
-    static class LabPerson {
-        int ID;
-        int CertID;
-        boolean Authorized;
-        int OverrideID;
-    }
-
-    private static class Equipment {
-        int EquipID;
-        int PPE;
-        String IP;
-
     }
 
     static class NetworkConfigurator {
