@@ -27,10 +27,11 @@ import java.util.UUID;
  * Created by cravers on 6/29/2017.
  */
 
-
-//The Database Connector class is where all interactions with the designated database for this project will happen
-//This class grabs the data for the equipment being used, the person who is trying to badge in, the ppe requirements
-//and is also responsible for sending the appropriate data back to the database for keeping logs
+/*
+The Database Connector class is where all interactions with the designated database for this project will happen
+This class grabs the data for the equipment being used, the person who is trying to badge in, the ppe requirements
+and is also responsible for sending the appropriate data back to the database for keeping logs
+*/
 class DatabaseConnector extends AppCompatActivity {
 
     private static final String TAG = "DBConnectorLib"; //set Logging tag
