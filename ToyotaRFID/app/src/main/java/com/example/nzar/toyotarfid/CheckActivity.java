@@ -5,6 +5,7 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.HashMap;
-
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,15 +48,20 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         requirements.setText(PPE);
 
+        PPECount = 0;
+
         HashMap<String, ImageButton> PPEButtons = generatePPEButtons();
-        for (ImageButton PPEButton : PPEButtons.values()) {
+        for (String PPEButton : PPEButtons.keySet()) {
             //for final implementation, there will be logic to decide if the button should be enabled
             //based on the database query
-            PPEButton.setVisibility(View.VISIBLE);
-            PPEButton.setOnClickListener(this);
-            PPECount++;
+            if (DatabaseConnector.PPEList.contains(PPEButton.replace('_',' ').substring(0,PPEButton.length() - 7))) {
+                PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
+                PPEButtons.get(PPEButton).setOnClickListener(this);
+                PPECount++;
+            }
         }
         if (PPECount > 10) PPECount--; // bad hack because two buttons overlap
+        if (PPECount <= 0) yes.setEnabled(true);
 
     }
 
