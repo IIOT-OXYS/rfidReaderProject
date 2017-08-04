@@ -37,16 +37,19 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
-        AsyncTask<Void, Void, String> setPPE = new CheckActivity.PPEJob();
+        AsyncTask<Void, Void, Void> setPPE = new CheckActivity.PPEJob();
         setPPE.execute();
+        TextView requirements = (TextView) findViewById(R.id.PPERequirements);
+        String PPE = "";
         try {
-            String PPE = setPPE.get();
-            TextView requirements = (TextView) findViewById(R.id.PPERequirements);
-            requirements.setText(PPE);
-        } catch (InterruptedException | ExecutionException | NullPointerException e) {
+            for (int i = 0; i < DatabaseConnector.PPEList.size(); i++){
+                PPE += DatabaseConnector.PPEList.get(i) + " ";
+            }
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
+        requirements.setText(PPE);
 
         HashMap<String, ImageButton> PPEButtons = generatePPEButtons();
         for (ImageButton PPEButton : PPEButtons.values()) {
@@ -109,16 +112,16 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         return PPEButtons;
     }
 
-    private class PPEJob extends AsyncTask<Void, Void, String> {
+    private class PPEJob extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             try {
-                return DatabaseConnector.getPPE();
+                DatabaseConnector.setPPEList();
             } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
-                return null;
             }
+            return null;
         }
     }
 
