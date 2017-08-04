@@ -39,6 +39,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static ArrayList<Integer> LabTechBadgeNumbers = new ArrayList<>();
     public static SparseArray<String> LabPersonEmailList = new SparseArray<>();
     public static ArrayList<String> PPEList = new ArrayList<>();
+    public  static ArrayList<Integer> CertIDs = new ArrayList<>();
     static SharedPreferences settings;
     private static String dbUrl;
     private static String dbPort;
@@ -51,7 +52,6 @@ class DatabaseConnector extends AppCompatActivity {
     //class to store information on person signing in
     static class LabPerson {
         int ID;
-        int CertID;
         boolean Authorized;
         int OverrideID;
     }
@@ -59,7 +59,7 @@ class DatabaseConnector extends AppCompatActivity {
     //information on the equipment is stored here
     private static class Equipment {
         int EquipID;
-        int PPE;
+        int LMSCertID;
         String IP;
 
     }
@@ -80,7 +80,7 @@ class DatabaseConnector extends AppCompatActivity {
         Equipment equip = new Equipment();
         equip.EquipID = settings.getInt("EquipID", 0);
         equip.IP = settings.getString("static_ip", "192.168.0.235");
-        equip.PPE = settings.getInt("PPE", 0);
+        equip.LMSCertID = settings.getInt("LMSCertID", 0);
         currentEquipment = equip;
     }
 
@@ -110,11 +110,12 @@ class DatabaseConnector extends AppCompatActivity {
         String dbFullUrl = generateFullUrl();
         DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
         labPerson.ID = badgeNumber;
+        CertIDs.clear();
 
         try {
             LabTechBadgeNumbers.get(badgeNumber);
         } catch (Exception e) {
-            labPerson.CertID = 0;
+            CertIDs.clear();
             labPerson.Authorized = false;
             setCurrentEmployee(labPerson);
             Log.d(TAG, "user " + String.valueOf(badgeNumber) + " not in database");
@@ -124,20 +125,20 @@ class DatabaseConnector extends AppCompatActivity {
 
             try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
                 Statement statement = connection.createStatement();
-                ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
+                ResultSet results = statement.executeQuery("SELECT personcert.LMSCertID FROM labperson"
                         + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
                         + " WHERE labperson.Email = " + LabTechBadgeNumbers.get(badgeNumber) +";");
                 if (results.next()) {
-
-                    labPerson.CertID = results.getInt(2);
-                    Statement statement1 = connection.createStatement();
-                    ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + currentEquipment.EquipID +
-                            " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
-                    if (results1.next()) {
-                        labPerson.Authorized = true;
-                        setCurrentEmployee(labPerson);
-                        connection.close();
-                        return true;
+                    do {
+                        CertIDs.add(results.getInt(1));
+                    }
+                    while(results.next());
+                    for (int i = 0; i < CertIDs.size(); i++){
+                        if(CertIDs.get(i) == currentEquipment.LMSCertID){
+                            labPerson.Authorized = true;
+                            setCurrentEmployee(labPerson);
+                            return true;
+                        }
                     }
                 } else {
                     labPerson.Authorized = false;
@@ -147,7 +148,7 @@ class DatabaseConnector extends AppCompatActivity {
                 }
 
         }
-        labPerson.CertID = 0;
+        CertIDs.clear();
         labPerson.Authorized = false;
         setCurrentEmployee(labPerson);
 
@@ -182,13 +183,14 @@ class DatabaseConnector extends AppCompatActivity {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement stmt = con.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentppe.PPEID FROM equipment"
+            ResultSet res = stmt.executeQuery("SELECT equipment.EquipmentID, equipmentcerts.LMSCertID FROM equipment"
                     + " JOIN equipmentppe ON equipment.EquipmentID = equipmentppe.EquipmentID"
+                    + " JOIN equipmentcerts ON equipment.EquipmentID = equipmentcerts.EquipmentID"
                     + " WHERE equipment.IPAddress = " + "\"" + currentEquipment.IP + "\"" + ";");
             res.next();
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("EquipID", res.getInt(1));
-            editor.putInt("PPE", res.getInt(2));
+            editor.putInt("LMSCertID", res.getInt(2));
             editor.apply();
             DatabaseConnector.setCurrentEquipment();
 
