@@ -38,6 +38,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static Equipment currentEquipment = new Equipment();
     public static ArrayList<Integer> LabTechBadgeNumbers = new ArrayList<>();
     public static SparseArray<String> LabPersonEmailList = new SparseArray<>();
+    public static ArrayList<String> PPEList = new ArrayList<>();
     static SharedPreferences settings;
     private static String dbUrl;
     private static String dbPort;
@@ -46,6 +47,23 @@ class DatabaseConnector extends AppCompatActivity {
     private static String dbName;
     private static String dbEngine;
     private static java.sql.Timestamp logIn;
+
+    //class to store information on person signing in
+    static class LabPerson {
+        int ID;
+        int CertID;
+        boolean Authorized;
+        int OverrideID;
+    }
+
+    //information on the equipment is stored here
+    private static class Equipment {
+        int EquipID;
+        int PPE;
+        String IP;
+
+    }
+
 
     //sets the log in time
     public static void setTime() {
@@ -179,14 +197,16 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     //method to grab the ppe for the machine that is being used
-    public static String getPPE() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
+    public static void setPPEList() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement stmt = con.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT ppe.PPE FROM ppe WHERE ppe.PPEID = " + currentEquipment.PPE + ";");
-            res.next();
-            return res.getString(1);
-
+            ResultSet res = stmt.executeQuery("SELECT ppe.PPE FROM ppe JOIN equipmentppe" +
+                    " ON ppe.PPEID = equipmentppe.PPEID  WHERE equipmentppe.EquipmentID = " + currentEquipment.EquipID + ";");
+            while (res.next()){
+                PPEList.add(res.getString(1));
+            }
+            con.close();
         }
     }
 
@@ -240,22 +260,6 @@ class DatabaseConnector extends AppCompatActivity {
                 throw new ClassNotFoundException();
         }
         return dbFullUrl;
-    }
-
-    //class to store information on person signing in
-    static class LabPerson {
-        int ID;
-        int CertID;
-        boolean Authorized;
-        int OverrideID;
-    }
-
-    //information on the equipment is stored here
-    private static class Equipment {
-        int EquipID;
-        int PPE;
-        String IP;
-
     }
 
     static class NetworkConfigurator {
