@@ -5,7 +5,6 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +13,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,17 +27,17 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_check);
 
         //creating all the buttons and toggle button
-        final Button yes = (Button) findViewById(R.id.Yes);
+        final Button yes = ( Button ) findViewById(R.id.Yes);
         yes.setOnClickListener(this);
         yes.setEnabled(false);
-        final Button cancel = (Button) findViewById(R.id.cancel_action);
+        final Button cancel = ( Button ) findViewById(R.id.cancel_action);
         cancel.setOnClickListener(this);
-        final Button contact = (Button) findViewById(R.id.Contact);
+        final Button contact = ( Button ) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
-        TextView requirements = (TextView) findViewById(R.id.PPERequirements);
+        TextView requirements = ( TextView ) findViewById(R.id.PPERequirements);
         String PPE = "";
         try {
-            for (int i = 0; i < DatabaseConnector.PPEList.size(); i++){
+            for (int i = 0; i < DatabaseConnector.PPEList.size(); i++) {
                 PPE += DatabaseConnector.PPEList.get(i) + " ";
             }
         } catch (NullPointerException e) {
@@ -97,13 +94,14 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    //method for generating the ImageButtons used to continue to the TimeActivity
     private HashMap<String, ImageButton> generatePPEButtons() {
         HashMap<String, ImageButton> PPEButtons = new HashMap<>();
-        ConstraintLayout rootLayout = (ConstraintLayout) findViewById(R.id.check_activity_root_layout);
+        ConstraintLayout rootLayout = ( ConstraintLayout ) findViewById(R.id.check_activity_root_layout);
         for (int i = 0; i < rootLayout.getChildCount(); i++) {
             View child = rootLayout.getChildAt(i);
             if (child instanceof ImageButton) {
-                ImageButton PPEButton = (ImageButton) child;
+                ImageButton PPEButton = ( ImageButton ) child;
                 PPEButtons.put(PPEButton.toString().substring(PPEButton.toString().indexOf("id/") + 3, PPEButton.toString().length() - 1).trim(), PPEButton);
             }
         }
