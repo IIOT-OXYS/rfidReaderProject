@@ -36,15 +36,14 @@ is allowed to use the attached device.
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = "MainActivity";
+    SharedPreferences settings;
     /*
     ID: a string builder that gets the keystrokes from the RFID reader to be parsed and queried
     TAG: the debug tag used in Log statements
      */
     private StringBuilder ID = new StringBuilder();
-    private final String TAG = "MainActivity";
-    private long lastTechListUpdate = 0;
-    SharedPreferences settings;
-
+    private long lastListUpdate = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (ID != null) {
             ID.delete(0, ID.length());
         }
+
+
 
     }
 
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
                 if (badge.equals(badgeNumber)) {
+                    Job.cancel(true);
                     DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
                     labPerson.OverrideID = badge;
                     labPerson.ID = badge;
@@ -186,11 +188,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-       Date date = new Date();
-       long currentDate = date.getTime();
-        if (currentDate != lastTechListUpdate) {
-            AsyncTask<Void,Void,Boolean> refreshTechList = new refreshTechList();
+        Date date = new Date();
+        long currentDate = date.getTime();
+        if (currentDate != lastListUpdate) {
+            AsyncTask<Void, Void, Boolean> refreshTechList = new refreshTechList();
             refreshTechList.execute();
+            AsyncTask<Void,Void,Void> refreshUserList = new fetchADSyncData();
+            refreshUserList.execute();
         }
 
     }
@@ -263,11 +267,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private class refreshTechList extends AsyncTask<Void,Void,Boolean> {
+    private class refreshTechList extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                DatabaseConnector.fillLabTech();
+                DatabaseConnector.fetchLabTechList();
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -276,6 +280,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private class fetchADSyncData extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                DatabaseConnector.fetchLabPersonEmailList();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
 
 }

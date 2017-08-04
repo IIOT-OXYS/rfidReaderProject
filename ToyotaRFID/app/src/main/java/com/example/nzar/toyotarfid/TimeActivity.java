@@ -37,13 +37,13 @@ their badge to prevent accidental logout
  */
 public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static boolean Finished;
     final private String TAG = "TimeActivity";
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private final String RELAY_ON = "relay on 0\r";
     private final String RELAY_OFF = "relay off 0\r";
     private Chronometer chron;
     private StringBuilder ID = new StringBuilder();
-    private static boolean Finished;
     private UsbSerialDevice relayDevice;
 
     @Override
@@ -95,7 +95,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
-                 Integer badgeNumber = Integer.parseInt(ID.toString().trim());
+                Integer badgeNumber = Integer.parseInt(ID.toString().trim());
                 //we store the active ID in the database connector and check if they are the same
                 boolean TechOverride = false;
                 for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
@@ -119,7 +119,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(this, MainActivity.class));
 
                 } else {
-                    ID.delete(0,ID.length());
+                    ID.delete(0, ID.length());
                 }
 
             } else {

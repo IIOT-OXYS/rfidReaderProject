@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -20,8 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by cravers on 6/29/2017.
@@ -38,11 +37,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static LabPerson currentLabPerson = new LabPerson();
     public static Equipment currentEquipment = new Equipment();
     public static ArrayList<Integer> LabTechBadgeNumbers = new ArrayList<>();
-    /*
-        These private strings are the settings used to connect the database, they all have public
-        setters to make sure they can be over-written, but can never be read to prevent unauthorized
-        database access.
-     */
+    public static SparseArray<String> LabPersonEmailList = new SparseArray<>();
     static SharedPreferences settings;
     private static String dbUrl;
     private static String dbPort;
@@ -52,28 +47,16 @@ class DatabaseConnector extends AppCompatActivity {
     private static String dbEngine;
     private static java.sql.Timestamp logIn;
 
-    //class to store information on person signing in
-    static class LabPerson {
-        int ID;
-        int CertID;
-        boolean Authorized;
-        int OverrideID;
-    }
-
-    //information on the equipment is stored here
-    private static class Equipment {
-        int EquipID;
-        int PPE;
-        String IP;
-
-    }
-
-
     //sets the log in time
     public static void setTime() {
         java.util.Date login = new java.util.Date();
         logIn = new java.sql.Timestamp(login.getTime());
     }
+
+    public static SparseArray<String> getLabPersonEmailList() {
+        return LabPersonEmailList;
+    }
+
     //sets up the current equipment that this machine in running on
     static void setCurrentEquipment() {
         Equipment equip = new Equipment();
@@ -82,10 +65,12 @@ class DatabaseConnector extends AppCompatActivity {
         equip.PPE = settings.getInt("PPE", 0);
         currentEquipment = equip;
     }
+
     //sets information for whoever is trying to badge in
-     static void setCurrentEmployee(LabPerson currentEmployee) {
+    static void setCurrentEmployee(LabPerson currentEmployee) {
         DatabaseConnector.currentLabPerson = currentEmployee;
     }
+
     //default values for database connectivity
     static void setSettings(SharedPreferences settings) {
         DatabaseConnector.settings = settings;
@@ -108,30 +93,41 @@ class DatabaseConnector extends AppCompatActivity {
         DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
         labPerson.ID = badgeNumber;
 
+        try {
+            LabTechBadgeNumbers.get(badgeNumber);
+        } catch (Exception e) {
+            labPerson.CertID = 0;
+            labPerson.Authorized = false;
+            setCurrentEmployee(labPerson);
+            Log.d(TAG, "user " + String.valueOf(badgeNumber) + " not in database");
 
-        try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
-            Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
-                    + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
-                    + " WHERE labperson.ID = " + badgeNumber + ";");
-            if (results.next()) {
+            return false;
+        }
 
-                labPerson.CertID = results.getInt(2);
-                Statement statement1 = connection.createStatement();
-                ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + currentEquipment.EquipID +
-                        " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
-                if (results1.next()) {
-                    labPerson.Authorized = true;
+            try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+                Statement statement = connection.createStatement();
+                ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
+                        + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
+                        + " WHERE labperson.Email = " + LabTechBadgeNumbers.get(badgeNumber) +";");
+                if (results.next()) {
+
+                    labPerson.CertID = results.getInt(2);
+                    Statement statement1 = connection.createStatement();
+                    ResultSet results1 = statement1.executeQuery("SELECT * FROM equipmentcerts WHERE equipmentcerts.EquipmentID = " + currentEquipment.EquipID +
+                            " AND equipmentcerts.LMSCertID = " + labPerson.CertID + ";");
+                    if (results1.next()) {
+                        labPerson.Authorized = true;
+                        setCurrentEmployee(labPerson);
+                        connection.close();
+                        return true;
+                    }
+                } else {
+                    labPerson.Authorized = false;
                     setCurrentEmployee(labPerson);
                     connection.close();
-                    return true;
+                    return false;
                 }
-            } else {
-                labPerson.Authorized = false;
-                setCurrentEmployee(labPerson);
-                connection.close();
-                return false;
-            }
+
         }
         labPerson.CertID = 0;
         labPerson.Authorized = false;
@@ -147,46 +143,23 @@ class DatabaseConnector extends AppCompatActivity {
         String dbFullUrl = generateFullUrl();
         try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO lablog " +
-                    "(LogID, Login, SessionID, Logout, AccessDenied, BadgeID, EquipmentID, OverrideBadgeID)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            int logID = generateUniqueID();
+                    "(Login, Logout, AccessDenied, BadgeID, EquipmentID, OverrideBadgeID)" +
+                    "VALUES (?, ?, ?, ?, ?, ?)");
 
-            String session = UUID.randomUUID().toString();
-            session = session.replaceAll("-", "");
-            preparedStatement.setInt(1, logID);
-            preparedStatement.setTimestamp(2, currentLabPerson.Authorized ? logIn : logtime);
-            preparedStatement.setString(3, session);
-            preparedStatement.setTimestamp(4, currentLabPerson.Authorized ? logtime : null);
-            preparedStatement.setBoolean(5, !currentLabPerson.Authorized);
-            preparedStatement.setInt(6, currentLabPerson.ID);
-            preparedStatement.setInt(7, currentEquipment.EquipID);
-            preparedStatement.setInt(8, currentLabPerson.OverrideID);
+            preparedStatement.setTimestamp(1, currentLabPerson.Authorized ? logIn : logtime);
+            preparedStatement.setTimestamp(2, logtime);
+            preparedStatement.setBoolean(3, !currentLabPerson.Authorized);
+            preparedStatement.setInt(4, currentLabPerson.ID);
+            preparedStatement.setInt(5, currentEquipment.EquipID);
+            preparedStatement.setInt(6, currentLabPerson.OverrideID);
             preparedStatement.executeUpdate();
 
             connection.close();
         }
 
     }
-    //method to generate the unique id for lablog
-    static int generateUniqueID() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
-        Random rand = new Random();
-        int n = rand.nextInt(1999999999);
-        String dbFullUrl = generateFullUrl();
-        try (Connection connection = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
-            Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM lablog WHERE lablog.LogID = " + n + ";");
-            if (!results.next()) {
-                connection.close();
-                return n;
-            } else {
-                connection.close();
-                generateUniqueID();
-            }
-        }
-        return n;
-    }
 
-        //method to set the information for the machine that is being used
+    //method to set the information for the machine that is being used
     public static void setEquipment() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
@@ -204,6 +177,7 @@ class DatabaseConnector extends AppCompatActivity {
             con.close();
         }
     }
+
     //method to grab the ppe for the machine that is being used
     public static String getPPE() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
@@ -215,8 +189,9 @@ class DatabaseConnector extends AppCompatActivity {
 
         }
     }
+
     //fills the ArrayList with labtech badge ids
-    public static void fillLabTech() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
+    public static void fetchLabTechList() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
             Statement stmt = con.createStatement();
@@ -224,6 +199,19 @@ class DatabaseConnector extends AppCompatActivity {
             while (res.next()) {
                 LabTechBadgeNumbers.add(res.getInt(1));
             }
+        }
+    }
+
+    public static void fetchLabPersonEmailList() throws Exception {
+        String dbFullUrl = generateFullUrl();
+        try (Connection ADConnection = DriverManager.getConnection(dbFullUrl,dbUser,dbPasswd)) {
+            SparseArray<String> UserInfo = new SparseArray<>();
+            PreparedStatement query = ADConnection.prepareStatement("SELECT * FROM adsync.employees;");
+            ResultSet UserTable = query.executeQuery();
+            while (UserTable.next()) {
+                UserInfo.append(UserTable.getInt(3),UserTable.getString(2));
+            }
+            LabPersonEmailList = UserInfo.clone();
         }
     }
 
@@ -250,6 +238,22 @@ class DatabaseConnector extends AppCompatActivity {
                 throw new ClassNotFoundException();
         }
         return dbFullUrl;
+    }
+
+    //class to store information on person signing in
+    static class LabPerson {
+        int ID;
+        int CertID;
+        boolean Authorized;
+        int OverrideID;
+    }
+
+    //information on the equipment is stored here
+    private static class Equipment {
+        int EquipID;
+        int PPE;
+        String IP;
+
     }
 
     static class NetworkConfigurator {

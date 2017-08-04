@@ -21,8 +21,8 @@ import java.util.concurrent.ExecutionException;
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = "CzechActivity";
     private static int PPECount = 0;
+    private final String TAG = "CzechActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +39,11 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         contact.setOnClickListener(this);
         AsyncTask<Void, Void, String> setPPE = new CheckActivity.PPEJob();
         setPPE.execute();
-        try{
+        try {
             String PPE = setPPE.get();
             TextView requirements = (TextView) findViewById(R.id.PPERequirements);
             requirements.setText(PPE);
-        }
-        catch (InterruptedException | ExecutionException | NullPointerException e){
+        } catch (InterruptedException | ExecutionException | NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -110,7 +109,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         return PPEButtons;
     }
 
-    private class PPEJob extends AsyncTask< Void, Void, String> {
+    private class PPEJob extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {

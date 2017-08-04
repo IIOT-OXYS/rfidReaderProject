@@ -27,9 +27,9 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         //set up button click listeners
         AsyncTask<Void, Void, Void> insertLog = new DatabaseDeniedLog();
         insertLog.execute();
-        Button ret = ( Button ) findViewById(R.id.Return);
+        Button ret = (Button) findViewById(R.id.Return);
         ret.setOnClickListener(this);
-        Button Contact = ( Button ) findViewById(R.id.Contact);
+        Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
     }
 

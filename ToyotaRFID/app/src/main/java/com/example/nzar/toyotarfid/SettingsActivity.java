@@ -84,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         for (String key : SettingsFields.keySet()) {
             EditText value = SettingsFields.get(key);
             if (!(value.getText().toString().trim().length() == 0)) {
-                editor.putString(key, value.getText().toString() );
+                editor.putString(key, value.getText().toString());
             }
         }
         editor.apply();
