@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
-
-
     }
 
     /*
@@ -195,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             refreshTechList.execute();
             AsyncTask<Void,Void,Void> refreshUserList = new fetchADSyncData();
             refreshUserList.execute();
+            Log.d(TAG, DatabaseConnector.getLabPersonEmailList().toString());
         }
 
     }

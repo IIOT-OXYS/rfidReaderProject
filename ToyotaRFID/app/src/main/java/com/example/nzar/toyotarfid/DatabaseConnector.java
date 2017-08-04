@@ -94,7 +94,7 @@ class DatabaseConnector extends AppCompatActivity {
         labPerson.ID = badgeNumber;
 
         try {
-            LabTechBadgeNumbers.get(badgeNumber);
+            LabPersonEmailList.get(badgeNumber);
         } catch (Exception e) {
             labPerson.CertID = 0;
             labPerson.Authorized = false;
@@ -108,7 +108,7 @@ class DatabaseConnector extends AppCompatActivity {
                 Statement statement = connection.createStatement();
                 ResultSet results = statement.executeQuery("SELECT labperson.ID, personcert.LMSCertID FROM labperson"
                         + " JOIN personcert ON labperson.ID = personcert.LabPersonID"
-                        + " WHERE labperson.Email = " + LabTechBadgeNumbers.get(badgeNumber) +";");
+                        + " WHERE labperson.Email = " + "\"" + LabPersonEmailList.get(badgeNumber) + "\"" +";");
                 if (results.next()) {
 
                     labPerson.CertID = results.getInt(2);
@@ -194,24 +194,26 @@ class DatabaseConnector extends AppCompatActivity {
     public static void fetchLabTechList() throws SQLException, ClassNotFoundException, UnsupportedEncodingException {
         String dbFullUrl = generateFullUrl();
         try (Connection con = DriverManager.getConnection(dbFullUrl, dbUser, dbPasswd)) {
+            LabTechBadgeNumbers.clear();
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT labtech.LabTech_BadgeID FROM labtech;");
             while (res.next()) {
                 LabTechBadgeNumbers.add(res.getInt(1));
             }
+            con.close();
         }
     }
 
     public static void fetchLabPersonEmailList() throws Exception {
-        String dbFullUrl = generateFullUrl();
+       String dbFullUrl = "jdbc:mysql://" + dbUrl + ":" + dbPort + "/" + "adsync";
         try (Connection ADConnection = DriverManager.getConnection(dbFullUrl,dbUser,dbPasswd)) {
-            SparseArray<String> UserInfo = new SparseArray<>();
-            PreparedStatement query = ADConnection.prepareStatement("SELECT * FROM adsync.employees;");
-            ResultSet UserTable = query.executeQuery();
+            LabPersonEmailList.clear();
+            Statement statement = ADConnection.createStatement();
+            ResultSet UserTable = statement.executeQuery("SELECT * FROM employees;");
             while (UserTable.next()) {
-                UserInfo.append(UserTable.getInt(3),UserTable.getString(2));
+                LabPersonEmailList.append(UserTable.getInt(3),UserTable.getString(2));
             }
-            LabPersonEmailList = UserInfo.clone();
+            ADConnection.close();
         }
     }
 
