@@ -263,6 +263,7 @@ class DatabaseConnector extends AppCompatActivity {
         return dbFullUrl;
     }
 
+    @SuppressWarnings("unchecked")
     static class NetworkConfigurator {
 
         static void setIpAssignment(String assign, WifiConfiguration wifiConf)
@@ -311,8 +312,7 @@ class DatabaseConnector extends AppCompatActivity {
         static Object getField(Object obj, String name)
                 throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
             Field f = obj.getClass().getField(name);
-            Object out = f.get(obj);
-            return out;
+            return f.get(obj);
         }
 
         static Object getDeclaredField(Object obj, String name)
@@ -320,8 +320,7 @@ class DatabaseConnector extends AppCompatActivity {
                 IllegalArgumentException, IllegalAccessException {
             Field f = obj.getClass().getDeclaredField(name);
             f.setAccessible(true);
-            Object out = f.get(obj);
-            return out;
+            return f.get(obj);
         }
 
         static void setEnumField(Object obj, String value, String name)
