@@ -186,6 +186,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
                 Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
             }
+            AsyncTask<Void, Void, Void> setPPE = new PPEJob();
+            setPPE.execute();
         }
 
         Date date = new Date();
@@ -292,6 +294,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private class PPEJob extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                DatabaseConnector.setPPEList();
+            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
 }
 

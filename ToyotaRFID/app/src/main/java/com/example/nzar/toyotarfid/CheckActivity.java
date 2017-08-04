@@ -37,8 +37,6 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
-        AsyncTask<Void, Void, Void> setPPE = new CheckActivity.PPEJob();
-        setPPE.execute();
         TextView requirements = (TextView) findViewById(R.id.PPERequirements);
         String PPE = "";
         try {
@@ -110,19 +108,6 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         return PPEButtons;
-    }
-
-    private class PPEJob extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                DatabaseConnector.setPPEList();
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 
 }
