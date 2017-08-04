@@ -203,6 +203,7 @@ class DatabaseConnector extends AppCompatActivity {
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery("SELECT ppe.PPE FROM ppe JOIN equipmentppe" +
                     " ON ppe.PPEID = equipmentppe.PPEID  WHERE equipmentppe.EquipmentID = " + currentEquipment.EquipID + ";");
+            PPEList.clear();
             while (res.next()){
                 PPEList.add(res.getString(1));
             }
