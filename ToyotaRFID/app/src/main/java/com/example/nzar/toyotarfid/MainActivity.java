@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
                     labPerson.OverrideID = badge;
                     labPerson.ID = badge;
-                    labPerson.CertID = 1;
+                    DatabaseConnector.CertIDs.clear();
                     labPerson.Authorized = true;
                     DatabaseConnector.setCurrentEmployee(labPerson);
                     startActivity(new Intent(this, CheckActivity.class));
