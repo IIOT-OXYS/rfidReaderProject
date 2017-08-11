@@ -3,13 +3,8 @@
 //2017
 package com.example.nzar.toyotarfid;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,13 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /*
@@ -53,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
 
-        runSetup(settings);
+        DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
+        setupNetwork.execute(getApplicationContext());
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
@@ -79,26 +69,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView tv = (TextView) findViewById(R.id.main_activity_text);
             tv.setText("Checking certifications. . .");
         }
-        if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {//checks for ascii delimiter
+        if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             Log.d(TAG, ID.toString().trim());//log ID for debugging
-            Integer badgeNumber = Integer.parseInt(ID.toString().trim()); // builds the string from the string builder
+            String badgeNumber = ID.toString().trim(); // builds the string from the string builder
 
-            AsyncTask<Integer, Void, Boolean> Job = new runLabPersonAuthentication(); //set our custom asynctask
+            DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.execute(badgeNumber);//execute the query on a separate thread
 
-            for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
-                if (badge.equals(badgeNumber)) {
-                    Job.cancel(true);
-                    DatabaseConnector.LabPerson labPerson = new DatabaseConnector.LabPerson();
-                    labPerson.OverrideID = badge;
-                    labPerson.ID = badge;
-                    DatabaseConnector.CertIDs.clear();
-                    labPerson.Authorized = true;
-                    DatabaseConnector.setCurrentEmployee(labPerson);
-                    startActivity(new Intent(this, CheckActivity.class));
-                    return super.onKeyDown(keyCode, event);
-                }
-            }
+
 
             try {
                 Boolean Allowed = Job.get();
@@ -157,154 +135,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private synchronized void runSetup(SharedPreferences settings) {
-        if (!settings.getBoolean("hasNetworkConfig", false)) {
-            AsyncTask<Void, Void, Boolean> setNetworkJob = new setupNetwork();
-            setNetworkJob.execute();
-            try {
-                if (setNetworkJob.get())
-                    settings.edit().putBoolean("hasNetworkConfig", true).apply();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to apply network configuration", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        DatabaseConnector.setSettings(settings);
-        DatabaseConnector.setCurrentEquipment();
 
 
-        if (!settings.getBoolean("hasEquipmentData", false)) {
-            AsyncTask<Void, Void, Boolean> setEquipment = new setEquipmentData();
-            setEquipment.execute();
-            try {
-                if (setEquipment.get())
-                    settings.edit().putBoolean("hasEquipmentData", true).apply();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to get equipment type", Toast.LENGTH_SHORT).show();
-            }
-            AsyncTask<Void, Void, Void> setPPE = new PPEJob();
-            setPPE.execute();
-        }
 
-        Date date = new Date();
-        long currentDate = date.getTime();
-        if (currentDate != lastListUpdate) {
-            AsyncTask<Void, Void, Boolean> refreshTechList = new refreshTechList();
-            refreshTechList.execute();
-            AsyncTask<Void,Void,Void> refreshUserList = new fetchADSyncData();
-            refreshUserList.execute();
-            Log.d(TAG, DatabaseConnector.getLabPersonEmailList().toString());
-        }
-
-    }
-
-    /*
-    runLabPersonAuthentication:
-    This is an implementation of the AsyncTask class, used to perform tasks on alternate threads.
-    This implementation uses an Integer input, and provides a Boolean output.
-    This allows our database interaction to take place asynchronously, such that it won't make
-    the UI thread hang.
-     */
-    private class runLabPersonAuthentication extends AsyncTask<Integer, Void, Boolean> {
-
-        protected Boolean doInBackground(Integer... params) {
-            boolean AccessGranted = false;
-
-            try {
-                AccessGranted = DatabaseConnector.getEmployeeAuthorization(params[0]);
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            return AccessGranted;
-
-        }
-
-    }
-
-    private class setEquipmentData extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                DatabaseConnector.setEquipment();
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
-
-    }
-
-
-    private class setupNetwork extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            WifiConfiguration wifiConf = null;
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo connectionInfo = wifiManager.getConnectionInfo();
-            List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
-            for (WifiConfiguration conf : configuredNetworks) {
-                if (conf.networkId == connectionInfo.getNetworkId()) {
-                    wifiConf = conf;
-                    break;
-                }
-            }
-            try {
-                DatabaseConnector.NetworkConfigurator.setIpAssignment("STATIC", wifiConf); //or "DHCP" for dynamic setting
-                DatabaseConnector.NetworkConfigurator.setIpAddress(InetAddress.getByName(settings.getString("static_ip", "192.168.0.235")), 24, wifiConf);
-                DatabaseConnector.NetworkConfigurator.setDNS(InetAddress.getByName("8.8.8.8"), wifiConf);
-                wifiManager.updateNetwork(wifiConf); //apply the setting
-                wifiManager.saveConfiguration(); //Save it
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    private class refreshTechList extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                DatabaseConnector.fetchLabTechList();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-    }
-
-    private class fetchADSyncData extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                DatabaseConnector.fetchLabPersonEmailList();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    private class PPEJob extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                DatabaseConnector.setPPEList();
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 
 }
 

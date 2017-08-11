@@ -96,14 +96,19 @@ class DatabaseConnector extends AppCompatActivity {
 //    }
 
 
+
 //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
-    public class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
+    public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
+
+
 
             return false;
         }
     }
+
+
 
     public class TILTGetUserTask extends AsyncTask<Void,Void,Void> {
         @Override
@@ -112,19 +117,20 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    public class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
+    public static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
             return null;
         }
     }
 
-    public class SetNetworkConfig extends AsyncTask<Void,Void,Boolean> {
+    //take the app context, doesn't provide updates, and return a boolean
+    public static class SetNetworkConfigTask extends AsyncTask<Context,Void,Boolean> {
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(Context... params) {
 
             WifiConfiguration wifiConf = null;
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) params[0].getSystemService(Context.WIFI_SERVICE);
             WifiInfo connectionInfo = wifiManager.getConnectionInfo();
             List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
             for (WifiConfiguration conf : configuredNetworks) {
