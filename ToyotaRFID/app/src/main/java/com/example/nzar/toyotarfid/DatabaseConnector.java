@@ -9,11 +9,16 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonReader;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,10 +106,47 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
+            String sessionID = "";
+            String machineIP = "";
+            String badgeID = params[0];
+            String isLoggingOut = "";
+
+            try {
+                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Users?" +
+                        "sessionID=" + sessionID +
+                        "&machineIP=" + machineIP +
+                        "&badgeID=" + badgeID +
+                        "&isLoggingOut=" + isLoggingOut);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Authorization", "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==");
+
+                if (connection.getResponseCode() == 201) {
+                    boolean UserAuthorized = false;
+                    InputStream RawResponse = connection.getInputStream();
+                    InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
+                    JsonReader ResponseReader = new JsonReader(Response);
+
+                    while (ResponseReader.hasNext()) {
+                        //parse response
+                        UserAuthorized = true;
+                    }
+
+                    return UserAuthorized;
 
 
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return false;
+
+
+
+
+
         }
     }
 
