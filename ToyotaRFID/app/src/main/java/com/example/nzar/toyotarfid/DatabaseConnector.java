@@ -101,6 +101,22 @@ class DatabaseConnector extends AppCompatActivity {
 //    }
 
 
+    private static JsonReader TILTAPITask(URL url, String method) throws Exception {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Authorization", "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==");
+
+        if (connection.getResponseCode() == 201 || connection.getResponseCode() == 200) {
+            InputStream RawResponse = connection.getInputStream();
+            InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
+            return new JsonReader(Response);
+
+
+        } else {
+            throw new Exception();
+        }
+    }
+
 
 //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
     public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
@@ -110,6 +126,7 @@ class DatabaseConnector extends AppCompatActivity {
             String machineIP = "";
             String badgeID = params[0];
             String isLoggingOut = "";
+            boolean UserAuthorized = false;
 
             try {
                 URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Users?" +
@@ -118,25 +135,20 @@ class DatabaseConnector extends AppCompatActivity {
                         "&badgeID=" + badgeID +
                         "&isLoggingOut=" + isLoggingOut);
 
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Authorization", "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==");
 
-                if (connection.getResponseCode() == 201) {
-                    boolean UserAuthorized = false;
-                    InputStream RawResponse = connection.getInputStream();
-                    InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
-                    JsonReader ResponseReader = new JsonReader(Response);
 
-                    while (ResponseReader.hasNext()) {
-                        //parse response
-                        UserAuthorized = true;
-                    }
+                JsonReader Response = TILTAPITask(url,"POST");
+
+                while (Response.hasNext()) {
+                    UserAuthorized = true;
+                }
+
+
 
                     return UserAuthorized;
 
 
-                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -195,7 +207,6 @@ class DatabaseConnector extends AppCompatActivity {
             return true;
         }
     }
-
 
 
     @SuppressWarnings("unchecked")
