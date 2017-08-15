@@ -6,7 +6,6 @@ package com.example.nzar.toyotarfid;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TAG: the debug tag used in Log statements
      */
     private StringBuilder ID = new StringBuilder();
-    private long lastListUpdate = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             Log.d(TAG, ID.toString().trim());//log ID for debugging
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
-            DatabaseConnector.setRandomSessionID();
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.execute(badgeNumber);//execute the query on a separate thread
 
