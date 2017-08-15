@@ -8,6 +8,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 
@@ -62,6 +63,12 @@ class DatabaseConnector extends AppCompatActivity {
         String email;
         String phoneNumber;
       }
+
+      public static LabTech clearTech(LabTech temp){
+        LabTech newTemp = new LabTech();
+         return newTemp;
+
+    }
     //class to store information on person signing in
 //    static class LabPerson {
 //        int ID;
@@ -224,7 +231,8 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians");
                 JsonReader ResponseReader = TILTAPITask(url, "GET");
-
+                LabTechList.clear();
+                LabTech temp = new LabTech();
                 while (ResponseReader.hasNext()) {
                     /*
                     parse response for tech info
@@ -235,7 +243,31 @@ class DatabaseConnector extends AppCompatActivity {
                     String Email
                     String PhoneNumber
                      */
+                    String key = ResponseReader.nextName();
+                    switch (key){
+                        case ("LabTechID"):
+                            temp.LabTechID = ResponseReader.nextInt();
+                            break;
+                        case ("FirstName"):
+                            temp.firstName = ResponseReader.nextString();
+                            break;
+                        case  ("LastName"):
+                            temp.lastName = ResponseReader.nextString();
+                            break;
+                        case ("Email"):
+                            temp.email = ResponseReader.nextString();
+                            break;
+                        case ("PhoneNumber"):
+                            temp.email = ResponseReader.nextString();
+                            LabTechList.add(temp);
+                            clearTech(temp);
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
+                ResponseReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
