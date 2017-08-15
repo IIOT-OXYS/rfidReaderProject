@@ -52,7 +52,7 @@ class DatabaseConnector extends AppCompatActivity {
 //    private static String dbEngine;
 //    private static java.sql.Timestamp logIn;
       public static ArrayList<String> PPEList = new ArrayList<>();
-      public static int sessionID;
+      public static int CurrentsessionID;
     //class to store information on person signing in
 //    static class LabPerson {
 //        int ID;
@@ -133,7 +133,8 @@ class DatabaseConnector extends AppCompatActivity {
                 sessionID = params[1];
                 isLoggingOut = "true";
             } else {
-                sessionID = String.valueOf(new Random().nextInt());
+                CurrentsessionID = new Random().nextInt();
+                sessionID = String.valueOf(CurrentsessionID);
                 isLoggingOut = "false";
             }
 
