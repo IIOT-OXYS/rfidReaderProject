@@ -113,7 +113,7 @@ class DatabaseConnector extends AppCompatActivity {
 
 
         } else {
-            throw new Exception();
+            throw new Exception("bad http response ");
         }
     }
 
@@ -140,7 +140,8 @@ class DatabaseConnector extends AppCompatActivity {
                 JsonReader Response = TILTAPITask(url,"POST");
 
                 while (Response.hasNext()) {
-                    UserAuthorized = true;
+                    //parse response for PPE info
+                    //if the response is not empty, set UserAuthorized to true
                 }
 
 
@@ -164,9 +165,24 @@ class DatabaseConnector extends AppCompatActivity {
 
 
 
-    public class TILTGetUserTask extends AsyncTask<Void,Void,Void> {
+    public class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            String sessionID="";
+            String machineIP="";
+            String content = "";//content of the email message
+            try {
+                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians" +
+                        "?sessionID=" + sessionID +
+                        "&machineIP="+ machineIP +
+                        "&content="+ content);
+
+                JsonReader responseReader = TILTAPITask(url, "POST");
+                //provides no response body
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -174,6 +190,25 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            try {
+                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians");
+                JsonReader ResponseReader = TILTAPITask(url, "GET");
+
+                while (ResponseReader.hasNext()) {
+                    /*
+                    parse response for tech info
+                    each element of the array contains:
+                    int LabTechID
+                    String FirstName
+                    String LastName
+                    String Email
+                    String PhoneNumber
+                     */
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
