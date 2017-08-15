@@ -113,7 +113,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                    Job.execute(badgeNumber.toString(), String.valueOf(DatabaseConnector.CurrentsessionID));
+                    Job.execute(badgeNumber.toString(), String.valueOf(DatabaseConnector.currentSessionID));
 
                     startActivity(new Intent(this, MainActivity.class));
 
