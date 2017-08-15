@@ -25,8 +25,6 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_denied);
         //set up button click listeners
-        AsyncTask<Void, Void, Void> insertLog = new DatabaseDeniedLog();
-        insertLog.execute();
         Button ret = (Button) findViewById(R.id.Return);
         ret.setOnClickListener(this);
         Button Contact = (Button) findViewById(R.id.Contact);
@@ -50,20 +48,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private static class DatabaseDeniedLog extends AsyncTask<Void, Void, Void> {
 
-        protected Void doInBackground(Void... params) {
-
-            try {
-                DatabaseConnector.insertLoginData();
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-    }
 }
 
 
