@@ -55,9 +55,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         setupRelay();
 
         //set up our UI elements
-        chron = (Chronometer) findViewById(R.id.chronometer2);
-        final ToggleButton fin = (ToggleButton) findViewById(R.id.fin);
-        final Button Contact = (Button) findViewById(R.id.Contact);
+        chron = ( Chronometer ) findViewById(R.id.chronometer2);
+        final ToggleButton fin = ( ToggleButton ) findViewById(R.id.fin);
+        final Button Contact = ( Button ) findViewById(R.id.Contact);
         chron.start();
         Contact.setOnClickListener(this);
 
@@ -112,9 +112,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (UnsupportedEncodingException | NullPointerException e) {
                         e.printStackTrace();
                     }
-                    AsyncTask<Void, Void, Void> insertLog = new DatabaseInsertLog();
-
-                    insertLog.execute();
+                    DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+                    Job.execute(badgeNumber.toString(), String.valueOf(DatabaseConnector.CurrentsessionID));
 
                     startActivity(new Intent(this, MainActivity.class));
 
@@ -123,7 +122,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             } else {
-                char c = (char) event.getUnicodeChar();
+                char c = ( char ) event.getUnicodeChar();
                 ID.append(c);
             }
         }
@@ -152,7 +151,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     private synchronized void setupRelay() {
         //these objects are used to iterate through the active USB devices
-        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        UsbManager manager = ( UsbManager ) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         //this iterates the hashmap and looks for a supported USB device
         DatabaseConnector.setTime();
@@ -207,20 +206,6 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private static class DatabaseInsertLog extends AsyncTask<Void, Void, Void> {
-
-        protected Void doInBackground(Void... params) {
-
-            try {
-                DatabaseConnector.insertLoginData();
-            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-    }
 }
 
 
