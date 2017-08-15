@@ -52,7 +52,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_time);
 
         //ready the USB relay
-        if (DatabaseConnector.currentLabPerson.Authorized) setupRelay();
+        setupRelay();
 
         //set up our UI elements
         chron = (Chronometer) findViewById(R.id.chronometer2);
