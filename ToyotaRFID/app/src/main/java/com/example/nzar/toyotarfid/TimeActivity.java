@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +24,6 @@ import android.widget.ToggleButton;
 import com.felhr.usbserial.UsbSerialDevice;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 /*
@@ -95,7 +93,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
-                Integer badgeNumber = Integer.parseInt(ID.toString().trim());
+                String badgeNumber = ID.toString().trim();
                 //we store the active ID in the database connector and check if they are the same
                 boolean TechOverride = false;
                 for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
@@ -113,7 +111,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                    Job.execute(badgeNumber.toString(), String.valueOf(DatabaseConnector.currentSessionID));
+                    Job.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
 
                     startActivity(new Intent(this, MainActivity.class));
 
