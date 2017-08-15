@@ -20,8 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.List;
+import java.util.Random;
 
 import static com.example.nzar.toyotarfid.SettingsActivity.settings;
 
@@ -102,11 +102,7 @@ class DatabaseConnector extends AppCompatActivity {
 //
 //    }
 
-    public static void setRandomSessionID(){
-        Random rand = new Random();
-        int n = rand.nextInt(1000000000) + 1;
-        sessionID = n;
-    }
+
     private static JsonReader TILTAPITask(URL url, String method) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
@@ -131,8 +127,15 @@ class DatabaseConnector extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
             String machineIP = "";
             String badgeID = params[0];
-            String isLoggingOut = "";
+            String isLoggingOut, sessionID;
             boolean UserAuthorized = false;
+            if (params[1] != null) {
+                sessionID = params[1];
+                isLoggingOut = "true";
+            } else {
+                sessionID = String.valueOf(new Random().nextInt());
+                isLoggingOut = "false";
+            }
 
             try {
                 URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Users?" +
@@ -195,8 +198,8 @@ class DatabaseConnector extends AppCompatActivity {
                         "&machineIP="+ machineIP +
                         "&content="+ content);
 
-                JsonReader responseReader = TILTAPITask(url, "POST");
-                //provides no response body
+                TILTAPITask(url, "POST");
+
 
             } catch (Exception e) {
                 e.printStackTrace();
