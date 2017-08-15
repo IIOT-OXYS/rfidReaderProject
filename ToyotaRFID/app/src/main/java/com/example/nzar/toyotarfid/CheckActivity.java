@@ -40,7 +40,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         String PPE = "";
         try {
             for (int i = 0; i < DatabaseConnector.PPEList.size(); i++) {
-                PPE += DatabaseConnector.PPEList.get(i) + " ";
+                PPE += DatabaseConnector.PPEList.get(i) + " \n";
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
