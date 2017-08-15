@@ -51,8 +51,17 @@ class DatabaseConnector extends AppCompatActivity {
 //    private static String dbName;
 //    private static String dbEngine;
 //    private static java.sql.Timestamp logIn;
-      public static ArrayList<String> PPEList = new ArrayList<>();
-      public static int currentSessionID;
+    public static ArrayList<String> PPEList = new ArrayList<>();
+    public static ArrayList<LabTech> LabTechList = new ArrayList<>();
+    public static int currentSessionID;
+
+    public static class LabTech{
+        int LabTechID;
+        String firstName;
+        String lastName;
+        String email;
+        String phoneNumber;
+      }
     //class to store information on person signing in
 //    static class LabPerson {
 //        int ID;
