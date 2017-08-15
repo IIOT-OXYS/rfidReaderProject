@@ -71,7 +71,12 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             case R.id.tech_page_button:
-                Toast.makeText(this, "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+                try{
+                    DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
+                    TechEmail.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
 

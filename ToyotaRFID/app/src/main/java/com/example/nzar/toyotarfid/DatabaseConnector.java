@@ -178,7 +178,7 @@ class DatabaseConnector extends AppCompatActivity {
 
 
 
-    public class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
+    public static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
             String sessionID="";
