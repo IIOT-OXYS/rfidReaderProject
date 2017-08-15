@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.List;
 
 import static com.example.nzar.toyotarfid.SettingsActivity.settings;
@@ -51,6 +52,7 @@ class DatabaseConnector extends AppCompatActivity {
 //    private static String dbEngine;
 //    private static java.sql.Timestamp logIn;
       public static ArrayList<String> PPEList = new ArrayList<>();
+      public static int sessionID;
     //class to store information on person signing in
 //    static class LabPerson {
 //        int ID;
@@ -100,7 +102,11 @@ class DatabaseConnector extends AppCompatActivity {
 //
 //    }
 
-
+    public static void setRandomSessionID(){
+        Random rand = new Random();
+        int n = rand.nextInt(1000000000) + 1;
+        sessionID = n;
+    }
     private static JsonReader TILTAPITask(URL url, String method) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
@@ -123,7 +129,6 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
-            String sessionID = "";
             String machineIP = "";
             String badgeID = params[0];
             String isLoggingOut = "";
