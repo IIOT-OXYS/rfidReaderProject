@@ -50,7 +50,7 @@ class DatabaseConnector extends AppCompatActivity {
 //    private static String dbName;
 //    private static String dbEngine;
 //    private static java.sql.Timestamp logIn;
-
+      public static ArrayList<String> PPEList = new ArrayList<>();
     //class to store information on person signing in
 //    static class LabPerson {
 //        int ID;
@@ -138,15 +138,25 @@ class DatabaseConnector extends AppCompatActivity {
 
 
                 JsonReader Response = TILTAPITask(url,"POST");
-
-                while (Response.hasNext()) {
-                    //parse response for PPE info
-                    //if the response is not empty, set UserAuthorized to true
+                if(Response.hasNext()) {
+                    PPEList.clear();
+                    while (Response.hasNext()) {
+                        //parse response for PPE info
+                        //if the response is not empty, set UserAuthorized to true
+                        String key = Response.nextName();
+                        if (key.equals("PPE")) {
+                            PPEList.add(Response.nextString());
+                        } else {
+                            Response.skipValue();
+                        }
+                    }
                 }
-
-
-
+                else{
+                    UserAuthorized = false;
                     return UserAuthorized;
+                }
+                UserAuthorized = true;
+                return UserAuthorized;
 
 
 
