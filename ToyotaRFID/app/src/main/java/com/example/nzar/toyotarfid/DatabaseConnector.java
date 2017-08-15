@@ -109,6 +109,7 @@ class DatabaseConnector extends AppCompatActivity {
         if (connection.getResponseCode() == 201 || connection.getResponseCode() == 200) {
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
+            connection.disconnect();
             return new JsonReader(Response);
 
 
@@ -152,9 +153,11 @@ class DatabaseConnector extends AppCompatActivity {
                     }
                 }
                 else{
+                    Response.close();
                     UserAuthorized = false;
                     return UserAuthorized;
                 }
+                Response.close();
                 UserAuthorized = true;
                 return UserAuthorized;
 
