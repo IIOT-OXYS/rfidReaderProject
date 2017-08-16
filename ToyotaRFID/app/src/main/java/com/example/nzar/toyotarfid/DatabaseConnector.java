@@ -8,9 +8,9 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
+import android.util.JsonToken;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -144,7 +144,6 @@ class DatabaseConnector extends AppCompatActivity {
             String machineIP = "";
             String badgeID = params[0];
             String isLoggingOut, sessionID;
-            boolean UserAuthorized = false;
             if (params[1] != null) {
                 sessionID = params[1];
                 isLoggingOut = "true";
@@ -164,8 +163,15 @@ class DatabaseConnector extends AppCompatActivity {
 
 
                 JsonReader Response = TILTAPITask(url,"POST");
-                if(Response.hasNext()) {
-                    PPEList.clear();
+
+                Response.beginArray();
+                if (Response.peek() == JsonToken.NULL) {
+                    Response.close();
+                    return false;
+                }
+                PPEList.clear();
+                while(Response.hasNext()) {
+                    Response.beginObject();
                     while (Response.hasNext()) {
                         //parse response for PPE info
                         //if the response is not empty, set UserAuthorized to true
@@ -177,14 +183,9 @@ class DatabaseConnector extends AppCompatActivity {
                         }
                     }
                 }
-                else{
-                    Response.close();
-                    UserAuthorized = false;
-                    return UserAuthorized;
-                }
+
                 Response.close();
-                UserAuthorized = true;
-                return UserAuthorized;
+                return true;
 
 
 
@@ -228,45 +229,44 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            LabTechList.clear();
             try {
                 URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians");
                 JsonReader ResponseReader = TILTAPITask(url, "GET");
                 LabTechList.clear();
-                LabTech temp = new LabTech();
+                ResponseReader.beginArray();
                 while (ResponseReader.hasNext()) {
-                    /*
-                    parse response for tech info
-                    each element of the array contains:
-                    int LabTechID
-                    String FirstName
-                    String LastName
-                    String Email
-                    String PhoneNumber
-                     */
-                    String key = ResponseReader.nextName();
-                    switch (key){
-                        case ("LabTechID"):
-                            temp.LabTechID = ResponseReader.nextInt();
-                            break;
-                        case ("FirstName"):
-                            temp.firstName = ResponseReader.nextString();
-                            break;
-                        case  ("LastName"):
-                            temp.lastName = ResponseReader.nextString();
-                            break;
-                        case ("Email"):
-                            temp.email = ResponseReader.nextString();
-                            break;
-                        case ("PhoneNumber"):
-                            temp.email = ResponseReader.nextString();
-                            LabTechList.add(temp);
-                            clearTech(temp);
-                            break;
-                        default:
-                            break;
+                    LabTech temp = new LabTech();
+
+                    ResponseReader.beginObject();
+                    while (ResponseReader.hasNext()) {
+                        String key = ResponseReader.nextName();
+                        switch (key) {
+                            case ("LabTechID"):
+                                temp.LabTechID = ResponseReader.nextInt();
+                                break;
+                            case ("FirstName"):
+                                temp.firstName = ResponseReader.nextString();
+                                break;
+                            case ("LastName"):
+                                temp.lastName = ResponseReader.nextString();
+                                break;
+                            case ("Email"):
+                                temp.email = ResponseReader.nextString();
+                                break;
+                            case ("PhoneNumber"):
+                                temp.email = ResponseReader.nextString();
+                                clearTech(temp);
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    LabTechList.add(temp);
+                    ResponseReader.endObject();
 
                 }
+                ResponseReader.endArray();
                 ResponseReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
