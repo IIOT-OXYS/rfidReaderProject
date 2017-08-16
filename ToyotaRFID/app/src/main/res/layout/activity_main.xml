@@ -46,7 +46,7 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="450dp"
         android:layout_height="175dp"
-        android:background="@android:color/holo_orange_dark"
+        android:background="?android:attr/colorMultiSelectHighlight"
         android:filterTouchesWhenObscured="false"
         android:text="@string/tech"
         android:textSize="50sp"
