@@ -93,7 +93,7 @@
         android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/PPE6" />
 
     <Button
@@ -164,10 +164,11 @@
         android:scaleType="fitCenter"
         android:visibility="invisible"
         app:srcCompat="@drawable/protective_clothing"
-        tools:layout_editor_absoluteY="306dp"
         android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="24dp" />
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_action" />
 
     <Button
         android:id="@+id/PPE7"
