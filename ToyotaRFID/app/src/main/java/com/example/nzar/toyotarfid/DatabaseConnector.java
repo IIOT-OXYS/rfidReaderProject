@@ -55,6 +55,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static ArrayList<String> PPEList = new ArrayList<>();
     public static ArrayList<LabTech> LabTechList = new ArrayList<>();
     public static int currentSessionID;
+    public static String currentBadgeID = "";
 
     public static class LabTech{
         int LabTechID;
@@ -150,6 +151,7 @@ class DatabaseConnector extends AppCompatActivity {
             } else {
                 currentSessionID = new Random().nextInt();
                 sessionID = String.valueOf(currentSessionID);
+                currentBadgeID = badgeID;
                 isLoggingOut = "false";
             }
 
