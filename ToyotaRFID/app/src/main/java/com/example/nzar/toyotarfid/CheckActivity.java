@@ -5,17 +5,13 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
@@ -29,14 +25,14 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_check);
 
         //creating all the buttons and toggle button
-        final Button yes = ( Button ) findViewById(R.id.Yes);
+        final Button yes = (Button) findViewById(R.id.Yes);
         yes.setOnClickListener(this);
         yes.setEnabled(false);
-        final Button cancel = ( Button ) findViewById(R.id.cancel_action);
+        final Button cancel = (Button) findViewById(R.id.cancel_action);
         cancel.setOnClickListener(this);
-        final Button contact = ( Button ) findViewById(R.id.Contact);
+        final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
-        TextView requirements = ( TextView ) findViewById(R.id.PPERequirements);
+        TextView requirements = (TextView) findViewById(R.id.PPERequirements);
         String PPE = "";
         try {
             for (int i = 0; i < DatabaseConnector.PPEList.size(); i++) {
@@ -48,20 +44,16 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         requirements.setText(PPE);
 
-        PPECount = 0;
 
-        HashMap<String, ImageButton> PPEButtons = generatePPEButtons();
+        HashMap<String, Button> PPEButtons = generatePPEButtons();
         for (String PPEButton : PPEButtons.keySet()) {
             //for final implementation, there will be logic to decide if the button should be enabled
             //based on the database query
-            if (DatabaseConnector.PPEList.contains(PPEButton.replace('_',' ').substring(0,PPEButton.length() - 7))) {
-                PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
-                PPEButtons.get(PPEButton).setOnClickListener(this);
-                PPECount++;
-            }
+            PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
+            PPEButtons.get(PPEButton).setText(PPEButton);
+            PPEButtons.get(PPEButton).setOnClickListener(this);
         }
-        if (PPECount > 10) PPECount--; // bad hack because two buttons overlap
-        if (PPECount <= 0) yes.setEnabled(true);
+        if (PPEButtons.size() <= 0) yes.setEnabled(true);
 
     }
 
@@ -102,15 +94,25 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //method for generating the ImageButtons used to continue to the TimeActivity
-    private HashMap<String, ImageButton> generatePPEButtons() {
-        HashMap<String, ImageButton> PPEButtons = new HashMap<>();
-        ConstraintLayout rootLayout = ( ConstraintLayout ) findViewById(R.id.check_activity_root_layout);
-        for (int i = 0; i < rootLayout.getChildCount(); i++) {
-            View child = rootLayout.getChildAt(i);
-            if (child instanceof ImageButton) {
-                ImageButton PPEButton = ( ImageButton ) child;
-                PPEButtons.put(PPEButton.toString().substring(PPEButton.toString().indexOf("id/") + 3, PPEButton.toString().length() - 1).trim(), PPEButton);
-            }
+    private HashMap<String, Button> generatePPEButtons() {
+        HashMap<String, Button> PPEButtons = new HashMap<>();
+        ArrayList<Button> buttons = new ArrayList<>();
+
+        buttons.add((Button) findViewById(R.id.PPE1));
+        buttons.add((Button) findViewById(R.id.PPE2));
+        buttons.add((Button) findViewById(R.id.PPE3));
+        buttons.add((Button) findViewById(R.id.PPE4));
+        buttons.add((Button) findViewById(R.id.PPE5));
+        buttons.add((Button) findViewById(R.id.PPE6));
+        buttons.add((Button) findViewById(R.id.PPE7));
+        buttons.add((Button) findViewById(R.id.PPE8));
+        buttons.add((Button) findViewById(R.id.PPE9));
+        buttons.add((Button) findViewById(R.id.PPE10));
+
+        int i = 0;
+        for (String PPE : DatabaseConnector.PPEList) {
+            PPEButtons.put(PPE, buttons.get(i));
+            i++;
         }
         return PPEButtons;
     }
