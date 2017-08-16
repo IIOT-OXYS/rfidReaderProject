@@ -76,6 +76,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     TechEmail.execute();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
