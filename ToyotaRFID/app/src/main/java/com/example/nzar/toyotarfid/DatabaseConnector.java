@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.util.JsonToken;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -127,7 +126,6 @@ class DatabaseConnector extends AppCompatActivity {
 
 
             } catch (Exception e) {
-                Toast.makeText(null, "There was a problem checking certifications", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
             return false;
@@ -157,7 +155,6 @@ class DatabaseConnector extends AppCompatActivity {
 
 
             } catch (Exception e) {
-                Toast.makeText(null, "There was a problem reaching the active tech", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
             return null;
@@ -206,7 +203,6 @@ class DatabaseConnector extends AppCompatActivity {
                 ResponseReader.endArray();
                 ResponseReader.close();
             } catch (Exception e) {
-                Toast.makeText(null, "There was an issue attempting to update the active tech list", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
@@ -237,7 +233,6 @@ class DatabaseConnector extends AppCompatActivity {
                 wifiManager.saveConfiguration(); //Save it
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(null, "Couldn't set network configuration", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
