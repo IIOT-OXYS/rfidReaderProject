@@ -96,14 +96,13 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 String badgeNumber = ID.toString().trim();
                 //we store the active ID in the database connector and check if they are the same
                 boolean TechOverride = false;
-                for (Integer badge : DatabaseConnector.LabTechBadgeNumbers) {
-                    if (badge.equals(badgeNumber)) {
-                        DatabaseConnector.currentLabPerson.OverrideID = badgeNumber;
+                for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
+                    if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
                         TechOverride = true;
                         break;
                     }
                 }
-                if (badgeNumber == DatabaseConnector.currentLabPerson.ID || TechOverride) {
+                if (badgeNumber.equals(DatabaseConnector.currentBadgeID) || TechOverride) {
                     try {
                         relayDevice.write(RELAY_OFF.getBytes("ASCII"));
                         Log.d(TAG, RELAY_OFF);
@@ -152,7 +151,6 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         UsbManager manager = ( UsbManager ) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         //this iterates the hashmap and looks for a supported USB device
-        DatabaseConnector.setTime();
         for (UsbDevice device : deviceList.values()) {
             //if a compatible device is found, we ask for permission and attempt to close the relay
             if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
