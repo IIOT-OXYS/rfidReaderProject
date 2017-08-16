@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
-        
+
         try {
              new DatabaseConnector.TILTGetTechTask().execute();
         } catch (Exception e) {
-            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
         }
 
         DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
             }
 
 
