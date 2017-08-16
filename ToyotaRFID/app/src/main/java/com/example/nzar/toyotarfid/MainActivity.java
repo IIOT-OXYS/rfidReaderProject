@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
@@ -40,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
+        
+        try {
+             new DatabaseConnector.TILTGetTechTask().execute();
+        } catch (Exception e) {
+            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_SHORT).show();
+        }
 
         DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
         setupNetwork.execute(getApplicationContext());
