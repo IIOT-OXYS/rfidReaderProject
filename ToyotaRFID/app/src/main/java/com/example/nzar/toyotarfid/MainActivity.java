@@ -45,11 +45,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
              new DatabaseConnector.TILTGetTechTask().execute();
         } catch (Exception e) {
+            e.printStackTrace();
+            DatabaseConnector.LabTech errorTech = new DatabaseConnector.LabTech();
+            errorTech.firstName = "Error";
+            errorTech.LabTechID = 0;
+            errorTech.lastName = "Error";
+            errorTech.email = "Error";
+            DatabaseConnector.LabTechList.add(errorTech);
             Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
         }
 
-        DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
-        setupNetwork.execute(getApplicationContext());
+//        try {
+//            DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
+//            setupNetwork.execute(getApplicationContext());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Toast.makeText(this, "There was a problem configuring the network", Toast.LENGTH_SHORT).show();
+//        }
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);

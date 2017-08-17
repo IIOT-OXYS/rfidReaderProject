@@ -28,17 +28,17 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="946dp"
-        android:layout_height="82dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="0dp"
         android:contentDescription=""
-        android:src="@drawable/toyota_template"
-        tools:ignore="ContentDescription"
+        android:src="@drawable/tiltlab_banner"
+        app:layout_constraintBottom_toTopOf="@+id/main_activity_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/main_activity_text" />
+        tools:ignore="ContentDescription" />
 
 
     <Button
@@ -63,10 +63,11 @@
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="SCAN BADGE TO START"
+        android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@android:color/white"
-        android:textSize="80sp"
 
+        android:textSize="80sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
