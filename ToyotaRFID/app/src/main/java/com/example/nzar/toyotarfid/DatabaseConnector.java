@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
-import android.util.JsonToken;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,20 +51,18 @@ class DatabaseConnector extends AppCompatActivity {
       }
 
       
-    private static JsonReader TILTAPITask(URL url, String method) throws Exception {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private static JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
         connection.setRequestMethod(method);
         connection.setRequestProperty("Authorization", "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==");
 
         if (connection.getResponseCode() == 201 || connection.getResponseCode() == 200) {
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
-            connection.disconnect();
             return new JsonReader(Response);
 
 
         } else if(connection.getResponseCode() == 400) {
-            return new JsonReader(null);
+            return null;
         } else {
             throw new Exception("bad http response ");
         }
@@ -98,10 +95,13 @@ class DatabaseConnector extends AppCompatActivity {
                         "&badgeID=" + badgeID +
                         "&isLoggingOut=" + isLoggingOut);
 
-                JsonReader Response = TILTAPITask(url,"POST");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                if (Response.peek() == JsonToken.NULL) {
-                    Response.close();
+
+                JsonReader Response = TILTAPITask(connection,"POST");
+
+                if (Response == null) {
+                    connection.disconnect();
                     return false;
                 }
 
@@ -123,6 +123,7 @@ class DatabaseConnector extends AppCompatActivity {
                 }
 
                 Response.close();
+                connection.disconnect();
                 return true;
 
 
@@ -143,9 +144,9 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            String sessionID="";
-            String machineIP="";
-            String content = "";//content of the email message
+            String sessionID = String.valueOf(currentSessionID) ;
+            String machineIP = "123";
+            String content = "I sent the tech an Email!!";//content of the email message
             try {
                 URL url = new URL("http://" +
                         baseServerUrl +
@@ -154,12 +155,18 @@ class DatabaseConnector extends AppCompatActivity {
                         "&machineIP="+ machineIP +
                         "&content="+ content);
 
-                TILTAPITask(url, "POST");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+
+                TILTAPITask(connection, "POST");
+
+                connection.disconnect();
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             return null;
         }
     }
@@ -171,7 +178,9 @@ class DatabaseConnector extends AppCompatActivity {
                 URL url = new URL("http://" +
                         baseServerUrl +
                         "/tiltwebapi/api/Technicians");
-                JsonReader ResponseReader = TILTAPITask(url, "GET");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                JsonReader ResponseReader = TILTAPITask(connection, "GET");
                 LabTechList.clear();
                 ResponseReader.beginArray();
                 while (ResponseReader.hasNext()) {
