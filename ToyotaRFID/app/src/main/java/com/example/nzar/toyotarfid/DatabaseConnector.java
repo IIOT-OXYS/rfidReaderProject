@@ -164,7 +164,6 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            LabTechList.clear();
             try {
                 URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians");
                 JsonReader ResponseReader = TILTAPITask(url, "GET");
