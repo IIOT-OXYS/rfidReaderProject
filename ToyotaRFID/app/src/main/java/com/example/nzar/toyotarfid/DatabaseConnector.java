@@ -40,6 +40,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static ArrayList<String> PPEList = new ArrayList<>();
     public static ArrayList<LabTech> LabTechList = new ArrayList<>();
     public static int currentSessionID;
+    public static String baseServerUrl = "10.2.5.50";
     public static String currentBadgeID = "";
 
     public static class LabTech{
@@ -75,7 +76,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
-            String machineIP = "";
+            String machineIP = "123";
             String badgeID = params[0];
             String isLoggingOut, sessionID;
             if (params[1] != null) {
@@ -89,21 +90,23 @@ class DatabaseConnector extends AppCompatActivity {
             }
 
             try {
-                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Users?" +
+                URL url = new URL("http://" +
+                        baseServerUrl +
+                        "/tiltwebapi/api/Users?" +
                         "sessionID=" + sessionID +
                         "&machineIP=" + machineIP +
                         "&badgeID=" + badgeID +
                         "&isLoggingOut=" + isLoggingOut);
 
-
-
                 JsonReader Response = TILTAPITask(url,"POST");
 
-                Response.beginArray();
                 if (Response.peek() == JsonToken.NULL) {
                     Response.close();
                     return false;
                 }
+
+                Response.beginArray();
+
                 PPEList.clear();
                 while(Response.hasNext()) {
                     Response.beginObject();
@@ -137,8 +140,6 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-
-
     public static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -146,7 +147,9 @@ class DatabaseConnector extends AppCompatActivity {
             String machineIP="";
             String content = "";//content of the email message
             try {
-                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians" +
+                URL url = new URL("http://" +
+                        baseServerUrl +
+                        "/tiltwebapi/api/Technicians" +
                         "?sessionID=" + sessionID +
                         "&machineIP="+ machineIP +
                         "&content="+ content);
@@ -165,7 +168,9 @@ class DatabaseConnector extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                URL url = new URL("http://V01DES168.tmm.na.corp.toyota.com/tiltwebapi/api/Technicians");
+                URL url = new URL("http://" +
+                        baseServerUrl +
+                        "/tiltwebapi/api/Technicians");
                 JsonReader ResponseReader = TILTAPITask(url, "GET");
                 LabTechList.clear();
                 ResponseReader.beginArray();
