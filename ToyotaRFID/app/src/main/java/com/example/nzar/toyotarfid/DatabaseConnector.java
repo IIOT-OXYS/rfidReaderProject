@@ -121,7 +121,9 @@ class DatabaseConnector extends AppCompatActivity {
                             Response.skipValue();
                         }
                     }
+                    Response.endObject();
                 }
+                Response.endArray();
 
                 Response.close();
                 connection.disconnect();
@@ -208,6 +210,7 @@ class DatabaseConnector extends AppCompatActivity {
                                 temp.email = ResponseReader.nextString();
                                 break;
                             default:
+                                ResponseReader.skipValue();
                                 break;
                         }
                     }
