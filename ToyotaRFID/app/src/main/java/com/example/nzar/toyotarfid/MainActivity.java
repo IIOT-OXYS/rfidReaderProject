@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                ID.delete(0,ID.length());
                 Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
             }
 
