@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             try {
-                wait(10000);
                 Boolean Allowed = Job.get();
                 if (Allowed) {
                     startActivity(new Intent(this, CheckActivity.class));
