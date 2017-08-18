@@ -76,14 +76,16 @@ class DatabaseConnector extends AppCompatActivity {
             String machineIP = "123";
             String badgeID = params[0];
             String isLoggingOut, sessionID;
-            if (params[1] != null) {
+            if (params.length == 2) {
                 sessionID = params[1];
                 isLoggingOut = "true";
-            } else {
+            } else if (params.length == 1){
                 currentSessionID = new Random().nextInt();
                 sessionID = String.valueOf(currentSessionID);
                 currentBadgeID = badgeID;
                 isLoggingOut = "false";
+            } else {
+                return null;
             }
 
             try {
