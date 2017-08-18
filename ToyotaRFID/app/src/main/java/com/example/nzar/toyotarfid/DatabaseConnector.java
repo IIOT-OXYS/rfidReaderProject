@@ -42,7 +42,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static String baseServerUrl = "10.2.5.50";
     public static String currentBadgeID = "";
 
-    public static class LabTech{
+    static class LabTech{
         int LabTechID;
         String firstName;
         String lastName;
@@ -62,15 +62,17 @@ class DatabaseConnector extends AppCompatActivity {
 
 
         } else if(connection.getResponseCode() == 400) {
+            connection.disconnect();
             return null;
         } else {
+            connection.disconnect();
             throw new Exception("bad http response ");
         }
     }
 
 
 //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
-    public static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
+    static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
             String machineIP = "123";
@@ -102,11 +104,8 @@ class DatabaseConnector extends AppCompatActivity {
 
                 JsonReader Response = TILTAPITask(connection,"POST");
 
-                if (Response == null) {
-                    connection.disconnect();
-                    return false;
-                }
 
+                assert Response != null;
                 Response.beginArray();
 
                 PPEList.clear();
@@ -143,7 +142,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    public static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
+    static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
             String sessionID = String.valueOf(currentSessionID) ;
@@ -173,7 +172,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    public static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
+    static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -183,6 +182,7 @@ class DatabaseConnector extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");
+                assert ResponseReader != null;
                 LabTechList.clear();
                 ResponseReader.beginArray();
                 while (ResponseReader.hasNext()) {
@@ -257,7 +257,7 @@ class DatabaseConnector extends AppCompatActivity {
 
 
     @SuppressWarnings("unchecked")
-    static class NetworkConfigurator {
+    private static class NetworkConfigurator {
 
         static void setIpAssignment(String assign, WifiConfiguration wifiConf)
                 throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
