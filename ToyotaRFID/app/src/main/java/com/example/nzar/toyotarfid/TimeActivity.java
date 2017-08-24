@@ -11,6 +11,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,6 +42,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     private final String RELAY_ON = "relay on 0\r";
     private final String RELAY_OFF = "relay off 0\r";
     private Chronometer chron;
+    long startTime = -1;
     private StringBuilder ID = new StringBuilder();
     private UsbSerialDevice relayDevice;
 
@@ -56,7 +58,15 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         chron = ( Chronometer ) findViewById(R.id.chronometer2);
         final ToggleButton fin = ( ToggleButton ) findViewById(R.id.fin);
         final Button Contact = ( Button ) findViewById(R.id.Contact);
+        long intentTime = getIntent().getLongExtra("timeTracker", -1);
+        if (intentTime == -1) {
+            startTime = SystemClock.elapsedRealtime();
+        } else {
+            startTime = intentTime;
+        }
+        chron.setBase(startTime);
         chron.start();
+
         Contact.setOnClickListener(this);
 
         //reset the string builder
@@ -139,6 +149,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.Contact:
                 Intent contact = new Intent(TimeActivity.this, TechContact.class);
                 contact.putExtra("return", "TimeActivity");
+                contact.putExtra("timeTracker", startTime);
                 TimeActivity.this.startActivity(contact);//go to tech screen
                 break;
 
