@@ -76,13 +76,13 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                             break;
                         default:
                             startActivity(new Intent(this, MainActivity.class));
-                            Toast.makeText(this, "Something happened, contact OXYS and tell them \"contact tech got confused\".", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Something happened, contact OXYS and tell them \"contact tech got confused\".", Toast.LENGTH_LONG).show();
                             break;
                     }
                 } else {
                     Log.d(TAG, "null intent extra"); // hopefully this doesn't happen, but if it does, we're ready
                     startActivity(new Intent(this, MainActivity.class));
-                    Toast.makeText(this, "Something really bad happened, contact OXYS and tell them \"contact tech went rogue\"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Something really bad happened, contact OXYS and tell them \"contact tech went rogue\"", Toast.LENGTH_LONG).show();
 
                 }
                 break;
@@ -90,6 +90,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                 try{
                     DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
                     TechEmail.execute();
+                    Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
