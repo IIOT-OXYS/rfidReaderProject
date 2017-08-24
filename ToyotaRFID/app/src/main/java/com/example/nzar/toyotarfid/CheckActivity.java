@@ -69,6 +69,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             //brings you back to the main screen (employee is not following PPE guidelines)
             case R.id.cancel_action:
                 PPECount = 0;
+                DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+                Job.execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
                 Intent x = new Intent(CheckActivity.this, MainActivity.class);
                 startActivity(x);
                 break;
