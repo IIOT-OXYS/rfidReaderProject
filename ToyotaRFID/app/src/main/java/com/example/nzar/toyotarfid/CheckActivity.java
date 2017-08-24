@@ -40,8 +40,10 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
             PPEButtons.get(PPEButton).setText(PPEButton);
             PPEButtons.get(PPEButton).setOnClickListener(this);
+
         }
-        if (PPEButtons.size() <= 0) yes.setEnabled(true);
+        PPECount = PPEButtons.size();
+        if (PPECount <= 0) yes.setEnabled(true);
 
     }
 
