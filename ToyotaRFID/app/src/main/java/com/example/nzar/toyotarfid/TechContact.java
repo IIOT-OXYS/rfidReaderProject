@@ -32,6 +32,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         Button ping = (Button) findViewById(R.id.tech_page_button);
         ping.setOnClickListener(this);
 
+
         TextView techdetails = (TextView) findViewById(R.id.techdetails);
 
         StringBuilder labtechinfo = new StringBuilder();
@@ -63,7 +64,9 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                             startActivity(new Intent(this, MainActivity.class));
                             break;
                         case "TimeActivity":
-                            startActivity(new Intent(this, TimeActivity.class));
+                            Intent timeIntent = new Intent(this, TimeActivity.class);
+                            timeIntent.putExtra("timeTracker", getIntent().getLongExtra("timeTracker",-1));
+                            startActivity(timeIntent);
                             break;
                         case "CheckActivity":
                             startActivity(new Intent(this, CheckActivity.class));
