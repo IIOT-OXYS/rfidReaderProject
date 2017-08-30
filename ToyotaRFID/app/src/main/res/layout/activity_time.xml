@@ -27,7 +27,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:background="@android:color/darker_gray"
+        android:background="#D0D2D3"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
         android:textAlignment="center"
