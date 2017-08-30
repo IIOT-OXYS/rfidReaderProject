@@ -98,4 +98,5 @@
     <string name="port">Port #</string>
     <string name="database_password">Database Password</string>
     <string name="tilt_lab_logo">tilt lab logo</string>
+    <string name="email_me_requirements">email me requirements</string>
 </resources>
