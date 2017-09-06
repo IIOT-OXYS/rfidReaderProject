@@ -93,7 +93,7 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 URL url = new URL("http://" +
                         baseServerUrl +
-                        "/tiltwebapi/api/Users?" +
+                        "/tiltwebapi/api/users?" +
                         "sessionID=" + sessionID +
                         "&machineIP=" + machineIP +
                         "&badgeID=" + badgeID +
