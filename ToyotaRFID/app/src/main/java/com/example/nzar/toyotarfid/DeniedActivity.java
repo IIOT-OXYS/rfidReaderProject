@@ -4,14 +4,10 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 
 /*
 This activity is where the user is placed if their ID does not match the training required for the device.
@@ -25,7 +21,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_denied);
         //set up button click listeners
-        Button ret = (Button) findViewById(R.id.Return);
+        Button ret = (Button) findViewById(R.id.UnauthorizedReturnButton);
         ret.setOnClickListener(this);
         Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
@@ -35,7 +31,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         //switch to navigate based on button pressed
         switch (v.getId()) {
-            case R.id.Return:
+            case R.id.UnauthorizedReturnButton:
                 Intent main = new Intent(DeniedActivity.this, MainActivity.class);
                 DeniedActivity.this.startActivity(main);
                 break;

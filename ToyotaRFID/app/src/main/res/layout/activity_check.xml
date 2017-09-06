@@ -12,13 +12,13 @@
 
 
     <Button
-        android:id="@+id/cancel_action"
+        android:id="@+id/CheckActivityCancelButton"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:background="@android:color/darker_gray"
+        android:background="#434343"
         android:text="@string/cancel"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:textStyle="bold"
         tools:ignore="MissingConstraints,RtlHardcoded"
@@ -36,7 +36,7 @@
         android:textStyle="bold"
         tools:ignore="MissingConstraints,RtlHardcoded"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/cancel_action"
+        app:layout_constraintLeft_toRightOf="@+id/CheckActivityCancelButton"
         android:layout_marginLeft="8dp"
         app:layout_constraintRight_toLeftOf="@+id/guideline"
         android:layout_marginRight="8dp"
@@ -70,7 +70,8 @@
         android:id="@+id/textClock"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:background="@android:color/darker_gray"
+        android:background="#D0D2D3"
+        android:textColor="#434343"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
         android:textAlignment="center"
@@ -166,7 +167,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_action" />
+        app:layout_constraintBottom_toTopOf="@+id/CheckActivityCancelButton" />
 
     <Button
         android:id="@+id/PPE7"
