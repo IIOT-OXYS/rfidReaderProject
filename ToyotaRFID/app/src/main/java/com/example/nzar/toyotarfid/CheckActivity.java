@@ -30,7 +30,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         final Button yes = (Button) findViewById(R.id.Yes);
         yes.setOnClickListener(this);
         yes.setEnabled(false);
-        final Button cancel = (Button) findViewById(R.id.cancel_action);
+        final Button cancel = (Button) findViewById(R.id.CheckActivityCancelButton);
         cancel.setOnClickListener(this);
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
@@ -59,7 +59,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(i);
                 break;
             //brings you back to the main screen (employee is not following PPE guidelines)
-            case R.id.cancel_action:
+            case R.id.CheckActivityCancelButton:
                 PPECount = 0;
                 DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
                 Job.execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
