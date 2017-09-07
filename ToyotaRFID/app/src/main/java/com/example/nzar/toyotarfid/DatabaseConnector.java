@@ -4,8 +4,11 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -53,13 +56,13 @@ class DatabaseConnector extends AppCompatActivity {
         String lastName;
         String email;
         String phoneNumber;
-        Bitmap Image;
+        Drawable Image;
       }
 
     static class PPE {
         int PPEID;
         String name;
-        Bitmap Image;
+        Drawable Image;
         boolean Required;
         boolean Restricted;
     }
@@ -85,9 +88,11 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    private static Bitmap ImageParser(String jsonImage) throws UnsupportedEncodingException {
+    private static Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
         byte encodedImage[] = jsonImage.getBytes();
-        return BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
+        Drawable drawable = new BitmapDrawable(Resources.getSystem(), bitmap);
+        return drawable;
     }
 
 //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
