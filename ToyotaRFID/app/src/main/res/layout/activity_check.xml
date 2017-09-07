@@ -269,7 +269,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="192dp" />
+        tools:layout_editor_absoluteX="481dp" />
 
 </android.support.constraint.ConstraintLayout>
 

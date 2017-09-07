@@ -4,10 +4,7 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -36,16 +33,17 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         contact.setOnClickListener(this);
 
 
-        HashMap<DatabaseConnector.PPE, Button> PPEButtons = generatePPEButtons();
-        for (DatabaseConnector.PPE ppe : PPEButtons.keySet()) {
+        HashMap<String, Button> PPEButtons = generatePPEButtons();
+        for (String PPEButton : PPEButtons.keySet()) {
             //for final implementation, there will be logic to decide if the button should be enabled
             //based on the database query
-            Button ppebutton = PPEButtons.get(ppe);
-            ppebutton.setVisibility(View.VISIBLE);
-            ppebutton.setBackground(ppe.Image);
-            ppebutton.setOnClickListener(this);
+            PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
+            PPEButtons.get(PPEButton).setText(PPEButton);
+            PPEButtons.get(PPEButton).setOnClickListener(this);
+
         }
-        if (PPEButtons.size() <= 0) yes.setEnabled(true);
+        PPECount = PPEButtons.size();
+        if (PPECount <= 0) yes.setEnabled(true);
 
     }
 
@@ -88,8 +86,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //method for generating the ImageButtons used to continue to the TimeActivity
-    private HashMap<DatabaseConnector.PPE, Button> generatePPEButtons() {
-        HashMap<DatabaseConnector.PPE, Button> PPEButtons = new HashMap<>();
+    private HashMap<String, Button> generatePPEButtons() {
+        HashMap<String, Button> PPEButtons = new HashMap<>();
         ArrayList<Button> buttons = new ArrayList<>();
 
         buttons.add((Button) findViewById(R.id.PPE1));
@@ -104,11 +102,9 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         buttons.add((Button) findViewById(R.id.PPE10));
 
         int i = 0;
-        for (DatabaseConnector.PPE PPE : DatabaseConnector.PPEList) {
-            if (PPE.Required) {
-                PPEButtons.put(PPE, buttons.get(i));
-                i++;
-            }
+        for (String PPE : DatabaseConnector.PPEList) {
+            PPEButtons.put(PPE, buttons.get(i));
+            i++;
         }
         return PPEButtons;
     }
