@@ -115,8 +115,10 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         int i = 0;
         for (DatabaseConnector.PPE PPE : DatabaseConnector.PPEList) {
-            PPEButtons.put(PPE, buttons.get(i));
-            i++;
+            if (PPE.Required) {
+                PPEButtons.put(PPE, buttons.get(i));
+                i++;
+            }
         }
         return PPEButtons;
     }
