@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /*
@@ -33,17 +32,6 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         ping.setOnClickListener(this);
 
 
-        TextView techdetails = (TextView) findViewById(R.id.techdetails);
-
-        StringBuilder labtechinfo = new StringBuilder();
-
-        for (DatabaseConnector.LabTech tech : DatabaseConnector.LabTechList) {
-            labtechinfo.append(tech.firstName)
-                    .append(" ")
-                    .append(tech.lastName)
-                    .append("\n");
-        }
-        techdetails.setText(labtechinfo.toString());
     }
 
     @Override
