@@ -45,19 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
 
-        try {
-             new DatabaseConnector.TILTGetTechTask().execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-            DatabaseConnector.LabTech errorTech = new DatabaseConnector.LabTech();
-            errorTech.firstName = "Error";
-            errorTech.LabTechID = 0;
-            errorTech.lastName = "Error";
-            errorTech.email = "Error";
-            DatabaseConnector.LabTechList.add(errorTech);
-            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
-        }
-
 //        try {
 //            DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
 //            setupNetwork.execute(getApplicationContext());

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /*
@@ -30,6 +32,30 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         back.setOnClickListener(this);
         Button ping = (Button) findViewById(R.id.tech_page_button);
         ping.setOnClickListener(this);
+
+        try {
+            new DatabaseConnector.TILTGetTechTask().execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            DatabaseConnector.LabTech errorTech = new DatabaseConnector.LabTech();
+            errorTech.firstName = "Error";
+            errorTech.LabTechID = 0;
+            errorTech.lastName = "Error";
+            errorTech.email = "Error";
+            DatabaseConnector.LabTechList.add(errorTech);
+            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
+        } finally {
+            DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
+            TextView name = (TextView) findViewById(R.id.LabTechName);
+            TextView email = (TextView) findViewById(R.id.LabTechEmail);
+            TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
+            ImageView image = (ImageView) findViewById(R.id.LabTechImage);
+
+            name.setText(tech.firstName + " " + tech.lastName);
+            email.setText(tech.email);
+            phone.setText(tech.phoneNumber);
+
+        }
 
 
     }
