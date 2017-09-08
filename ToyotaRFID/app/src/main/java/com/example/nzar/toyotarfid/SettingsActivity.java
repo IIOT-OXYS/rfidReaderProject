@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
 /*
 SettingsActivity:
 This class is intended to allow system administrators to set many key parameters to work with their systems.
@@ -30,6 +32,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         setContentView(R.layout.activity_settings);
         settings.registerOnSharedPreferenceChangeListener(this);
 

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
 /*
 This activity is where the user is placed if their ID does not match the training required for the device.
 If the users ID is not found in the database, they will also land there.
@@ -19,6 +21,8 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         setContentView(R.layout.activity_denied);
         //set up button click listeners
         Button ret = (Button) findViewById(R.id.UnauthorizedReturnButton);
