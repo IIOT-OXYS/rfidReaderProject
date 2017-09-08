@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,13 +35,14 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         contact.setOnClickListener(this);
 
 
-        HashMap<String, Button> PPEButtons = generatePPEButtons();
-        for (String PPEButton : PPEButtons.keySet()) {
+        HashMap<DatabaseConnector.PPE, Button> PPEButtons = generatePPEButtons();
+        for (DatabaseConnector.PPE ppe : PPEButtons.keySet()) {
             //for final implementation, there will be logic to decide if the button should be enabled
             //based on the database query
-            PPEButtons.get(PPEButton).setVisibility(View.VISIBLE);
-            PPEButtons.get(PPEButton).setText(PPEButton);
-            PPEButtons.get(PPEButton).setOnClickListener(this);
+            Button PPEButton = PPEButtons.get(ppe);
+            PPEButton.setVisibility(View.VISIBLE);
+            PPEButton.setBackground(ppe.Image);
+            PPEButton.setOnClickListener(this);
 
         }
         PPECount = PPEButtons.size();
@@ -86,8 +89,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //method for generating the ImageButtons used to continue to the TimeActivity
-    private HashMap<String, Button> generatePPEButtons() {
-        HashMap<String, Button> PPEButtons = new HashMap<>();
+    private HashMap<DatabaseConnector.PPE, Button> generatePPEButtons() {
+        HashMap<DatabaseConnector.PPE, Button> PPEButtons = new HashMap<>();
         ArrayList<Button> buttons = new ArrayList<>();
 
         buttons.add((Button) findViewById(R.id.PPE1));
@@ -102,8 +105,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         buttons.add((Button) findViewById(R.id.PPE10));
 
         int i = 0;
-        for (String PPE : DatabaseConnector.PPEList) {
-            PPEButtons.put(PPE, buttons.get(i));
+        for (DatabaseConnector.PPE ppe : DatabaseConnector.PPEList) {
+            PPEButtons.put(ppe, buttons.get(i));
             i++;
         }
         return PPEButtons;

@@ -54,6 +54,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
             name.setText(tech.firstName + " " + tech.lastName);
             email.setText(tech.email);
             phone.setText(tech.phoneNumber);
+            image.setBackground(tech.Image);
 
         }
 
