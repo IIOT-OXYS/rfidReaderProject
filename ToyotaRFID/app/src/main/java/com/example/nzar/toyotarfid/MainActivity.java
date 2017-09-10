@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             char c = (char) event.getUnicodeChar();
             ID.append(c);
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 
     /*

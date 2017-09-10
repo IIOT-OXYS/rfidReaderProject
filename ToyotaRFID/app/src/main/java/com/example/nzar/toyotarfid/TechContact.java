@@ -37,24 +37,20 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
             new DatabaseConnector.TILTGetTechTask().execute();
         } catch (Exception e) {
             e.printStackTrace();
-            DatabaseConnector.LabTech errorTech = new DatabaseConnector.LabTech();
-            errorTech.firstName = "Error";
-            errorTech.LabTechID = 0;
-            errorTech.lastName = "Error";
-            errorTech.email = "Error";
-            DatabaseConnector.LabTechList.add(errorTech);
             Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
         } finally {
-            DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
-            TextView name = (TextView) findViewById(R.id.LabTechName);
-            TextView email = (TextView) findViewById(R.id.LabTechEmail);
-            TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
-            ImageView image = (ImageView) findViewById(R.id.LabTechImage);
+            if (!DatabaseConnector.LabTechList.isEmpty()) {
+                DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
+                TextView name = (TextView) findViewById(R.id.LabTechName);
+                TextView email = (TextView) findViewById(R.id.LabTechEmail);
+                TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
+                ImageView image = (ImageView) findViewById(R.id.LabTechImage);
 
-            name.setText(tech.firstName + " " + tech.lastName);
-            email.setText(tech.email);
-            phone.setText(tech.phoneNumber);
-            image.setBackground(tech.Image);
+                name.setText(tech.firstName + " " + tech.lastName);
+                email.setText(tech.email);
+                phone.setText(tech.phoneNumber);
+                image.setBackground(tech.Image);
+            }
 
         }
 
