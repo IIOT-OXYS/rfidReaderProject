@@ -39,14 +39,14 @@
         tools:ignore="MissingConstraints,RtlHardcoded"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintRight_toRightOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/Contact"
+        app:layout_constraintRight_toRightOf="@+id/Contact"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="11dp"
-        app:layout_constraintLeft_toLeftOf="@+id/button" />
+        app:layout_constraintLeft_toLeftOf="@+id/Contact" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/Contact"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="400dp"
         android:layout_height="0dp"
@@ -92,7 +92,7 @@
         android:layout_marginTop="6dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button" />
+        app:layout_constraintTop_toTopOf="@+id/Contact" />
 
     <TextView
         android:id="@+id/textView4"
