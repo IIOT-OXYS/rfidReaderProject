@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -44,14 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
-
-//        try {
-//            DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
-//            setupNetwork.execute(getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Toast.makeText(this, "There was a problem configuring the network", Toast.LENGTH_SHORT).show();
-//        }
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
@@ -110,20 +103,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     This is used to detect a secret four-finger tap gesture to navigate to the settings.
     This is done to allow administrators access to robust settings, while restricting access to users.
      */
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//        if (event.getPointerCount() == 4) {
-//            SettingsActivity.setSettings(settings);
-//            this.startActivity(new Intent(this, SettingsActivity.class));
-//            return super.onTouchEvent(event);
-//
-//        } else {
-//            return super.onTouchEvent(event);
-//        }
-//
-//
-//    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getPointerCount() == 4) {
+            SettingsActivity.setSettings(settings);
+            this.startActivity(new Intent(this, SettingsActivity.class));
+            return super.onTouchEvent(event);
+
+        } else {
+            return super.onTouchEvent(event);
+        }
+
+
+    }
 
     /*
     onClick:

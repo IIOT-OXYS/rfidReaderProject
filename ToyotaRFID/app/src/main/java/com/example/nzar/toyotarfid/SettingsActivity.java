@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         //setup UI elements for interaction
         View Focus = getCurrentFocus();
         Button setButton = (Button) findViewById(R.id.set_button);
-        Button BackButton = (Button) findViewById(R.id.back_button);
+        Button BackButton = (Button) findViewById(R.id.SettingsCancelButton);
 
         setButton.setOnClickListener(this);
         BackButton.setOnClickListener(this);
@@ -60,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_button:
+            case R.id.SettingsCancelButton:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.set_button:

@@ -6,7 +6,6 @@ package com.example.nzar.toyotarfid;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
@@ -106,10 +105,27 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 String badgeNumber = ID.toString().trim();
                 //we store the active ID in the database connector and check if they are the same
                 boolean TechOverride = false;
-                for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
-                    if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
-                        TechOverride = true;
-                        break;
+
+                try {
+                    new DatabaseConnector.TILTGetTechTask().execute();
+                    if (!DatabaseConnector.LabTechList.isEmpty()) {
+                        for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
+                            if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
+                                TechOverride = true;
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (!DatabaseConnector.LabTechList.isEmpty()) {
+                    for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
+                        if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
+                            TechOverride = true;
+                            break;
+                        }
                     }
                 }
                 if (badgeNumber.equals(DatabaseConnector.currentBadgeID) || TechOverride) {
