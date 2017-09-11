@@ -76,11 +76,10 @@
     <Button
         android:id="@+id/Contact"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
         android:layout_width="234dp"
         android:layout_height="112dp"
-        android:layout_marginRight="24dp"
         android:background="#E55125"
         android:filterTouchesWhenObscured="false"
         android:text="@string/tech"
@@ -88,8 +87,11 @@
         android:textStyle="bold"
         android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/textClock"
         tools:ignore="MissingConstraints,RtlHardcoded"
-        android:layout_marginEnd="24dp" />
+        android:layout_marginBottom="0dp"
+        app:layout_constraintRight_toLeftOf="@+id/textClock"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/fin"
+        android:layout_marginLeft="8dp" />
 
 </android.support.constraint.ConstraintLayout>

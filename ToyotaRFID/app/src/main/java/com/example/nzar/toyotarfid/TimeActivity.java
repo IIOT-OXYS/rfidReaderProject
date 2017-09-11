@@ -77,15 +77,11 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         ID.delete(0, ID.length());
 
         //set disabled color to togglebutton
-        fin.setBackgroundColor(Color.CYAN);
         Finished = false;
         fin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {//user wants to log out
-                    fin.setBackgroundColor(Color.GREEN);
-                } else {//user is still working
-                    fin.setBackgroundColor(Color.CYAN);
+                if (!isChecked) {//user wants to log out
                     ID.delete(0, ID.length());
                 }
                 //track the state of the toggle button for other methods

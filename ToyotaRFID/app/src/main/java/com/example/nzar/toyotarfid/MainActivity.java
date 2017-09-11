@@ -83,10 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.execute(badgeNumber);//execute the query on a separate thread
 
-
-
-
-
             try {
                 Boolean Allowed = Job.get();
                 if (Allowed) {
