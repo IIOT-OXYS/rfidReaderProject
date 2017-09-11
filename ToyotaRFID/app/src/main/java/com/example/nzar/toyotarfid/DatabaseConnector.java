@@ -116,8 +116,8 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 URL url = new URL("http://" +
                         baseServerUrl +
-                        "/tiltwebapi/api/users?" +
-                        "sessionID=" + sessionID +
+                        "/tiltwebapi/api/users/" +
+                        "?sessionID=" + sessionID +
                         "&machineIP=" + machineIP +
                         "&badgeID=" + badgeID +
                         "&isLoggingOut=" + isLoggingOut);
@@ -248,7 +248,7 @@ class DatabaseConnector extends AppCompatActivity {
                             case ("PhoneNumber"):
                                 temp.phoneNumber = ResponseReader.nextString();
                                 break;
-                            case "Image":
+                            case "Photo":
                                 temp.Image = ImageParser(ResponseReader.nextString());
                             default:
                                 ResponseReader.skipValue();
