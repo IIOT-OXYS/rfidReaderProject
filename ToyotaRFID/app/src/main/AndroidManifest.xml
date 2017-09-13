@@ -26,7 +26,8 @@
         <activity android:name=".TimeActivity" />
         <activity android:name=".DeniedActivity" />
         <activity android:name=".TechContact" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SecondaryBadgeActivity"></activity>
     </application>
 
 </manifest>

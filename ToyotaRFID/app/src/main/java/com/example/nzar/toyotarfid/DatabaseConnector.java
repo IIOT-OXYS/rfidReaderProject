@@ -10,29 +10,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.JsonReader;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import static com.example.nzar.toyotarfid.SettingsActivity.settings;
 
 /**
  * Created by cravers on 6/29/2017.
@@ -52,7 +41,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static String baseServerUrl = "10.2.5.50";
     public static String currentBadgeID = "";
 
-    static class LabTech{
+    static class LabTech {
         int LabTechID;
         String firstName;
         String lastName;
