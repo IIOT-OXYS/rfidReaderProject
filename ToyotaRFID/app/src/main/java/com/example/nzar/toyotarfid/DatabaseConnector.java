@@ -4,6 +4,7 @@
 package com.example.nzar.toyotarfid;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,6 +48,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static ArrayList<PPE> PPEList = new ArrayList<>();
     public static ArrayList<LabTech> LabTechList = new ArrayList<>();
     public static int currentSessionID;
+    public static String machineID;
     public static String baseServerUrl = "10.2.5.50";
     public static String currentBadgeID = "";
 
@@ -65,6 +67,13 @@ class DatabaseConnector extends AppCompatActivity {
         Drawable Image;
         boolean Required;
         boolean Restricted;
+    }
+
+    public static boolean BindPreferences(SharedPreferences prefs) {
+        machineID = prefs.getString("machineID", null);
+        baseServerUrl = prefs.getString("baseServerUrl", null);
+
+        return (machineID == null || baseServerUrl == null);
     }
 
 
@@ -98,7 +107,6 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
-            String machineIP = "123";
             String badgeID = params[0];
             String isLoggingOut, sessionID;
             if (params.length == 2) {
@@ -116,9 +124,9 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 URL url = new URL("http://" +
                         baseServerUrl +
-                        "/tiltwebapi/api/users/" +
+                        "/tiltwebapi/api/Users" +
                         "?sessionID=" + sessionID +
-                        "&machineIP=" + machineIP +
+                        "&machineIP=" + machineID +
                         "&badgeID=" + badgeID +
                         "&isLoggingOut=" + isLoggingOut);
 
@@ -160,6 +168,7 @@ class DatabaseConnector extends AppCompatActivity {
                                 break;
                         }
                     }
+                    PPEList.add(ppe);
                     Response.endObject();
                 }
                 Response.endArray();
@@ -187,14 +196,13 @@ class DatabaseConnector extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             String sessionID = String.valueOf(currentSessionID) ;
-            String machineIP = "123";
             String content = "I sent the tech an Email!!";//content of the email message
             try {
                 URL url = new URL("http://" +
                         baseServerUrl +
                         "/tiltwebapi/api/Technicians" +
                         "?sessionID=" + sessionID +
-                        "&machineIP="+ machineIP +
+                        "&machineIP=" + machineID +
                         "&content="+ content);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();

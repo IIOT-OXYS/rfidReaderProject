@@ -45,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getPreferences(0);
 
+        if (DatabaseConnector.BindPreferences(settings)) {
+            Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
+        }
+
 //        try {
 //            DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
 //            setupNetwork.execute(getApplicationContext());
