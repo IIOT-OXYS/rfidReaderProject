@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
 /*
 TechContact:
 This class provides contact information about how to contact the working technician.
@@ -26,6 +28,9 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_tech_contact);
         //setup UI elements for interaction
         Button back = (Button) findViewById(R.id.tech_back_button);
