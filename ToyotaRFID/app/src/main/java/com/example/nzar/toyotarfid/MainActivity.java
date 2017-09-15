@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (DatabaseConnector.BindPreferences(settings)) {
             Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, SettingsActivity.class));
         }
 
 //        try {

@@ -51,4 +51,33 @@
         app:layout_constraintLeft_toRightOf="@+id/SettingsCancelButton"
         android:layout_marginStart="29dp" />
 
+    <EditText
+        android:id="@+id/machineID"
+        android:layout_width="500dp"
+        android:layout_height="80dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Machine ID"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/baseServerUrl"
+        android:layout_width="500dp"
+        android:layout_height="80dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="API Server IP/URL"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/machineID"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/machineID"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/machineID"
+        app:layout_constraintHorizontal_bias="0.0" />
+
 </android.support.constraint.ConstraintLayout>
