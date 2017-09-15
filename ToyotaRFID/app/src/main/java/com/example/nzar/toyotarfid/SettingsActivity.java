@@ -25,9 +25,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     static SharedPreferences settings;
 
-    public static void setSettings(SharedPreferences settings) {
-        SettingsActivity.settings = settings;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +33,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         setContentView(R.layout.activity_settings);
-        settings.registerOnSharedPreferenceChangeListener(this);
+        settings = getSharedPreferences("ConnectivitySettings",0);
+
+            settings.registerOnSharedPreferenceChangeListener(this);
+            Button setButton = (Button) findViewById(R.id.set_button);
+            setButton.setOnClickListener(this);
+
 
         //setup UI elements for interaction
         View Focus = getCurrentFocus();
-        Button setButton = (Button) findViewById(R.id.set_button);
-        Button BackButton = (Button) findViewById(R.id.back_button);
 
-        setButton.setOnClickListener(this);
+        Button BackButton = (Button) findViewById(R.id.SettingsCancelButton);
+
+
         BackButton.setOnClickListener(this);
 
 
@@ -60,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_button:
+            case R.id.SettingsCancelButton:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.set_button:

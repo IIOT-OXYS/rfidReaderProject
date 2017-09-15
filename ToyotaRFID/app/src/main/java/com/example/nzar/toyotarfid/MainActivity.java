@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //get preferences and set network settings accordingly
-        settings = getPreferences(0);
+        settings = getSharedPreferences("ConnectivitySettings",0);
 
         if (DatabaseConnector.BindPreferences(settings)) {
             Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
@@ -114,20 +115,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     This is used to detect a secret four-finger tap gesture to navigate to the settings.
     This is done to allow administrators access to robust settings, while restricting access to users.
      */
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//        if (event.getPointerCount() == 4) {
-//            SettingsActivity.setSettings(settings);
-//            this.startActivity(new Intent(this, SettingsActivity.class));
-//            return super.onTouchEvent(event);
-//
-//        } else {
-//            return super.onTouchEvent(event);
-//        }
-//
-//
-//    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getPointerCount() == 4) {
+            this.startActivity(new Intent(this, SettingsActivity.class));
+            return super.onTouchEvent(event);
+
+        } else {
+            return super.onTouchEvent(event);
+        }
+
+
+    }
 
     /*
     onClick:
