@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //get preferences and set network settings accordingly
-        settings = getPreferences(0);
+        settings = getSharedPreferences("ConnectivitySettings",0);
 
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getPointerCount() == 4) {
-            SettingsActivity.setSettings(settings);
             this.startActivity(new Intent(this, SettingsActivity.class));
             return super.onTouchEvent(event);
 
