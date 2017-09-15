@@ -36,6 +36,8 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         //switch to navigate based on button pressed
         switch (v.getId()) {
             case R.id.UnauthorizedReturnButton:
+                new DatabaseConnector.TILTPostUserTask()
+                        .execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
                 Intent main = new Intent(DeniedActivity.this, MainActivity.class);
                 DeniedActivity.this.startActivity(main);
                 break;

@@ -117,7 +117,7 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
-                        "/tiltwebapi/api/Users" +
+                        "/tiltwebapi/api/Users",
                                 "?sessionID=" + sessionID +
                                 "&machineIP=" + machineID +
                                 "&badgeID=" + badgeID +
@@ -202,10 +202,11 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
-                        "/tiltwebapi/api/Technicians" +
+                        "/tiltwebapi/api/Technicians",
                                 "?sessionID=" + sessionID +
                                 "&machineIP=" + machineID +
-                                "&content=" + content);
+                                        "&content=" + content,
+                        null);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -233,6 +234,7 @@ class DatabaseConnector extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             URI APIConnectionUrl = null;
+
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
