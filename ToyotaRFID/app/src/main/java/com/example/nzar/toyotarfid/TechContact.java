@@ -61,6 +61,16 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
 
+            case R.id.tech_page_button:
+                try{
+                    DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
+                    TechEmail.execute();
+                    Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
+                }
+
             case R.id.tech_back_button:
                 String context = getIntent().getStringExtra("return");
         /*
@@ -97,16 +107,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
                 }
                 break;
-            case R.id.tech_page_button:
-                try{
-                    DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
-                    TechEmail.execute();
-                    Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
-                }
-                break;
+
         }
 
 
