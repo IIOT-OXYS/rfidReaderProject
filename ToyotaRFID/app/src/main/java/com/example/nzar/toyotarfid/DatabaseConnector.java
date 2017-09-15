@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -110,16 +113,23 @@ class DatabaseConnector extends AppCompatActivity {
                 return null;
             }
 
-            String APIConnectionUrl = "http://" +
-                    baseServerUrl +
-                    "/tiltwebapi/api/Users" +
-                    "?sessionID=" + sessionID +
-                    "&machineIP=" + machineID +
-                    "&badgeID=" + badgeID +
-                    "&isLoggingOut=" + isLoggingOut;
+            URI APIConnectionUrl = null;
+            try {
+                APIConnectionUrl = new URI("http",
+                        baseServerUrl,
+                        "/tiltwebapi/api/Users" +
+                                "?sessionID=" + sessionID +
+                                "&machineIP=" + machineID +
+                                "&badgeID=" + badgeID +
+                                "&isLoggingOut=" + isLoggingOut);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
             try {
-                URL url = new URL(APIConnectionUrl);
+
+                assert APIConnectionUrl != null;
+                URL url = APIConnectionUrl.toURL();
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -188,14 +198,20 @@ class DatabaseConnector extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             String sessionID = String.valueOf(currentSessionID) ;
             String content = "I sent the tech an Email!!";//content of the email message
-            String APIConnectionUrl = "http://" +
-                    baseServerUrl +
-                    "/tiltwebapi/api/Technicians" +
-                    "?sessionID=" + sessionID +
-                    "&machineIP=" + machineID +
-                    "&content="+ content;
+            URI APIConnectionUrl = null;
             try {
-                URL url = new URL(APIConnectionUrl);
+                APIConnectionUrl = new URI("http",
+                        baseServerUrl,
+                        "/tiltwebapi/api/Technicians" +
+                                "?sessionID=" + sessionID +
+                                "&machineIP=" + machineID +
+                                "&content=" + content);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            try {
+                assert APIConnectionUrl != null;
+                URL url = APIConnectionUrl.toURL();
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -216,11 +232,17 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            String APIConnectionUrl = "http://" +
-                    baseServerUrl +
-                    "/tiltwebapi/api/Technicians";
+            URI APIConnectionUrl = null;
             try {
-                URL url = new URL(APIConnectionUrl);
+                APIConnectionUrl = new URI("http",
+                        baseServerUrl,
+                        "/tiltwebapi/api/Technicians");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            try {
+                assert APIConnectionUrl != null;
+                URL url = APIConnectionUrl.toURL();
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");

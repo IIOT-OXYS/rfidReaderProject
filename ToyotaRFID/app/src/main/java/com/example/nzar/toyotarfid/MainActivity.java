@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
 
+
         //resets the string builder used to parse the input from the RFID reader.
         if (ID != null) {
             ID.delete(0, ID.length());
