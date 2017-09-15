@@ -85,14 +85,15 @@
         android:id="@+id/PPE1"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:elevation="0dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        android:layout_marginLeft="24dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/PPE6" />
+        app:layout_constraintBottom_toTopOf="@+id/PPE6"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/PPE2"
