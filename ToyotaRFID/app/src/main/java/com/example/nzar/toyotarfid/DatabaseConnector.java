@@ -3,7 +3,6 @@
 //2017
 package com.example.nzar.toyotarfid;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -96,6 +95,7 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
+
             String badgeID = params[0];
             String isLoggingOut, sessionID;
             if (params.length == 2) {
@@ -110,14 +110,16 @@ class DatabaseConnector extends AppCompatActivity {
                 return null;
             }
 
+            String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/tiltwebapi/api/Users" +
+                    "?sessionID=" + sessionID +
+                    "&machineIP=" + machineID +
+                    "&badgeID=" + badgeID +
+                    "&isLoggingOut=" + isLoggingOut;
+
             try {
-                URL url = new URL("http://" +
-                        baseServerUrl +
-                        "/tiltwebapi/api/Users" +
-                        "?sessionID=" + sessionID +
-                        "&machineIP=" + machineID +
-                        "&badgeID=" + badgeID +
-                        "&isLoggingOut=" + isLoggingOut);
+                URL url = new URL(APIConnectionUrl);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -186,13 +188,14 @@ class DatabaseConnector extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             String sessionID = String.valueOf(currentSessionID) ;
             String content = "I sent the tech an Email!!";//content of the email message
+            String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/tiltwebapi/api/Technicians" +
+                    "?sessionID=" + sessionID +
+                    "&machineIP=" + machineID +
+                    "&content="+ content;
             try {
-                URL url = new URL("http://" +
-                        baseServerUrl +
-                        "/tiltwebapi/api/Technicians" +
-                        "?sessionID=" + sessionID +
-                        "&machineIP=" + machineID +
-                        "&content="+ content);
+                URL url = new URL(APIConnectionUrl);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -213,10 +216,11 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/tiltwebapi/api/Technicians";
             try {
-                URL url = new URL("http://" +
-                        baseServerUrl +
-                        "/tiltwebapi/api/Technicians");
+                URL url = new URL(APIConnectionUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");
