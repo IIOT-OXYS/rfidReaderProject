@@ -44,8 +44,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         View Focus = getCurrentFocus();
 
         Button BackButton = (Button) findViewById(R.id.SettingsCancelButton);
-
-
+        Button UpdateButton = (Button) findViewById(R.id.SettingsLaunchUpdateButton);
+        Button ResetButton = (Button) findViewById(R.id.SettingsResetButton);
+        UpdateButton.setOnClickListener(this);
+        ResetButton.setOnClickListener(this);
         BackButton.setOnClickListener(this);
 
 
@@ -63,16 +65,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.set_button:
+                applySettings();
+                Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
             case R.id.SettingsCancelButton:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
-            case R.id.set_button:
-                applySettings();
-
-
-                Toast.makeText(this, "Parameters set", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+            case R.id.SettingsResetButton:
+                clearSettings();
+                Toast.makeText(this, "Settings cleared, please input new preferences before continuing", Toast.LENGTH_LONG).show();
                 break;
+
 
         }
     }
@@ -97,6 +101,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         editor.apply();
 
     }
+
+    private void clearSettings() {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear().apply();
+    }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
