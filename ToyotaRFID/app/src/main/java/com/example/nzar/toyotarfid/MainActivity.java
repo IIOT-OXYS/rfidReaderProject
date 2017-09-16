@@ -6,6 +6,7 @@ package com.example.nzar.toyotarfid;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,14 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, SettingsActivity.class));
         }
 
-//        try {
-//            DatabaseConnector.SetNetworkConfigTask setupNetwork = new DatabaseConnector.SetNetworkConfigTask();
-//            setupNetwork.execute(getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Toast.makeText(this, "There was a problem configuring the network", Toast.LENGTH_SHORT).show();
-//        }
-
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
@@ -80,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (ID.length() == 0) {//inform the user their tap was registered
+        if (ID.length() == 1) {//inform the user their tap was registered
             TextView tv = (TextView) findViewById(R.id.main_activity_text);
             tv.setText("Checking certifications. . .");
         }
@@ -119,10 +112,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int pointerCount = event.getPointerCount();
+        long downTime = event.getDownTime();
 
-        if (event.getPointerCount() == 4) {
+        if (pointerCount == 3
+                && SystemClock.uptimeMillis() - downTime >= 3000) {
+
+//            MotionEvent.PointerCoords pointer0 = new MotionEvent.PointerCoords();
+//            MotionEvent.PointerCoords pointer1 = new MotionEvent.PointerCoords();
+//            MotionEvent.PointerCoords pointer2 = new MotionEvent.PointerCoords();
+//            event.getPointerCoords(0, pointer0);
+//            event.getPointerCoords(1, pointer1);
+//            event.getPointerCoords(2, pointer2);
+
+            //TODO add check for coordinates to be in correct area
+
             this.startActivity(new Intent(this, SettingsActivity.class));
-            return super.onTouchEvent(event);
+            return true;
 
         } else {
             return super.onTouchEvent(event);
