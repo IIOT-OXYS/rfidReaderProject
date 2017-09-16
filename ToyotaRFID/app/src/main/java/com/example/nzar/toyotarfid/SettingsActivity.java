@@ -5,6 +5,7 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+import static android.view.View.combineMeasuredStates;
 
 /*
 SettingsActivity:
@@ -76,6 +78,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 clearSettings();
                 Toast.makeText(this, "Settings cleared, please input new preferences before continuing", Toast.LENGTH_LONG).show();
                 break;
+            case R.id.SettingsLaunchUpdateButton:
+                Intent LaunchUpdater = getPackageManager().getLaunchIntentForPackage("com.android.apkinstaller");
+                startActivity(LaunchUpdater);
+
 
 
         }
