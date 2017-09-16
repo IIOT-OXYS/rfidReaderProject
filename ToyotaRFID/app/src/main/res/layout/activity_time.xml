@@ -41,22 +41,24 @@
     <Chronometer
         android:id="@+id/chronometer2"
         android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="24dp"
-        android:text="Time Active:"
-        android:gravity="center"
         android:background="#D0D2D3"
-
+        android:gravity="center"
+        android:paddingTop="45dp"
+        android:text="Time Active:"
         android:textColor="#434343"
         android:textSize="200sp"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/fin"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="RtlHardcoded"
-        tools:text="Time Active"
-        android:layout_height="0dp" />
+        tools:text="Time Active" />
 
     <ToggleButton
         android:id="@+id/fin"
@@ -91,5 +93,23 @@
         app:layout_constraintLeft_toRightOf="@+id/fin"
         app:layout_constraintRight_toLeftOf="@+id/textClock"
         tools:ignore="MissingConstraints,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/RunTimeLabel"
+        android:layout_width="350dp"
+        android:gravity="center"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:background="#434343"
+        android:text="RUN TIME:"
+        android:textAllCaps="true"
+        android:textColor="#D0D2D3"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chronometer2" />
 
 </android.support.constraint.ConstraintLayout>
