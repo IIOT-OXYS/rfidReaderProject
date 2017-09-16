@@ -14,42 +14,52 @@
         android:id="@+id/set_button"
         android:layout_width="234dp"
         android:layout_height="112dp"
-        android:background="@android:color/holo_green_dark"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="-2dp"
+        android:background="#659941"
         android:text="@string/set"
-        android:textSize="30sp"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/SettingsCancelButton"
-        android:background="#BE1E2D"
         android:layout_width="234dp"
         android:layout_height="112dp"
         android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:autoText="true"
+        android:background="#434343"
         android:text="Cancel"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/set_button"
-        android:layout_marginStart="29dp" />
+        app:layout_constraintLeft_toRightOf="@+id/set_button" />
 
     <Button
         android:id="@+id/SettingsLaunchUpdateButton"
         android:layout_width="234dp"
         android:layout_height="112dp"
-        android:text="Update"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="30dp"
-        app:layout_constraintLeft_toRightOf="@+id/SettingsResetButton" />
+        android:background="#FBB040"
+        android:text="Update"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/SettingsResetButton"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/SettingsResetButton"
         android:layout_width="234dp"
         android:layout_height="112dp"
         android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:background="#BE1E2D"
         android:text="Reset"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/SettingsCancelButton"
-        android:layout_marginStart="29dp" />
+        app:layout_constraintLeft_toRightOf="@+id/SettingsCancelButton" />
 
     <EditText
         android:id="@+id/machineID"

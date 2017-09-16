@@ -17,7 +17,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="#434343"
-        android:textSize="80sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -44,12 +44,12 @@
         android:background="#434343"
         android:filterTouchesWhenObscured="false"
         android:text="@string/cancel"
-        android:textSize="30sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:typeface="normal"
-        tools:ignore="MissingConstraints,RtlHardcoded"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints,RtlHardcoded" />
 
     <Button
         android:id="@+id/tech_page_button"
@@ -58,7 +58,7 @@
         android:background="#E55125"
         android:text="Page Working Tech"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/tech_back_button"
         app:layout_constraintRight_toLeftOf="@+id/textClock" />

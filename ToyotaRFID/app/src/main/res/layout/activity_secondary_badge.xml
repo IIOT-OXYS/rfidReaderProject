@@ -33,7 +33,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="#434343"
-        android:textSize="80sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -59,7 +59,8 @@
         android:layout_marginLeft="0dp"
         android:background="#434343"
         android:text="@string/cancel"
-        android:textSize="32sp"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -72,7 +73,8 @@
         android:layout_marginRight="24dp"
         android:background="#E55125"
         android:text="Contact Tech"
-        android:textSize="32sp"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/SecondaryBadgeInCancel"
