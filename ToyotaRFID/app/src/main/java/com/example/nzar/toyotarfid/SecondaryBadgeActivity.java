@@ -32,6 +32,7 @@ private final String TAG = "SecondaryBadgeIn";
         Button ContactTech = (Button) findViewById(R.id.SecondaryBadgeInContactTech);
 
         Cancel.setOnClickListener(this);
+        ContactTech.setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +47,7 @@ private final String TAG = "SecondaryBadgeIn";
                 Intent contactTech = new Intent(this, CheckActivity.class);
                 contactTech.putExtra("return", "SecondaryBadgeIn");
                 startActivity(contactTech);
+                break;
         }
     }
 
