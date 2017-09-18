@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -94,9 +95,9 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
 //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
-    static class TILTPostUserTask extends AsyncTask<String, String, Boolean> {
+    static class TILTPostUserTask extends AsyncTask<String, String, String> {
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected String doInBackground(String... params) {
 
             String badgeID = params[0];
             String isLoggingOut, sessionID;
@@ -116,7 +117,7 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
-                        "/tiltwebapi/api/Users",
+                        "/TILTWebApi/api/Users",
                                 "?sessionID=" + sessionID +
                                 "&machineIP=" + machineID +
                                 "&badgeID=" + badgeID +
@@ -137,53 +138,45 @@ class DatabaseConnector extends AppCompatActivity {
 
 
                 assert Response != null;
-                Response.beginArray();
-
-                PPEList.clear();
-                while(Response.hasNext()) {
-                    PPE ppe = new PPE();
-                    Response.beginObject();
-                    while (Response.hasNext()) {
-                        //parse response for PPE info
-                        //if the response is not empty, set UserAuthorized to true
-                        String key = Response.nextName();
-                        switch (key) {
-                            case "PPEID":
-                                ppe.PPEID = Response.nextInt();
-                                break;
-                            case "PPE":
-                                ppe.name = Response.nextString();
-                                break;
-                            case "Image":
-                                ppe.Image = ImageParser(Response.nextString());
-                                break;
-                            case "Required":
-                                ppe.Required = Response.nextBoolean();
-                                break;
-                            case "Restricted":
-                                ppe.Restricted = Response.nextBoolean();
-                                break;
-                            default:
-                                Response.skipValue();
-                                break;
-                        }
+                boolean UserHasCerts = false;
+                boolean UserIsTech = false;
+                boolean MachineNeedsTech = false;
+                Response.beginObject();
+                while (Response.hasNext()) {
+                    switch (Response.nextName()) {
+                        case "MachinePPE":
+                            Response = PPEJsonParse(Response);
+                            break;
+                        case "UserHasCerts":
+                            UserHasCerts = Response.nextBoolean();
+                            break;
+                        case "UserIsTech":
+                            UserIsTech = Response.nextBoolean();
+                            break;
+                        case "MachineNeedsTech":
+                            MachineNeedsTech = Response.nextBoolean();
+                            break;
                     }
-                    PPEList.add(ppe);
-                    Response.endObject();
                 }
-                Response.endArray();
-
                 Response.close();
                 connection.disconnect();
-                return true;
+
+                if (UserHasCerts && MachineNeedsTech && !UserIsTech) {
+                    return "SecondaryTechBadgeIn";
+                } else if (UserHasCerts || UserIsTech){
+                    return "CheckPPE";
+                } else {
+                    return "Denied";
+                }
+
 
 
 
 
             } catch (Exception e) {
                 e.printStackTrace();
+                return "Exception";
             }
-            return false;
 
 
 
@@ -192,16 +185,25 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    static class TILTPostTechTask extends AsyncTask<Void,Void,Void> {
+    static class TILTPostTechTask extends AsyncTask<String,Void,Void> {
         @Override
-        protected Void doInBackground(Void... params) {
-            String sessionID = String.valueOf(currentSessionID) ;
+        protected Void doInBackground(String... params) {
+
+            String sessionID;
+
+            if(params.length >= 1) {
+                sessionID = params[0];
+            } else {
+                sessionID = String.valueOf(new Random().nextInt());
+            }
+
             String content = "I sent the tech an Email!!";//content of the email message
             URI APIConnectionUrl = null;
+
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
-                        "/tiltwebapi/api/Technicians",
+                        "/TILTWebApi/api/technicians",
                                 "?sessionID=" + sessionID +
                                 "&machineIP=" + machineID +
                                         "&content=" + content,
@@ -237,7 +239,7 @@ class DatabaseConnector extends AppCompatActivity {
             try {
                 APIConnectionUrl = new URI("http",
                         baseServerUrl,
-                        "/tiltwebapi/api/Technicians");
+                        "/TILTWebApi/api/technicians");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -291,6 +293,45 @@ class DatabaseConnector extends AppCompatActivity {
 
             return null;
         }
+    }
+
+   static JsonReader PPEJsonParse(JsonReader Response) throws IOException{
+        Response.beginArray();
+
+        PPEList.clear();
+        while(Response.hasNext()) {
+            PPE ppe = new PPE();
+            Response.beginObject();
+            while (Response.hasNext()) {
+                //parse response for PPE info
+                //if the response is not empty, set UserAuthorized to true
+                String key = Response.nextName();
+                switch (key) {
+                    case "PPEID":
+                        ppe.PPEID = Response.nextInt();
+                        break;
+                    case "PPE":
+                        ppe.name = Response.nextString();
+                        break;
+                    case "Image":
+                        ppe.Image = ImageParser(Response.nextString());
+                        break;
+                    case "Required":
+                        ppe.Required = Response.nextBoolean();
+                        break;
+                    case "Restricted":
+                        ppe.Restricted = Response.nextBoolean();
+                        break;
+                    default:
+                        Response.skipValue();
+                        break;
+                }
+            }
+            PPEList.add(ppe);
+            Response.endObject();
+        }
+        Response.endArray();
+        return Response;
     }
 
 

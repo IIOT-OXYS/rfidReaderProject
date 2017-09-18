@@ -84,11 +84,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Job.execute(badgeNumber);//execute the query on a separate thread
 
             try {
-                Boolean Allowed = Job.get();
-                if (Allowed) {
+                String Authorization = Job.get();
+                switch (Authorization) {
+                    case "CheckPPE":
                     startActivity(new Intent(this, CheckActivity.class));
-                } else {
+                        break;
+                    case "SecondaryTechBadgeIn":
+                        startActivity(new Intent(this, SecondaryBadgeActivity.class));
+                        break;
+                default:
                     startActivity(new Intent(this, DeniedActivity.class));
+                    break;
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();

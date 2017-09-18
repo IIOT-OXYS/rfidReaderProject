@@ -64,12 +64,19 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        String context = getIntent().getStringExtra("return");
         switch (v.getId()) {
 
+
             case R.id.tech_page_button:
+
                 try{
                     DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
-                    TechEmail.execute();
+                    if (context.equals("MainActivity")) {
+                        TechEmail.execute();
+                    } else {
+                        TechEmail.execute(String.valueOf(DatabaseConnector.currentSessionID));
+                    }
                     Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -77,7 +84,6 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                 }
 
             case R.id.tech_back_button:
-                String context = getIntent().getStringExtra("return");
         /*
             In this particular onClickListener, we grab a StringExtra that every activity sets
             before sending the intent to get to this activity. We use that extra as a context
