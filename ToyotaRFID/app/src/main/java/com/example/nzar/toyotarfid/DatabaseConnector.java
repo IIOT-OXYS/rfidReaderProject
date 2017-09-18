@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +39,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static ArrayList<LabTech> LabTechList = new ArrayList<>();
     public static int currentSessionID;
     public static String machineID;
-    public static String baseServerUrl = "10.2.5.50";
+    public static String baseServerUrl;
     public static String currentBadgeID = "";
 
     static class LabTech {
