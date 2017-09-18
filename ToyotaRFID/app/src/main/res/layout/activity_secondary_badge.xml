@@ -65,7 +65,7 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/SecondaryBadgeInContactTech"
         android:layout_width="500dp"
         android:layout_height="112dp"
         android:layout_marginBottom="0dp"
