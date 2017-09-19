@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -113,23 +111,18 @@ class DatabaseConnector extends AppCompatActivity {
                 return null;
             }
 
-            URI APIConnectionUrl = null;
-            try {
-                APIConnectionUrl = new URI("http",
-                        baseServerUrl,
-                        "/TILTWebApi/api/Users",
-                                "?sessionID=" + sessionID +
-                                "&machineIP=" + machineID +
-                                "&badgeID=" + badgeID +
-                                "&isLoggingOut=" + isLoggingOut);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
+            String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/TILTWebApi/api/Users" +
+                    "?sessionID=" + sessionID +
+                    "&machineIP=" + machineID +
+                    "&badgeID=" + badgeID +
+                    "&isLoggingOut=" + isLoggingOut;
+
 
             try {
 
-                assert APIConnectionUrl != null;
-                URL url = APIConnectionUrl.toURL();
+                URL url = new URL(APIConnectionUrl);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -198,22 +191,15 @@ class DatabaseConnector extends AppCompatActivity {
             }
 
             String content = "I sent the tech an Email!!";//content of the email message
-            URI APIConnectionUrl = null;
+            String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/TILTWebApi/api/technicians" +
+                    "?sessionID=" + sessionID +
+                    "&machineIP=" + machineID +
+                    "&content=" + content;
 
             try {
-                APIConnectionUrl = new URI("http",
-                        baseServerUrl,
-                        "/TILTWebApi/api/technicians",
-                                "?sessionID=" + sessionID +
-                                "&machineIP=" + machineID +
-                                        "&content=" + content,
-                        null);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            try {
-                assert APIConnectionUrl != null;
-                URL url = APIConnectionUrl.toURL();
+                URL url = new URL(APIConnectionUrl);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -234,18 +220,14 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            URI APIConnectionUrl = null;
+
+            String APIConnectionUrl ="http://" +
+                        baseServerUrl +
+                        "/TILTWebApi/api/technicians";
+
 
             try {
-                APIConnectionUrl = new URI("http",
-                        baseServerUrl,
-                        "/TILTWebApi/api/technicians");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            try {
-                assert APIConnectionUrl != null;
-                URL url = APIConnectionUrl.toURL();
+                URL url = new URL(APIConnectionUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");
