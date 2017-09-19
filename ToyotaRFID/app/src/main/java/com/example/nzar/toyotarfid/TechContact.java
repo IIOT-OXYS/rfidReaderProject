@@ -106,6 +106,9 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                         case "DeniedActivity":
                             startActivity(new Intent(this, DeniedActivity.class));
                             break;
+                        case "SecondaryBadgeIn":
+                            startActivity(new Intent(this, SecondaryBadgeActivity.class));
+                            break;
                         default:
                             startActivity(new Intent(this, MainActivity.class));
                             Toast.makeText(this, "Something happened, contact OXYS and tell them \"contact tech got confused\".", Toast.LENGTH_LONG).show();

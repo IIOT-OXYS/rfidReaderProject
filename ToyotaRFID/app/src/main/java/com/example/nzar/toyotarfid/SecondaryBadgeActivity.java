@@ -44,7 +44,8 @@ private final String TAG = "SecondaryBadgeIn";
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.SecondaryBadgeInContactTech:
-                Intent contactTech = new Intent(this, CheckActivity.class);
+
+                Intent contactTech = new Intent(this, TechContact.class);
                 contactTech.putExtra("return", "SecondaryBadgeIn");
                 startActivity(contactTech);
                 break;
