@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import java.io.IOException;
@@ -43,20 +44,20 @@ class DatabaseConnector extends AppCompatActivity {
     public static String currentBadgeID = "";
 
     static class LabTech {
-        int LabTechID;
-        String firstName;
-        String lastName;
-        String email;
-        String phoneNumber;
-        Drawable Image;
+        int LabTechID = -1;
+        String firstName = null;
+        String lastName = null;
+        String email = null;
+        String phoneNumber = null;
+        Drawable Image = null;
     }
 
     static class PPE {
-        int PPEID;
-        String name;
-        Drawable Image;
-        boolean Required;
-        boolean Restricted;
+        int PPEID = -1;
+        String name = null;
+        Drawable Image = null;
+        boolean Required = false;
+        boolean Restricted = false;
     }
 
     public static boolean BindPreferences(SharedPreferences prefs) {
@@ -80,8 +81,6 @@ class DatabaseConnector extends AppCompatActivity {
             Log.d("TILTAPI", "Received valid response");
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
-            Log.d("TILTAPI", "Dumping raw response:");
-            Log.d("TILTAPI", Response.toString());
             return new JsonReader(Response);
 
 
@@ -94,9 +93,13 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     private static synchronized Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
-        byte encodedImage[] = jsonImage.getBytes();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
-        return new BitmapDrawable(Resources.getSystem(), bitmap);
+        if (jsonImage != null && jsonImage.length() > 15) {
+            byte encodedImage[] = jsonImage.getBytes();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
+            return new BitmapDrawable(Resources.getSystem(), bitmap);
+        } else {
+            return null;
+        }
     }
 
     //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
@@ -146,20 +149,24 @@ class DatabaseConnector extends AppCompatActivity {
                 boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
                 Response.beginObject();
                 while (Response.hasNext()) {
-                    switch (Response.nextName()) {
-                        case "MachinePPE":
-                            Response = PPEJsonParse(Response);
-                            Log.d(TAG, "Found information for " + String.valueOf(DatabaseConnector.PPEList.size()) + "PPEs");
-                            break;
-                        case "UserHasCerts":
-                            UserHasCerts = Response.nextBoolean();
-                            break;
-                        case "UserIsTech":
-                            UserIsTech = Response.nextBoolean();
-                            break;
-                        case "MachineNeedsTech":
-                            MachineNeedsTech = Response.nextBoolean();
-                            break;
+                    if (Response.peek() != JsonToken.NULL) {
+                        switch (Response.nextName()) {
+                            case "MachinePPE":
+                                Response = PPEJsonParse(Response);
+                                Log.d(TAG, "Found information for " + String.valueOf(DatabaseConnector.PPEList.size()) + "PPEs");
+                                break;
+                            case "UserHasCerts":
+                                UserHasCerts = Response.nextBoolean();
+                                break;
+                            case "UserIsTech":
+                                UserIsTech = Response.nextBoolean();
+                                break;
+                            case "MachineNeedsTech":
+                                MachineNeedsTech = Response.nextBoolean();
+                                break;
+                        }
+                    }  else {
+                        Response.skipValue();
                     }
                 }
                 Response.close();
@@ -262,30 +269,34 @@ class DatabaseConnector extends AppCompatActivity {
 
                     ResponseReader.beginObject();
                     while (ResponseReader.hasNext()) {
-                        String key = ResponseReader.nextName();
-                        switch (key) {
-                            case ("LabTechID"):
-                                temp.LabTechID = ResponseReader.nextInt();
-                                Log.d(TAG, "Received Tech with ID: " + String.valueOf(temp.LabTechID));
+                        if (ResponseReader.peek() != JsonToken.NULL) {
+                            String key = ResponseReader.nextName();
+                            switch (key) {
+                                case ("LabTechID"):
+                                    temp.LabTechID = ResponseReader.nextInt();
+                                    Log.d(TAG, "Received Tech with ID: " + String.valueOf(temp.LabTechID));
 
-                                break;
-                            case ("FirstName"):
-                                temp.firstName = ResponseReader.nextString();
-                                break;
-                            case ("LastName"):
-                                temp.lastName = ResponseReader.nextString();
-                                break;
-                            case ("Email"):
-                                temp.email = ResponseReader.nextString();
-                                break;
-                            case ("PhoneNumber"):
-                                temp.phoneNumber = ResponseReader.nextString();
-                                break;
-                            case "Photo":
-                                temp.Image = ImageParser(ResponseReader.nextString());
-                            default:
-                                ResponseReader.skipValue();
-                                break;
+                                    break;
+                                case ("FirstName"):
+                                    temp.firstName = ResponseReader.nextString();
+                                    break;
+                                case ("LastName"):
+                                    temp.lastName = ResponseReader.nextString();
+                                    break;
+                                case ("Email"):
+                                    temp.email = ResponseReader.nextString();
+                                    break;
+                                case ("PhoneNumber"):
+                                    temp.phoneNumber = ResponseReader.nextString();
+                                    break;
+                                case "Photo":
+                                    temp.Image = ImageParser(ResponseReader.nextString());
+                                default:
+                                    ResponseReader.skipValue();
+                                    break;
+                            }
+                        }  else {
+                            ResponseReader.skipValue();
                         }
                     }
                     LabTechList.add(temp);
@@ -315,26 +326,30 @@ class DatabaseConnector extends AppCompatActivity {
                 //parse response for PPE info
                 //if the response is not empty, set UserAuthorized to true
                 String key = Response.nextName();
-                switch (key) {
-                    case "PPEID":
-                        ppe.PPEID = Response.nextInt();
-                        break;
-                    case "PPE":
-                        ppe.name = Response.nextString();
-                        Log.d("TILTPOSTUser", "Found PPE: " + ppe.name);
-                        break;
-                    case "Image":
-                        ppe.Image = ImageParser(Response.nextString());
-                        break;
-                    case "Required":
-                        ppe.Required = Response.nextBoolean();
-                        break;
-                    case "Restricted":
-                        ppe.Restricted = Response.nextBoolean();
-                        break;
-                    default:
-                        Response.skipValue();
-                        break;
+                if (Response.peek() != JsonToken.NULL) {
+                    switch (key) {
+                        case "PPEID":
+                            ppe.PPEID = Response.nextInt();
+                            break;
+                        case "PPE":
+                            ppe.name = Response.nextString();
+                            Log.d("TILTPOSTUser", "Found PPE: " + ppe.name);
+                            break;
+                        case "Image":
+                            ppe.Image = ImageParser(Response.nextString());
+                            break;
+                        case "Required":
+                            ppe.Required = Response.nextBoolean();
+                            break;
+                        case "Restricted":
+                            ppe.Restricted = Response.nextBoolean();
+                            break;
+                        default:
+                            Response.skipValue();
+                            break;
+                    }
+                } else {
+                    Response.skipValue();
                 }
             }
             PPEList.add(ppe);
