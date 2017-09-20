@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -48,6 +49,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         }
         PPECount = PPEButtons.size();
+        Log.d(TAG, "Found " + String.valueOf(PPECount) + " PPEs");
         if (PPECount <= 0) yes.setEnabled(true);
 
     }
