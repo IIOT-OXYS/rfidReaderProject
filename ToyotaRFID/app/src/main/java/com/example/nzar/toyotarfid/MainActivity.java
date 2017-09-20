@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (DatabaseConnector.BindPreferences(settings)) {
             Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, SettingsActivity.class));
+        } else {
+            Log.d(TAG, "Using serverIP: " + settings.getString("baseServerUrl", "null"));
+            Log.d(TAG, "Using machineID: " + settings.getString("machineID", "null"));
         }
 
         //set up buttons with click listeners
@@ -78,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv.setText("Checking certifications. . .");
         }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
-            Log.d(TAG, ID.toString().trim());//log ID for debugging
-            String badgeNumber = ID.toString().trim(); // builds the string from the string builder
+            final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
+            Log.d(TAG,"BadgeID: " + badgeNumber);//log ID for debugging
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.execute(badgeNumber);//execute the query on a separate thread
 
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //TODO add check for coordinates to be in correct area
 
             this.startActivity(new Intent(this, SettingsActivity.class));
+            Log.d(TAG, "User has entered the admin settings");
             return true;
 
         } else {
