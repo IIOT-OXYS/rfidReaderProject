@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private StringBuilder ID = new StringBuilder();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected synchronized void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Job.execute(badgeNumber);//execute the query on a separate thread
 
             try {
+                wait(250);
                 String Authorization = Job.get();
                 switch (Authorization) {
                     case "UserIsTech":

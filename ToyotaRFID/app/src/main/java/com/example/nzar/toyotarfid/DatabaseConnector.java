@@ -68,7 +68,7 @@ class DatabaseConnector extends AppCompatActivity {
 
 
     @Nullable
-    private static JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
+    private static synchronized JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
         final String TILT_API_KEY = "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==";
         Log.d("TILTAPI", "Using key: " + TILT_API_KEY);
         connection.setRequestMethod(method);
@@ -93,7 +93,7 @@ class DatabaseConnector extends AppCompatActivity {
 
     }
 
-    private static Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
+    private static synchronized Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
         byte encodedImage[] = jsonImage.getBytes();
         Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
         return new BitmapDrawable(Resources.getSystem(), bitmap);
@@ -103,7 +103,7 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
         final String TAG = "TILTPOSTUser";
         @Override
-        protected String doInBackground(String... params) {
+        protected synchronized String doInBackground(String... params) {
 
             String badgeID = params[0];
             String isLoggingOut, sessionID;
@@ -193,7 +193,7 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
         final String TAG = "TILTPOSTTech";
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected synchronized Boolean doInBackground(String... params) {
 
             String sessionID;
 
@@ -236,7 +236,7 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
         final String TAG = "TILTGETTech";
         @Override
-        protected Void doInBackground(Void... params) {
+        protected synchronized Void doInBackground(Void... params) {
 
             final String APIConnectionUrl = "http://" +
                     baseServerUrl +
@@ -304,7 +304,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-    static JsonReader PPEJsonParse(JsonReader Response) throws IOException {
+    static synchronized JsonReader PPEJsonParse(JsonReader Response) throws IOException {
         Response.beginArray();
 
         PPEList.clear();

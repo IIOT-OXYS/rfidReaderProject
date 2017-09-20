@@ -27,7 +27,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected synchronized void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -44,6 +44,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
         try {
             new DatabaseConnector.TILTGetTechTask().execute();
+            wait(250);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
@@ -94,7 +95,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View v) {
+    public synchronized void onClick(View v) {
         String context = getIntent().getStringExtra("return");
         switch (v.getId()) {
 
