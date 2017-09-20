@@ -164,6 +164,9 @@ class DatabaseConnector extends AppCompatActivity {
                             case "MachineNeedsTech":
                                 MachineNeedsTech = Response.nextBoolean();
                                 break;
+                            default:
+                                Response.skipValue();
+                                break;
                         }
                     }  else {
                         Response.skipValue();
@@ -266,6 +269,7 @@ class DatabaseConnector extends AppCompatActivity {
                 ResponseReader.beginArray();
                 while (ResponseReader.hasNext()) {
                     LabTech temp = new LabTech();
+                    boolean isActive = false;
 
                     ResponseReader.beginObject();
                     while (ResponseReader.hasNext()) {
@@ -291,6 +295,9 @@ class DatabaseConnector extends AppCompatActivity {
                                     break;
                                 case "Photo":
                                     temp.Image = ImageParser(ResponseReader.nextString());
+                                    break;
+                                case "Active":
+                                    isActive = ResponseReader.nextBoolean();
                                 default:
                                     ResponseReader.skipValue();
                                     break;
@@ -299,7 +306,9 @@ class DatabaseConnector extends AppCompatActivity {
                             ResponseReader.skipValue();
                         }
                     }
-                    LabTechList.add(temp);
+                    if (isActive) {
+                        LabTechList.add(temp);
+                    }
                     ResponseReader.endObject();
 
                 }
