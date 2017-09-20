@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ class DatabaseConnector extends AppCompatActivity {
         String email;
         String phoneNumber;
         Drawable Image;
-      }
+    }
 
     static class PPE {
         int PPEID;
@@ -68,16 +69,20 @@ class DatabaseConnector extends AppCompatActivity {
 
     @Nullable
     private static JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
+        final String TILT_API_KEY = "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==";
+        Log.d("TILTAPI", "Using key: " + TILT_API_KEY);
         connection.setRequestMethod(method);
-        connection.setRequestProperty("Authorization", "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==");
+        connection.setRequestProperty("Authorization", TILT_API_KEY);
+        int ResponseCode = connection.getResponseCode();
+        Log.d("TILTAPI", "Respose code: " + String.valueOf(ResponseCode));
 
-        if (connection.getResponseCode() == 201 || connection.getResponseCode() == 200) {
+        if (ResponseCode == 201 || ResponseCode == 200) {
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
             return new JsonReader(Response);
 
 
-        } else if(connection.getResponseCode() == 400) {
+        } else if (connection.getResponseCode() == 400) {
             connection.disconnect();
             return null;
         } else {
@@ -92,7 +97,7 @@ class DatabaseConnector extends AppCompatActivity {
         return new BitmapDrawable(Resources.getSystem(), bitmap);
     }
 
-//give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
+    //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -102,7 +107,7 @@ class DatabaseConnector extends AppCompatActivity {
             if (params.length == 2) {
                 sessionID = params[1];
                 isLoggingOut = "true";
-            } else if (params.length == 1){
+            } else if (params.length == 1) {
                 currentSessionID = new Random().nextInt();
                 sessionID = String.valueOf(currentSessionID);
                 currentBadgeID = badgeID;
@@ -111,7 +116,7 @@ class DatabaseConnector extends AppCompatActivity {
                 return null;
             }
 
-            String APIConnectionUrl = "http://" +
+            final String APIConnectionUrl = "http://" +
                     baseServerUrl +
                     "/TILTWebApi/api/Users" +
                     "?sessionID=" + sessionID +
@@ -119,6 +124,7 @@ class DatabaseConnector extends AppCompatActivity {
                     "&badgeID=" + badgeID +
                     "&isLoggingOut=" + isLoggingOut;
 
+            Log.d("TILTPostUser", APIConnectionUrl);
 
             try {
 
@@ -127,13 +133,13 @@ class DatabaseConnector extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 
-                JsonReader Response = TILTAPITask(connection,"POST");
+                JsonReader Response = TILTAPITask(connection, "POST");
 
-
+                if (Response == null) {
+                    Log.d("TILTJSON", "JSON response was null");
+                }
                 assert Response != null;
-                boolean UserHasCerts = false;
-                boolean UserIsTech = false;
-                boolean MachineNeedsTech = false;
+                boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
                 Response.beginObject();
                 while (Response.hasNext()) {
                     switch (Response.nextName()) {
@@ -156,14 +162,11 @@ class DatabaseConnector extends AppCompatActivity {
 
                 if (UserHasCerts && MachineNeedsTech && !UserIsTech) {
                     return "SecondaryTechBadgeIn";
-                } else if (UserHasCerts || UserIsTech){
+                } else if (UserHasCerts || UserIsTech) {
                     return "CheckPPE";
                 } else {
                     return "Denied";
                 }
-
-
-
 
 
             } catch (Exception e) {
@@ -172,58 +175,58 @@ class DatabaseConnector extends AppCompatActivity {
             }
 
 
-
-
-
         }
     }
 
-    static class TILTPostTechTask extends AsyncTask<String,Void,Void> {
+    static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
         @Override
-        protected Void doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
 
             String sessionID;
 
-            if(params.length >= 1) {
+            if (params.length >= 1) {
                 sessionID = params[0];
             } else {
                 sessionID = String.valueOf(new Random().nextInt());
             }
 
-            String content = "I sent the tech an Email!!";//content of the email message
-            String APIConnectionUrl = "http://" +
+            final String content = "testContent";//content of the email message
+            final String APIConnectionUrl = "http://" +
                     baseServerUrl +
                     "/TILTWebApi/api/technicians" +
                     "?sessionID=" + sessionID +
                     "&machineIP=" + machineID +
                     "&content=" + content;
+            Log.d("TILTPostUser", APIConnectionUrl);
+
 
             try {
                 URL url = new URL(APIConnectionUrl);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-
                 TILTAPITask(connection, "POST");
 
                 connection.disconnect();
 
+                return true;
 
             } catch (Exception e) {
+                Log.d("POSTTechnician", "Failed to send Email request");
                 e.printStackTrace();
+                return false;
             }
-
-            return null;
         }
     }
 
-    static class TILTGetTechTask extends AsyncTask<Void,Void,Void> {
+    static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
 
-            String APIConnectionUrl ="http://" +
-                        baseServerUrl +
-                        "/TILTWebApi/api/technicians";
+            final String APIConnectionUrl = "http://" +
+                    baseServerUrl +
+                    "/TILTWebApi/api/technicians";
+            Log.d("TILTPostUser", APIConnectionUrl);
 
 
             try {
@@ -231,6 +234,11 @@ class DatabaseConnector extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");
+
+                if (ResponseReader == null) {
+                    Log.d("TILTJSON", "JSON response was null");
+                }
+
                 assert ResponseReader != null;
                 LabTechList.clear();
                 ResponseReader.beginArray();
@@ -277,11 +285,11 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
-   static JsonReader PPEJsonParse(JsonReader Response) throws IOException{
+    static JsonReader PPEJsonParse(JsonReader Response) throws IOException {
         Response.beginArray();
 
         PPEList.clear();
-        while(Response.hasNext()) {
+        while (Response.hasNext()) {
             PPE ppe = new PPE();
             Response.beginObject();
             while (Response.hasNext()) {
@@ -294,6 +302,7 @@ class DatabaseConnector extends AppCompatActivity {
                         break;
                     case "PPE":
                         ppe.name = Response.nextString();
+                        Log.d("TILTJSON", "Found PPE: " + ppe.name);
                         break;
                     case "Image":
                         ppe.Image = ImageParser(Response.nextString());

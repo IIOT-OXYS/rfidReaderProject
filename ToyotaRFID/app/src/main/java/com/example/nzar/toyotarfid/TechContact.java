@@ -77,10 +77,16 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     } else {
                         TechEmail.execute(String.valueOf(DatabaseConnector.currentSessionID));
                     }
-                    Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
+                    if (TechEmail.get().equals(true)) {
+                        Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
+                    break;
                 }
 
             case R.id.tech_back_button:
