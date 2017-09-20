@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
         app:layout_constraintRight_toLeftOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2">
 
         <ImageView
@@ -87,7 +87,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tech_page_button">
 
         <ImageView
-            android:id="@+id/LabTechImage"
+            android:id="@+id/LabTechImage2"
             android:layout_width="160dp"
             android:layout_height="160dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +96,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/LabTechEmail"
+            android:id="@+id/LabTechEmail2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -105,13 +105,13 @@
             android:text="email"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
-            app:layout_constraintBottom_toTopOf="@+id/LabTechPhoneNumber"
-            app:layout_constraintLeft_toRightOf="@+id/LabTechImage"
-            app:layout_constraintTop_toBottomOf="@+id/LabTechName"
+            app:layout_constraintBottom_toTopOf="@+id/LabTechPhoneNumber2"
+            app:layout_constraintLeft_toRightOf="@+id/LabTechImage2"
+            app:layout_constraintTop_toBottomOf="@+id/LabTechName2"
             app:layout_constraintVertical_bias="0.505" />
 
         <TextView
-            android:id="@+id/LabTechPhoneNumber"
+            android:id="@+id/LabTechPhoneNumber2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -119,11 +119,11 @@
             android:text="number"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
-            app:layout_constraintBottom_toBottomOf="@+id/LabTechImage"
-            app:layout_constraintLeft_toRightOf="@+id/LabTechImage" />
+            app:layout_constraintBottom_toBottomOf="@+id/LabTechImage2"
+            app:layout_constraintLeft_toRightOf="@+id/LabTechImage2" />
 
         <TextView
-            android:id="@+id/LabTechName"
+            android:id="@+id/LabTechName2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -132,8 +132,8 @@
             android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toRightOf="@+id/LabTechImage"
-            app:layout_constraintTop_toTopOf="@+id/LabTechImage" />
+            app:layout_constraintLeft_toRightOf="@+id/LabTechImage2"
+            app:layout_constraintTop_toTopOf="@+id/LabTechImage2" />
     </android.support.constraint.ConstraintLayout>
 
     <TextClock
