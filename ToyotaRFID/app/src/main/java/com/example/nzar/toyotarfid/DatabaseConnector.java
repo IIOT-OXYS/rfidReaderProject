@@ -99,6 +99,7 @@ class DatabaseConnector extends AppCompatActivity {
 
     //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
+        final String TAG = "TILTPOSTUser";
         @Override
         protected String doInBackground(String... params) {
 
@@ -124,11 +125,12 @@ class DatabaseConnector extends AppCompatActivity {
                     "&badgeID=" + badgeID +
                     "&isLoggingOut=" + isLoggingOut;
 
-            Log.d("TILTPostUser", APIConnectionUrl);
 
             try {
 
                 URL url = new URL(APIConnectionUrl);
+                Log.d(TAG, url.toString());
+
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -136,7 +138,7 @@ class DatabaseConnector extends AppCompatActivity {
                 JsonReader Response = TILTAPITask(connection, "POST");
 
                 if (Response == null) {
-                    Log.d("TILTJSON", "JSON response was null");
+                    Log.d(TAG, "JSON response was null");
                 }
                 assert Response != null;
                 boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
@@ -181,6 +183,7 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
+        final String TAG = "TILTPOSTTech";
         @Override
         protected Boolean doInBackground(String... params) {
 
@@ -199,11 +202,10 @@ class DatabaseConnector extends AppCompatActivity {
                     "?sessionID=" + sessionID +
                     "&machineIP=" + machineID +
                     "&content=" + content;
-            Log.d("TILTPostUser", APIConnectionUrl);
-
 
             try {
                 URL url = new URL(APIConnectionUrl);
+                Log.d(TAG, url.toString());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -214,7 +216,7 @@ class DatabaseConnector extends AppCompatActivity {
                 return true;
 
             } catch (Exception e) {
-                Log.d("POSTTechnician", "Failed to send Email request");
+                Log.d(TAG, "Failed to send Email request");
                 e.printStackTrace();
                 return false;
             }
@@ -222,23 +224,24 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
+        final String TAG = "TILTGETTech";
         @Override
         protected Void doInBackground(Void... params) {
 
             final String APIConnectionUrl = "http://" +
                     baseServerUrl +
                     "/TILTWebApi/api/technicians";
-            Log.d("TILTPostUser", APIConnectionUrl);
-
 
             try {
                 URL url = new URL(APIConnectionUrl);
+                Log.d(TAG, url.toString());
+
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 JsonReader ResponseReader = TILTAPITask(connection, "GET");
 
                 if (ResponseReader == null) {
-                    Log.d("TILTJSON", "JSON response was null");
+                    Log.d(TAG, "JSON response was null");
                 }
 
                 assert ResponseReader != null;
@@ -304,7 +307,7 @@ class DatabaseConnector extends AppCompatActivity {
                         break;
                     case "PPE":
                         ppe.name = Response.nextString();
-                        Log.d("TILTJSON", "Found PPE: " + ppe.name);
+                        Log.d("TILTPOSTUser", "Found PPE: " + ppe.name);
                         break;
                     case "Image":
                         ppe.Image = ImageParser(Response.nextString());
