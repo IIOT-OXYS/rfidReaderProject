@@ -76,19 +76,19 @@ class DatabaseConnector extends AppCompatActivity {
         int ResponseCode = connection.getResponseCode();
         Log.d("TILTAPI", "Respose code: " + String.valueOf(ResponseCode));
 
-        if (ResponseCode == 201 || ResponseCode == 200) {
+        if (ResponseCode >= 1 || ResponseCode <= 300) {
+            Log.d("TILTAPI", "Received valid response");
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
+            Log.d("TILTAPI", "Dumping raw response:");
+            Log.d("TILTAPI", Response.toString());
             return new JsonReader(Response);
 
 
-        } else if (connection.getResponseCode() == 400) {
+        } else if (connection.getResponseCode() > 300) {
             connection.disconnect();
-            return null;
-        } else {
-            connection.disconnect();
-            throw new Exception("bad http response ");
         }
+        return null;
     }
 
     private static Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
@@ -147,6 +147,7 @@ class DatabaseConnector extends AppCompatActivity {
                     switch (Response.nextName()) {
                         case "MachinePPE":
                             Response = PPEJsonParse(Response);
+                            Log.d(TAG, "Found information for " + String.valueOf(DatabaseConnector.PPEList.size()) + "PPEs");
                             break;
                         case "UserHasCerts":
                             UserHasCerts = Response.nextBoolean();
@@ -163,17 +164,22 @@ class DatabaseConnector extends AppCompatActivity {
                 connection.disconnect();
 
                 if (UserHasCerts && MachineNeedsTech) {
+                    Log.d(TAG,"The user with Badge Number: " + badgeID + " requires tech badge");
                     return "RequiresTech";
                 } else if (UserIsTech) {
+                    Log.d(TAG, "The user with Badge Number: " + badgeID +  " is a Tech");
                     return "UserIsTech";
                 } else if (UserHasCerts) {
+                    Log.d(TAG, "The user with Badge Number: " + badgeID +  " was allowed");
                     return "UserIsAllowed";
                 } else {
+                    Log.d(TAG, "The user with Badge Number: " + badgeID + " was denied access");
                     return "UserIsDenied";
                 }
 
 
             } catch (Exception e) {
+                Log.d(TAG, "problem contacting API, printing stack trace:");
                 e.printStackTrace();
                 return "Exception";
             }
@@ -213,10 +219,12 @@ class DatabaseConnector extends AppCompatActivity {
 
                 connection.disconnect();
 
+                Log.d(TAG, "User successfully sent an email request");
+
                 return true;
 
             } catch (Exception e) {
-                Log.d(TAG, "Failed to send Email request");
+                Log.d(TAG, "problem contacting API, printing stack trace:");
                 e.printStackTrace();
                 return false;
             }
@@ -256,6 +264,8 @@ class DatabaseConnector extends AppCompatActivity {
                         switch (key) {
                             case ("LabTechID"):
                                 temp.LabTechID = ResponseReader.nextInt();
+                                Log.d(TAG, "Received Tech with ID: " + String.valueOf(temp.LabTechID));
+
                                 break;
                             case ("FirstName"):
                                 temp.firstName = ResponseReader.nextString();
@@ -282,7 +292,9 @@ class DatabaseConnector extends AppCompatActivity {
                 }
                 ResponseReader.endArray();
                 ResponseReader.close();
+                Log.d(TAG, "Received information for " + String.valueOf(LabTechList.size()) + " techs");
             } catch (Exception e) {
+                Log.d(TAG, "problem contacting API, printing stack trace:");
                 e.printStackTrace();
             }
 
