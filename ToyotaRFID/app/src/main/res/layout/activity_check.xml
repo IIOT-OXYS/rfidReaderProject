@@ -83,152 +83,146 @@
 
     <Button
         android:id="@+id/PPE1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:elevation="0dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/PPE6"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE6"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPERequirements"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <Button
         android:id="@+id/PPE2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:maxWidth="100dp"
         android:scaleType="fitXY"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE1"
-        app:layout_constraintTop_toTopOf="@+id/PPE1"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/PPE1"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintRight_toLeftOf="@+id/PPE3"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/PPE1"
+        android:layout_marginTop="-7dp"
+        app:layout_constraintHorizontal_bias="0.514" />
 
     <Button
         android:id="@+id/PPE3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE2"
-        app:layout_constraintTop_toTopOf="@+id/PPE2"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/PPE2"
+        android:layout_marginTop="-7dp" />
 
     <Button
         android:id="@+id/PPE4"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE3"
-        app:layout_constraintTop_toTopOf="@+id/PPE3"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintRight_toLeftOf="@+id/PPE5"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintLeft_toRightOf="@+id/PPE3"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintRight_toLeftOf="@+id/PPE5"
+        app:layout_constraintTop_toTopOf="@+id/PPE3"
+        android:layout_marginTop="-7dp"
+        app:layout_constraintHorizontal_bias="0.485" />
 
     <Button
         android:id="@+id/PPE5"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="16dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE4"
-        app:layout_constraintTop_toTopOf="@+id/PPE4"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginRight="24dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="24dp" />
+        app:layout_constraintTop_toTopOf="@+id/PPE4"
+        android:layout_marginTop="-7dp" />
 
     <Button
         android:id="@+id/PPE6"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/CheckActivityCancelButton" />
 
     <Button
         android:id="@+id/PPE7"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE6"
-        app:layout_constraintTop_toTopOf="@+id/PPE6"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/PPE6"
-        android:layout_marginLeft="8dp"
         app:layout_constraintRight_toLeftOf="@+id/PPE8"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/PPE6" />
 
     <Button
         android:id="@+id/PPE8"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE7"
-        app:layout_constraintTop_toTopOf="@+id/PPE7"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/PPE7" />
 
     <Button
         android:id="@+id/PPE9"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginStart="8dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE8"
-        app:layout_constraintTop_toTopOf="@+id/PPE8"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintRight_toLeftOf="@+id/PPE10"
-        android:layout_marginRight="9dp"
         app:layout_constraintLeft_toRightOf="@+id/PPE8"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="9dp" />
+        app:layout_constraintRight_toLeftOf="@+id/PPE10"
+        app:layout_constraintTop_toTopOf="@+id/PPE8"
+        app:layout_constraintHorizontal_bias="0.501" />
 
     <Button
         android:id="@+id/PPE10"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/PPE9"
-        app:layout_constraintTop_toTopOf="@+id/PPE9"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginRight="24dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="24dp" />
+        app:layout_constraintTop_toTopOf="@+id/PPE9" />
 
 
     <ImageView
@@ -270,6 +264,158 @@
         app:layout_constraintGuide_percent="0.5"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="481dp" />
+
+    <TextView
+        android:id="@+id/PPEText1"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE1"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE1"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE1"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/PPE6" />
+
+    <TextView
+        android:id="@+id/PPEText2"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE2"
+        app:layout_constraintRight_toRightOf="@+id/PPE2"
+        app:layout_constraintTop_toBottomOf="@+id/PPE2"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/PPE7" />
+
+    <TextView
+        android:id="@+id/PPEText3"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE3"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE3"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE3"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/PPE8" />
+
+    <TextView
+        android:id="@+id/PPEText5"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE5"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE5"
+        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE5"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/PPE10" />
+
+    <TextView
+        android:id="@+id/PPEText4"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE4"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE4"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE4"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/PPE9" />
+
+    <TextView
+        android:id="@+id/PPEText6"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE6"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE6"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE6"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/CheckActivityCancelButton" />
+
+    <TextView
+        android:id="@+id/PPEText7"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/Yes"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE7"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE7"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE7" />
+
+    <TextView
+        android:id="@+id/PPEText9"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE9"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE9"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE9"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/Contact" />
+
+    <TextView
+        android:id="@+id/PPEText8"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE8"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE8"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE8"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/Yes" />
+
+    <TextView
+        android:id="@+id/PPEText10"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/PPE10"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/PPE10"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/PPE10"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textClock" />
 
 </android.support.constraint.ConstraintLayout>
 
