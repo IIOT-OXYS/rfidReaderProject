@@ -50,7 +50,6 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
 }
 
 

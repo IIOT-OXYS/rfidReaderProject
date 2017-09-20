@@ -70,7 +70,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
             case R.id.tech_page_button:
 
-                try{
+                try {
                     DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
                     if (context.equals("MainActivity")) {
                         TechEmail.execute();
@@ -103,7 +103,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                             break;
                         case "TimeActivity":
                             Intent timeIntent = new Intent(this, TimeActivity.class);
-                            timeIntent.putExtra("timeTracker", getIntent().getLongExtra("timeTracker",-1));
+                            timeIntent.putExtra("timeTracker", getIntent().getLongExtra("timeTracker", -1));
                             startActivity(timeIntent);
                             break;
                         case "CheckActivity":

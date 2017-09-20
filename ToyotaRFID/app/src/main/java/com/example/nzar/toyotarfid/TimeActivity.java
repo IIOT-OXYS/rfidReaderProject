@@ -59,9 +59,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         setupRelay();
 
         //set up our UI elements
-        chron = ( Chronometer ) findViewById(R.id.chronometer2);
-        final ToggleButton fin = ( ToggleButton ) findViewById(R.id.fin);
-        final Button Contact = ( Button ) findViewById(R.id.Contact);
+        chron = (Chronometer) findViewById(R.id.chronometer2);
+        final ToggleButton fin = (ToggleButton) findViewById(R.id.fin);
+        final Button Contact = (Button) findViewById(R.id.Contact);
         long intentTime = getIntent().getLongExtra("timeTracker", -1);
         if (intentTime == -1) {
             startTime = SystemClock.elapsedRealtime();
@@ -109,28 +109,27 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 DatabaseConnector.TILTPostUserTask logoutTask = new DatabaseConnector.TILTPostUserTask();
                 logoutTask.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
                 try {
-                if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
+                    if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
 
-                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                    Log.d(TAG, RELAY_OFF);
-                    startActivity(new Intent(this, MainActivity.class));
+                        relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                        Log.d(TAG, RELAY_OFF);
+                        startActivity(new Intent(this, MainActivity.class));
 
-                }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-
-
-
-                } else {
-                    ID.delete(0, ID.length());
-                    Toast.makeText(this, "Only the user which accessed the machine or a tech may badge out.", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
 
             } else {
-                char c = ( char ) event.getUnicodeChar();
-                ID.append(c);
+                ID.delete(0, ID.length());
+                Toast.makeText(this, "Only the user which accessed the machine or a tech may badge out.", Toast.LENGTH_SHORT).show();
             }
+
+        } else {
+            char c = (char) event.getUnicodeChar();
+            ID.append(c);
+        }
 
         return super.onKeyDown(keyCode, event);
 
@@ -158,7 +157,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     private synchronized void setupRelay() {
         //these objects are used to iterate through the active USB devices
-        UsbManager manager = ( UsbManager ) getSystemService(Context.USB_SERVICE);
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         //this iterates the hashmap and looks for a supported USB device
         for (UsbDevice device : deviceList.values()) {

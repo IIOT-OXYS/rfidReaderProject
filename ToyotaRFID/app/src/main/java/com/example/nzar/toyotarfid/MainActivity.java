@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //get preferences and set network settings accordingly
-        settings = getSharedPreferences("ConnectivitySettings",0);
+        settings = getSharedPreferences("ConnectivitySettings", 0);
 
         if (DatabaseConnector.BindPreferences(settings)) {
             Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
-            Log.d(TAG,"BadgeID: " + badgeNumber);//log ID for debugging
+            Log.d(TAG, "BadgeID: " + badgeNumber);//log ID for debugging
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.execute(badgeNumber);//execute the query on a separate thread
 
@@ -91,18 +91,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (Authorization) {
                     case "UserIsTech":
                     case "UserIsAllowed":
-                    startActivity(new Intent(this, CheckActivity.class));
+                        startActivity(new Intent(this, CheckActivity.class));
                         break;
                     case "RequiresTech":
                         startActivity(new Intent(this, SecondaryBadgeActivity.class));
                         break;
-                default:
-                    startActivity(new Intent(this, DeniedActivity.class));
-                    break;
+                    default:
+                        startActivity(new Intent(this, DeniedActivity.class));
+                        break;
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                ID.delete(0,ID.length());
+                ID.delete(0, ID.length());
                 Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
             }
 
@@ -164,9 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
-
 
 
 }
