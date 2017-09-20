@@ -160,12 +160,14 @@ class DatabaseConnector extends AppCompatActivity {
                 Response.close();
                 connection.disconnect();
 
-                if (UserHasCerts && MachineNeedsTech && !UserIsTech) {
-                    return "SecondaryTechBadgeIn";
-                } else if (UserHasCerts || UserIsTech) {
-                    return "CheckPPE";
+                if (UserHasCerts && MachineNeedsTech) {
+                    return "RequiresTech";
+                } else if (UserIsTech) {
+                    return "UserIsTech";
+                } else if (UserHasCerts) {
+                    return "UserIsAllowed";
                 } else {
-                    return "Denied";
+                    return "UserIsDenied";
                 }
 
 

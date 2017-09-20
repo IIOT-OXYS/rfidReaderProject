@@ -11,6 +11,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -102,53 +103,35 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
             if (keyCode == KeyEvent.KEYCODE_BACKSLASH) {
-                String badgeNumber = ID.toString().trim();
-                //we store the active ID in the database connector and check if they are the same
-                boolean TechOverride = false;
+                final String badgeNumber = ID.toString().trim();
+                Log.d(TAG, "BadgeID: " + badgeNumber);
 
+                DatabaseConnector.TILTPostUserTask logoutTask = new DatabaseConnector.TILTPostUserTask();
+                logoutTask.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
                 try {
-                    new DatabaseConnector.TILTGetTechTask().execute();
-                    if (!DatabaseConnector.LabTechList.isEmpty()) {
-                        for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
-                            if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
-                                TechOverride = true;
-                                break;
-                            }
-                        }
-                    }
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
+                if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
 
-                if (!DatabaseConnector.LabTechList.isEmpty()) {
-                    for (DatabaseConnector.LabTech labTech : DatabaseConnector.LabTechList) {
-                        if (labTech.LabTechID == Integer.parseInt(badgeNumber)) {
-                            TechOverride = true;
-                            break;
-                        }
-                    }
+                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                    Log.d(TAG, RELAY_OFF);
+                    startActivity(new Intent(this, MainActivity.class));
+
                 }
-                if (badgeNumber.equals(DatabaseConnector.currentBadgeID) || TechOverride) {
-                    try {
-                        relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                        Log.d(TAG, RELAY_OFF);
-                    } catch (UnsupportedEncodingException | NullPointerException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                    Job.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
 
-                    startActivity(new Intent(this, MainActivity.class));
+
 
                 } else {
                     ID.delete(0, ID.length());
+                    Toast.makeText(this, "Only the user which accessed the machine or a tech may badge out.", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
                 char c = ( char ) event.getUnicodeChar();
                 ID.append(c);
             }
-        }
+
         return super.onKeyDown(keyCode, event);
 
     }

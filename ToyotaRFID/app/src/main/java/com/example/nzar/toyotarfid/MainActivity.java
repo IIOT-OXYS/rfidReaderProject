@@ -89,10 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 String Authorization = Job.get();
                 switch (Authorization) {
-                    case "CheckPPE":
+                    case "UserIsTech":
+                    case "UserIsAllowed":
                     startActivity(new Intent(this, CheckActivity.class));
                         break;
-                    case "SecondaryTechBadgeIn":
+                    case "RequiresTech":
                         startActivity(new Intent(this, SecondaryBadgeActivity.class));
                         break;
                 default:
