@@ -5,6 +5,7 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,23 +39,50 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         Button ping = (Button) findViewById(R.id.tech_page_button);
         ping.setOnClickListener(this);
 
+        ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
+
+
         try {
             new DatabaseConnector.TILTGetTechTask().execute();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
         } finally {
-            if (!DatabaseConnector.LabTechList.isEmpty()) {
-                DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
-                TextView name = (TextView) findViewById(R.id.LabTechName);
-                TextView email = (TextView) findViewById(R.id.LabTechEmail);
-                TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
-                ImageView image = (ImageView) findViewById(R.id.LabTechImage);
+            switch (DatabaseConnector.LabTechList.size()){
 
-                name.setText(tech.firstName + " " + tech.lastName);
-                email.setText(tech.email);
-                phone.setText(tech.phoneNumber);
-                image.setBackground(tech.Image);
+                case 2:
+                    tech2Container.setVisibility(View.VISIBLE);
+                    DatabaseConnector.LabTech tech2 = DatabaseConnector.LabTechList.get(1);
+                    TextView name2 = (TextView) findViewById(R.id.LabTechName2);
+                    TextView email2 = (TextView) findViewById(R.id.LabTechEmail2);
+                    TextView phone2 = (TextView) findViewById(R.id.LabTechPhoneNumber2);
+                    ImageView image2 = (ImageView) findViewById(R.id.LabTechImage2);
+
+                    name2.setText(tech2.firstName + " " + tech2.lastName);
+                    email2.setText(tech2.email);
+                    phone2.setText(tech2.phoneNumber);
+                    image2.setBackground(tech2.Image);
+                case 1:
+                    techContainer.setVisibility(View.VISIBLE);
+                    DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
+                    TextView name = (TextView) findViewById(R.id.LabTechName);
+                    TextView email = (TextView) findViewById(R.id.LabTechEmail);
+                    TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
+                    ImageView image = (ImageView) findViewById(R.id.LabTechImage);
+
+                    name.setText(tech.firstName + " " + tech.lastName);
+                    email.setText(tech.email);
+                    phone.setText(tech.phoneNumber);
+                    image.setBackground(tech.Image);
+                    break;
+                default:
+                    techContainer.setVisibility(View.INVISIBLE);
+                    tech2Container.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "no lab techs to display");
+                    break;
+
             }
 
         }
