@@ -37,7 +37,6 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         Button back = (Button) findViewById(R.id.tech_back_button);
         back.setOnClickListener(this);
         Button ping = (Button) findViewById(R.id.tech_page_button);
-        ping.setOnClickListener(this);
 
         ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
         ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
@@ -75,8 +74,12 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     email.setText(tech.email);
                     phone.setText(tech.phoneNumber);
                     image.setBackground(tech.Image);
+
+                    ping.setOnClickListener(this);
+
                     break;
                 default:
+                    //ping.setBackground();
                     techContainer.setVisibility(View.INVISIBLE);
                     tech2Container.setVisibility(View.INVISIBLE);
                     Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();

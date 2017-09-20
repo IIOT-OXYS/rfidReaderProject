@@ -76,7 +76,7 @@ class DatabaseConnector extends AppCompatActivity {
         int ResponseCode = connection.getResponseCode();
         Log.d("TILTAPI", "Respose code: " + String.valueOf(ResponseCode));
 
-        if (ResponseCode >= 1 || ResponseCode <= 300) {
+        if (ResponseCode < 404) {
             Log.d("TILTAPI", "Received valid response");
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
@@ -85,10 +85,12 @@ class DatabaseConnector extends AppCompatActivity {
             return new JsonReader(Response);
 
 
-        } else if (connection.getResponseCode() > 300) {
+        } else {
+            Log.d("TILTAPI", "Response Code indicated error, JSON parsing will be skipped");
             connection.disconnect();
+            return null;
         }
-        return null;
+
     }
 
     private static Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
