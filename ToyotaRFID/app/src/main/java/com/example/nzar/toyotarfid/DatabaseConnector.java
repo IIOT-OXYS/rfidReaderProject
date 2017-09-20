@@ -164,6 +164,7 @@ class DatabaseConnector extends AppCompatActivity {
                             case "MachineNeedsTech":
                                 MachineNeedsTech = Response.nextBoolean();
                                 break;
+
                             default:
                                 Response.skipValue();
                                 break;
@@ -298,6 +299,8 @@ class DatabaseConnector extends AppCompatActivity {
                                     break;
                                 case "Active":
                                     isActive = ResponseReader.nextBoolean();
+                                    break;
+
                                 default:
                                     ResponseReader.skipValue();
                                     break;
@@ -353,6 +356,7 @@ class DatabaseConnector extends AppCompatActivity {
                         case "Restricted":
                             ppe.Restricted = Response.nextBoolean();
                             break;
+
                         default:
                             Response.skipValue();
                             break;
