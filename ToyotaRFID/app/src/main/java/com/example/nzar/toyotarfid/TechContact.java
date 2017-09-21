@@ -59,10 +59,18 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     TextView phone2 = (TextView) findViewById(R.id.LabTechPhoneNumber2);
                     ImageView image2 = (ImageView) findViewById(R.id.LabTechImage2);
 
-                    name2.setText(tech2.firstName + " " + tech2.lastName);
-                    email2.setText(tech2.email);
-                    phone2.setText(tech2.phoneNumber);
-                    image2.setBackground(tech2.Image);
+                    if (tech2.firstName != null && tech2.lastName != null) {
+                        name2.setText(tech2.firstName + " " + tech2.lastName);
+                    }
+                    if (tech2.email != null) {
+                        email2.setText(tech2.email);
+                    }
+                    if (tech2.phoneNumber != null) {
+                        phone2.setText(tech2.phoneNumber);
+                    }
+                    if (tech2.Image != null) {
+                        image2.setBackground(tech2.Image);
+                    }
                 case 1:
                     techContainer.setVisibility(View.VISIBLE);
                     DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
@@ -71,10 +79,18 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                     TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
                     ImageView image = (ImageView) findViewById(R.id.LabTechImage);
 
-                    name.setText(tech.firstName + " " + tech.lastName);
-                    email.setText(tech.email);
-                    phone.setText(tech.phoneNumber);
-                    image.setBackground(tech.Image);
+                    if (tech.firstName != null && tech.lastName != null) {
+                        name.setText(tech.firstName + " " + tech.lastName);
+                    }
+                    if (tech.email != null) {
+                        email.setText(tech.email);
+                    }
+                    if (tech.phoneNumber != null) {
+                        phone.setText(tech.phoneNumber);
+                    }
+                    if (tech.Image != null) {
+                        image.setBackground(tech.Image);
+                    }
 
                     ping.setOnClickListener(this);
 

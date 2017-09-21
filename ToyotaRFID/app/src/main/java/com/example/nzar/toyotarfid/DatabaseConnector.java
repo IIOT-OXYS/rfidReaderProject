@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.util.JsonToken;
@@ -93,11 +94,19 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     private static synchronized Drawable ImageParser(String jsonImage) throws UnsupportedEncodingException {
-        if (jsonImage != null && jsonImage.length() > 15) {
+        if (jsonImage != null) {
             byte encodedImage[] = jsonImage.getBytes();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, encodedImage.length);
-            return new BitmapDrawable(Resources.getSystem(), bitmap);
+            if (encodedImage.length > 16) {
+                Log.d("TILTJSON", "Parsing image...");
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, (encodedImage.length - 1));
+                return new BitmapDrawable(Resources.getSystem(), bitmap);
+
+            } else {
+                Log.d("TILTJSON", "Image field did not contain a valid image");
+                return null;
+            }
         } else {
+            Log.d("TILTJSON", "Image field was null");
             return null;
         }
     }
@@ -170,6 +179,7 @@ class DatabaseConnector extends AppCompatActivity {
                                 break;
                         }
                     }  else {
+                        Log.d(TAG, "Null field: " + Response.nextName());
                         Response.skipValue();
                     }
                 }
@@ -280,7 +290,6 @@ class DatabaseConnector extends AppCompatActivity {
                                 case ("LabTechID"):
                                     temp.LabTechID = ResponseReader.nextInt();
                                     Log.d(TAG, "Received Tech with ID: " + String.valueOf(temp.LabTechID));
-
                                     break;
                                 case ("FirstName"):
                                     temp.firstName = ResponseReader.nextString();
@@ -306,6 +315,7 @@ class DatabaseConnector extends AppCompatActivity {
                                     break;
                             }
                         }  else {
+                            Log.d(TAG, "Null field: " + ResponseReader.nextName());
                             ResponseReader.skipValue();
                         }
                     }
@@ -362,6 +372,7 @@ class DatabaseConnector extends AppCompatActivity {
                             break;
                     }
                 } else {
+                    Log.d("TILTPOSTUser", "Null field: " + Response.nextName());
                     Response.skipValue();
                 }
             }
