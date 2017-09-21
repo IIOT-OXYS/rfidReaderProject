@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -101,8 +102,9 @@ class DatabaseConnector extends AppCompatActivity {
             if (jsonImage != null) {
                     Log.d("TILTJSON", "Parsing image...");
                     int offset = jsonImage.indexOf(',') + 1;
-                    byte encodedImage[] = jsonImage.getBytes();
+                    byte encodedImage[] = Base64.decode(jsonImage, Base64.DEFAULT);
                     int length = encodedImage.length - offset;
+                Log.d("TILTJSON","decoding " + String.valueOf(length) + "bytes into image");
                     Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, offset, length);
                 if (bitmap != null) {
                     Log.d("TILTJSON", "Image parsed successfully");
@@ -139,7 +141,9 @@ class DatabaseConnector extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String aString) {
-            onFinishedParsingListener.onFinishedParsing(this);
+            if (onFinishedParsingListener != null) {
+                onFinishedParsingListener.onFinishedParsing(this);
+            }
             super.onPostExecute(aString);
 
         }
@@ -260,7 +264,10 @@ class DatabaseConnector extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            onFinishedParsingListener.onFinishedParsing();
+            if (onFinishedParsingListener != null) {
+
+                onFinishedParsingListener.onFinishedParsing();
+            }
             super.onPostExecute(aBoolean);
 
         }
@@ -326,7 +333,9 @@ class DatabaseConnector extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void avoid) {
-            onFinishedParsingListener.onFinishedParsing();
+            if (onFinishedParsingListener != null) {
+                onFinishedParsingListener.onFinishedParsing();
+            }
             super.onPostExecute(avoid);
 
         }
