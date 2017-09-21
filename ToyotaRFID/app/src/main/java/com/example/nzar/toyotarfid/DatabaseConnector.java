@@ -315,24 +315,29 @@ class DatabaseConnector extends AppCompatActivity {
 
                     ResponseReader.beginObject();
                     while (ResponseReader.hasNext()) {
-                        if (ResponseReader.peek() != JsonToken.NULL) {
+                        Log.d(TAG, "Received tech, extracting details.");
+                        if (ResponseReader.peek() != JsonToken.NULL && ResponseReader.peek() != null) {
                             String key = ResponseReader.nextName();
                             switch (key) {
                                 case ("LabTechID"):
                                     temp.LabTechID = ResponseReader.nextInt();
-                                    Log.d(TAG, "Received Tech with ID: " + String.valueOf(temp.LabTechID));
+                                    Log.d(TAG, key + ": " + String.valueOf(temp.LabTechID));
                                     break;
                                 case ("FirstName"):
                                     temp.firstName = ResponseReader.nextString();
+                                    Log.d(TAG, key + ": " + String.valueOf(temp.firstName));
                                     break;
                                 case ("LastName"):
                                     temp.lastName = ResponseReader.nextString();
+                                    Log.d(TAG, key + ": " + String.valueOf(temp.lastName));
                                     break;
                                 case ("Email"):
                                     temp.email = ResponseReader.nextString();
+                                    Log.d(TAG, key + ": " + String.valueOf(temp.email));
                                     break;
                                 case ("PhoneNumber"):
                                     temp.phoneNumber = ResponseReader.nextString();
+                                    Log.d(TAG, key + ": " + String.valueOf(temp.phoneNumber));
                                     break;
                                 case "Photo":
                                     temp.Image = ImageParser(ResponseReader.nextString());
@@ -380,22 +385,26 @@ class DatabaseConnector extends AppCompatActivity {
                 //if the response is not empty, set UserAuthorized to true
                 String key = Response.nextName();
                 if (Response.peek() != JsonToken.NULL) {
+                    Log.d("TILTPOSTUser", "found PPE, extracting details");
                     switch (key) {
                         case "PPEID":
                             ppe.PPEID = Response.nextInt();
+                            Log.d("TILTPOSTUser", key + ": " + ppe.name);
                             break;
                         case "PPE":
                             ppe.name = Response.nextString();
-                            Log.d("TILTPOSTUser", "Found PPE: " + ppe.name);
+                            Log.d("TILTPOSTUser", key + ": " + ppe.name);
                             break;
                         case "Image":
                             ppe.Image = ImageParser(Response.nextString());
                             break;
                         case "Required":
                             ppe.Required = Response.nextBoolean();
+                            Log.d("TILTPOSTUser", key + ": " + String.valueOf(ppe.Required));
                             break;
                         case "Restricted":
                             ppe.Restricted = Response.nextBoolean();
+                            Log.d("TILTPOSTUser", key + ": " + String.valueOf(ppe.Restricted));
                             break;
 
                         default:
