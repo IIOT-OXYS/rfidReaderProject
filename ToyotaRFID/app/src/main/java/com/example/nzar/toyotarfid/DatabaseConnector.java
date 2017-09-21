@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.sip.SipAudioCall;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -101,7 +102,7 @@ class DatabaseConnector extends AppCompatActivity {
                     Log.d("TILTJSON", "Parsing image...");
                     int offset = jsonImage.indexOf(',');
                     byte encodedImage[] = jsonImage.getBytes();
-                    int length = encodedImage.length - offset - 1;
+                    int length = encodedImage.length - offset;
                     Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, offset, length);
                 if (bitmap != null) {
                     Log.d("TILTJSON", "Image parsed successfully");
@@ -126,6 +127,23 @@ class DatabaseConnector extends AppCompatActivity {
         final String TAG = "TILTPOSTUser";
 
         Context context;
+
+
+        public interface OnFinishedParsingListener{
+            void onFinishedParsing(TILTPostUserTask Job);
+        }
+        public OnFinishedParsingListener onFinishedParsingListener;
+
+        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
+            this.onFinishedParsingListener = onFinishedParsingListener;
+        }
+
+        @Override
+        protected void onPostExecute(String aString) {
+            onFinishedParsingListener.onFinishedParsing(this);
+            super.onPostExecute(aString);
+
+        }
 
         public void setContext(Context ctx) {
             context = ctx;
@@ -232,6 +250,21 @@ class DatabaseConnector extends AppCompatActivity {
 
         final String TAG = "TILTPOSTTech";
         Context context;
+        public interface OnFinishedParsingListener{
+            void onFinishedParsing();
+        }
+        public OnFinishedParsingListener onFinishedParsingListener;
+
+        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
+            this.onFinishedParsingListener = onFinishedParsingListener;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            onFinishedParsingListener.onFinishedParsing();
+            super.onPostExecute(aBoolean);
+
+        }
 
         public void setContext(Context ctx) {
             context = ctx;
@@ -283,6 +316,22 @@ class DatabaseConnector extends AppCompatActivity {
         final String TAG = "TILTGETTech";
         Context context;
 
+        public interface OnFinishedParsingListener{
+            void onFinishedParsing();
+        }
+        public OnFinishedParsingListener onFinishedParsingListener;
+
+        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
+            this.onFinishedParsingListener = onFinishedParsingListener;
+        }
+
+        @Override
+        protected void onPostExecute(Void avoid) {
+            onFinishedParsingListener.onFinishedParsing();
+            super.onPostExecute(avoid);
+
+        }
+
         public void setContext(Context ctx) {
             context = ctx;
         }
@@ -312,10 +361,11 @@ class DatabaseConnector extends AppCompatActivity {
                 while (ResponseReader.hasNext()) {
                     LabTech temp = new LabTech();
                     boolean isActive = false;
+                    Log.d(TAG, "Received tech, extracting details.");
+
 
                     ResponseReader.beginObject();
                     while (ResponseReader.hasNext()) {
-                        Log.d(TAG, "Received tech, extracting details.");
                         if (ResponseReader.peek() != JsonToken.NULL && ResponseReader.peek() != null) {
                             String key = ResponseReader.nextName();
                             switch (key) {
@@ -325,19 +375,19 @@ class DatabaseConnector extends AppCompatActivity {
                                     break;
                                 case ("FirstName"):
                                     temp.firstName = ResponseReader.nextString();
-                                    Log.d(TAG, key + ": " + String.valueOf(temp.firstName));
+                                    Log.d(TAG, key + ": " + temp.firstName);
                                     break;
                                 case ("LastName"):
                                     temp.lastName = ResponseReader.nextString();
-                                    Log.d(TAG, key + ": " + String.valueOf(temp.lastName));
+                                    Log.d(TAG, key + ": " + temp.lastName);
                                     break;
                                 case ("Email"):
                                     temp.email = ResponseReader.nextString();
-                                    Log.d(TAG, key + ": " + String.valueOf(temp.email));
+                                    Log.d(TAG, key + ": " + temp.email);
                                     break;
                                 case ("PhoneNumber"):
                                     temp.phoneNumber = ResponseReader.nextString();
-                                    Log.d(TAG, key + ": " + String.valueOf(temp.phoneNumber));
+                                    Log.d(TAG, key + ": " + temp.phoneNumber);
                                     break;
                                 case "Photo":
                                     temp.Image = ImageParser(ResponseReader.nextString());
@@ -380,16 +430,17 @@ class DatabaseConnector extends AppCompatActivity {
         while (Response.hasNext()) {
             PPE ppe = new PPE();
             Response.beginObject();
+            Log.d("TILTPOSTUser", "found PPE, extracting details");
+
             while (Response.hasNext()) {
                 //parse response for PPE info
                 //if the response is not empty, set UserAuthorized to true
                 String key = Response.nextName();
                 if (Response.peek() != JsonToken.NULL) {
-                    Log.d("TILTPOSTUser", "found PPE, extracting details");
                     switch (key) {
                         case "PPEID":
                             ppe.PPEID = Response.nextInt();
-                            Log.d("TILTPOSTUser", key + ": " + ppe.name);
+                            Log.d("TILTPOSTUser", key + ": " + String.valueOf(ppe.PPEID));
                             break;
                         case "PPE":
                             ppe.name = Response.nextString();

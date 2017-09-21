@@ -31,7 +31,7 @@ This class will initialize the RFID reader and poll it for ID numbers,
 which are then parsed and fed into a database query to determine if the user who's ID was tapped
 is allowed to use the attached device.
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, DatabaseConnector.TILTPostUserTask.OnFinishedParsingListener {
 
     private final String TAG = "MainActivity";
     SharedPreferences settings;
@@ -93,29 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             Log.d(TAG, "BadgeID: " + badgeNumber);//log ID for debugging
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+            Job.setOnFinishedParsingListener(this);
             Job.execute(badgeNumber);//execute the query on a separate thread
-
-            try {
-                wait(250);
-                String Authorization = Job.get();
-                switch (Authorization) {
-                    case "UserIsTech":
-                    case "UserIsAllowed":
-                        startActivity(new Intent(this, CheckActivity.class));
-                        break;
-                    case "RequiresTech":
-                        startActivity(new Intent(this, SecondaryBadgeActivity.class));
-                        break;
-                    default:
-                        startActivity(new Intent(this, DeniedActivity.class));
-                        break;
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                ID.delete(0, ID.length());
-                Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
-            }
-
 
         } else {//delimeter not detected, log input and proceed
             char c = (char) event.getUnicodeChar();
@@ -176,6 +155,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onFinishedParsing(DatabaseConnector.TILTPostUserTask Job) {
+        try {
+        String Authorization = Job.get();
+        switch (Authorization) {
+            case "UserIsTech":
+            case "UserIsAllowed":
+                startActivity(new Intent(this, CheckActivity.class));
+                break;
+            case "RequiresTech":
+                startActivity(new Intent(this, SecondaryBadgeActivity.class));
+                break;
+            default:
+                startActivity(new Intent(this, DeniedActivity.class));
+                break;
+        }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            ID.delete(0, ID.length());
+            Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
+        }
+    }
 }
 
 

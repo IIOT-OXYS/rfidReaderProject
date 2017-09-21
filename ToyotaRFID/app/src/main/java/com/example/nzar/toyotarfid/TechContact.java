@@ -25,7 +25,7 @@ TechContact:
 This class provides contact information about how to contact the working technician.
 The user also has the ability to ping a tech using email (no current implementation)
  */
-public class TechContact extends AppCompatActivity implements View.OnClickListener {
+public class TechContact extends AppCompatActivity implements View.OnClickListener, DatabaseConnector.TILTGetTechTask.OnFinishedParsingListener {
 
     private final String TAG = "TechContact";   // set Log tag
 
@@ -40,81 +40,16 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         //setup UI elements for interaction
         Button back = (Button) findViewById(R.id.tech_back_button);
         back.setOnClickListener(this);
-        Button ping = (Button) findViewById(R.id.tech_page_button);
-
-        ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
-        ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
 
         //show date
         TextView dateText = (TextView) findViewById(R.id.TextDate);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
-        try {
-            new DatabaseConnector.TILTGetTechTask().execute();
-            wait(250);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "There was a problem updating the Active Tech List", Toast.LENGTH_LONG).show();
-        } finally {
-            switch (DatabaseConnector.LabTechList.size()){
 
-                case 2:
-                    tech2Container.setVisibility(View.VISIBLE);
-                    DatabaseConnector.LabTech tech2 = DatabaseConnector.LabTechList.get(1);
-                    TextView name2 = (TextView) findViewById(R.id.LabTechName2);
-                    TextView email2 = (TextView) findViewById(R.id.LabTechEmail2);
-                    TextView phone2 = (TextView) findViewById(R.id.LabTechPhoneNumber2);
-                    ImageView image2 = (ImageView) findViewById(R.id.LabTechImage2);
-
-                    if (tech2.firstName != null && tech2.lastName != null) {
-                        name2.setText(tech2.firstName + " " + tech2.lastName);
-                    }
-                    if (tech2.email != null) {
-                        email2.setText(tech2.email);
-                    }
-                    if (tech2.phoneNumber != null) {
-                        phone2.setText(tech2.phoneNumber);
-                    }
-                    if (tech2.Image != null) {
-                        image2.setBackground(tech2.Image);
-                    }
-                case 1:
-                    techContainer.setVisibility(View.VISIBLE);
-                    DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
-                    TextView name = (TextView) findViewById(R.id.LabTechName);
-                    TextView email = (TextView) findViewById(R.id.LabTechEmail);
-                    TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
-                    ImageView image = (ImageView) findViewById(R.id.LabTechImage);
-
-                    if (tech.firstName != null && tech.lastName != null) {
-                        name.setText(tech.firstName + " " + tech.lastName);
-                    }
-                    if (tech.email != null) {
-                        email.setText(tech.email);
-                    }
-                    if (tech.phoneNumber != null) {
-                        phone.setText(tech.phoneNumber);
-                    }
-                    if (tech.Image != null) {
-                        image.setBackground(tech.Image);
-                    }
-
-                    ping.setOnClickListener(this);
-
-                    break;
-                default:
-                    ping.setBackgroundColor(0x88E55125);
-                    techContainer.setVisibility(View.INVISIBLE);
-                    tech2Container.setVisibility(View.INVISIBLE);
-                    Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "no lab techs to display");
-                    break;
-
-            }
-
-        }
-
+            DatabaseConnector.TILTGetTechTask refreshTechs = new DatabaseConnector.TILTGetTechTask();
+        refreshTechs.setOnFinishedParsingListener(this);
+        refreshTechs.execute();
 
     }
 
@@ -192,4 +127,67 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    @Override
+    public void onFinishedParsing() {
+        ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
+        Button ping = (Button) findViewById(R.id.tech_page_button);
+        switch (DatabaseConnector.LabTechList.size()){
+
+            case 2:
+                tech2Container.setVisibility(View.VISIBLE);
+                DatabaseConnector.LabTech tech2 = DatabaseConnector.LabTechList.get(1);
+                TextView name2 = (TextView) findViewById(R.id.LabTechName2);
+                TextView email2 = (TextView) findViewById(R.id.LabTechEmail2);
+                TextView phone2 = (TextView) findViewById(R.id.LabTechPhoneNumber2);
+                ImageView image2 = (ImageView) findViewById(R.id.LabTechImage2);
+
+                if (tech2.firstName != null && tech2.lastName != null) {
+                    name2.setText(tech2.firstName + " " + tech2.lastName);
+                }
+                if (tech2.email != null) {
+                    email2.setText(tech2.email);
+                }
+                if (tech2.phoneNumber != null) {
+                    phone2.setText(tech2.phoneNumber);
+                }
+                if (tech2.Image != null) {
+                    image2.setBackground(tech2.Image);
+                }
+            case 1:
+                techContainer.setVisibility(View.VISIBLE);
+                DatabaseConnector.LabTech tech = DatabaseConnector.LabTechList.get(0);
+                TextView name = (TextView) findViewById(R.id.LabTechName);
+                TextView email = (TextView) findViewById(R.id.LabTechEmail);
+                TextView phone = (TextView) findViewById(R.id.LabTechPhoneNumber);
+                ImageView image = (ImageView) findViewById(R.id.LabTechImage);
+
+                if (tech.firstName != null && tech.lastName != null) {
+                    name.setText(tech.firstName + " " + tech.lastName);
+                }
+                if (tech.email != null) {
+                    email.setText(tech.email);
+                }
+                if (tech.phoneNumber != null) {
+                    phone.setText(tech.phoneNumber);
+                }
+                if (tech.Image != null) {
+                    image.setBackground(tech.Image);
+                }
+
+                ping.setOnClickListener(this);
+
+                break;
+            default:
+                ping.setBackgroundColor(0x88E55125);
+                techContainer.setVisibility(View.INVISIBLE);
+                tech2Container.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "no lab techs to display");
+                break;
+
+
+
+        }
+    }
 }
