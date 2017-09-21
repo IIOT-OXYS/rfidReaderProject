@@ -47,10 +47,9 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
 
-            DatabaseConnector.TILTGetTechTask refreshTechs = new DatabaseConnector.TILTGetTechTask();
+        DatabaseConnector.TILTGetTechTask refreshTechs = new DatabaseConnector.TILTGetTechTask();
         refreshTechs.setOnFinishedParsingListener(this);
         refreshTechs.execute();
-
     }
 
     @Override
@@ -199,4 +198,6 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
         }
     }
+
+
 }

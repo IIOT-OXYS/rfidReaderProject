@@ -10,10 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.sip.SipAudioCall;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.JsonReader;
@@ -23,7 +21,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -100,12 +97,13 @@ class DatabaseConnector extends AppCompatActivity {
     private static synchronized Drawable ImageParser(String jsonImage) {
         try {
             if (jsonImage != null) {
-                    Log.d("TILTJSON", "Parsing image...");
-                    int offset = jsonImage.indexOf(',') + 1;
-                    byte encodedImage[] = Base64.decode(jsonImage, Base64.DEFAULT);
-                    int length = encodedImage.length - offset;
-                Log.d("TILTJSON","decoding " + String.valueOf(length) + "bytes into image");
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, offset, length);
+
+                jsonImage = jsonImage.substring(jsonImage.indexOf(',')+1);
+                Log.d("TILTJSON", "Parsing image...");
+                byte encodedImage[] = Base64.decode(jsonImage, Base64.DEFAULT);
+                int length = encodedImage.length;
+                Log.d("TILTJSON", "decoding " + String.valueOf(length) + "bytes into image");
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 0, length);
                 if (bitmap != null) {
                     Log.d("TILTJSON", "Image parsed successfully");
                     return new BitmapDrawable(Resources.getSystem(), bitmap);
@@ -122,6 +120,7 @@ class DatabaseConnector extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+
     }
 
     //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
