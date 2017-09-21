@@ -9,13 +9,13 @@
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
 
+
     <TextClock
         android:id="@+id/textClock"
         android:layout_width="500dp"
         android:layout_height="175dp"
         android:background="#D0D2D3"
         android:fontFamily="sans-serif"
-        android:paddingTop="10dp"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="#434343"
@@ -76,6 +76,34 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/Contact" />
+
+    <View
+        android:layout_width="400dp"
+        android:layout_height="2dp"
+        android:background="#434343"
+        app:layout_constraintTop_toTopOf="@+id/textClock"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock" />
+
+    <TextView
+        android:id="@+id/TextDate"
+        android:gravity="center"
+        android:textColor="#434343"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="November 14, 2015"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock" />
 
 
 </android.support.constraint.ConstraintLayout>
