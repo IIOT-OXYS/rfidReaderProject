@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
@@ -27,6 +30,10 @@ private final String TAG = "SecondaryBadgeIn";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_secondary_badge);
 
+        //show date
+        TextView dateText = (TextView) findViewById(R.id.TextDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         Button Cancel = (Button) findViewById(R.id.SecondaryBadgeInCancel);
         Button ContactTech = (Button) findViewById(R.id.SecondaryBadgeInContactTech);

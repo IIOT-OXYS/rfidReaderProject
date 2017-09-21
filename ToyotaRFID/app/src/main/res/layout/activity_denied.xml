@@ -12,7 +12,7 @@
     <TextClock
         android:id="@+id/textClock"
         android:layout_width="238dp"
-        android:layout_height="100dp"
+        android:layout_height="112dp"
         android:background="#D0D2D3"
         android:fontFamily="sans-serif"
         android:paddingTop="10dp"
@@ -51,7 +51,7 @@
         android:id="@+id/Contact"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="500dp"
-        android:layout_height="0dp"
+        android:layout_height="112dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:background="#E55125"
@@ -87,7 +87,7 @@
     <Button
         android:id="@+id/UnauthorizedReturnButton"
         android:layout_width="238dp"
-        android:layout_height="0dp"
+        android:layout_height="112dp"
         android:layout_marginTop="6dp"
         android:background="#434343"
         android:text="@string/cancel"
@@ -102,23 +102,51 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:gravity="center"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:text="@string/unauhorized_user_message"
-        android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
         android:background="#BE1E2D"
+        android:gravity="center"
+        android:text="@string/unauhorized_user_message"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="#FFFFFF"
         android:textSize="50sp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/EmailRequirementsButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <View
+        android:layout_width="200dp"
+        android:layout_height="2dp"
+        android:background="#434343"
+        app:layout_constraintTop_toTopOf="@+id/textClock"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        android:id="@+id/view" />
+
+    <TextView
+        android:id="@+id/TextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#434343"
+        android:textSize="24sp"
+        android:text="Sep 24, 1997"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/EmailRequirementsButton" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock" />
 
 </android.support.constraint.ConstraintLayout>

@@ -19,13 +19,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.felhr.usbserial.UsbSerialDevice;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -54,6 +58,11 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         setContentView(R.layout.activity_time);
+
+        //show date
+        TextView dateText = (TextView) findViewById(R.id.TextDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         //ready the USB relay
         setupRelay();

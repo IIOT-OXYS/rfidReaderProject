@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -29,6 +34,10 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         ret.setOnClickListener(this);
         Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
+        //show date
+        TextView dateText = (TextView) findViewById(R.id.TextDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
     }
 
     @Override

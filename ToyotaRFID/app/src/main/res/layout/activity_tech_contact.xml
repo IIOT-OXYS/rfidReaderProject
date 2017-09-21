@@ -139,6 +139,7 @@
     <TextClock
         android:id="@+id/textClock"
         android:layout_width="238dp"
+        android:paddingTop="8dp"
         android:layout_height="112dp"
         android:background="#D0D2D3"
         android:fontFamily="sans-serif"
@@ -206,5 +207,33 @@
         app:layout_constraintGuide_end="238dp"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="786dp" />
+
+    <View
+        android:layout_width="200dp"
+        android:layout_height="2dp"
+        android:background="#434343"
+        app:layout_constraintTop_toTopOf="@+id/textClock"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        android:id="@+id/view" />
+
+    <TextView
+        android:id="@+id/TextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#434343"
+        android:textSize="24sp"
+        android:text="Sep 24, 1997"
+        app:layout_constraintBottom_toBottomOf="@+id/textClock"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/textClock"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textClock" />
 
 </android.support.constraint.ConstraintLayout>

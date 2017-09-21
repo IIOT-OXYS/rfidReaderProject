@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
 /*
@@ -41,6 +45,10 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
         ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
 
+        //show date
+        TextView dateText = (TextView) findViewById(R.id.TextDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         try {
             new DatabaseConnector.TILTGetTechTask().execute();

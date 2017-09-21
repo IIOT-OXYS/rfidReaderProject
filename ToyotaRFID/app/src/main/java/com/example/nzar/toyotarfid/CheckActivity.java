@@ -12,8 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
@@ -29,6 +32,11 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         setContentView(R.layout.activity_check);
+
+        //show date
+        TextView dateText = (TextView) findViewById(R.id.TextDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         //creating all the buttons and toggle button
         Button yes = (Button) findViewById(R.id.Yes);
