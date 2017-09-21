@@ -42,8 +42,6 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         HashMap<DatabaseConnector.PPE, Button> PPEButtons = new HashMap<>();
         HashMap<DatabaseConnector.PPE, TextView> PPETexts = new HashMap<>();
 
-
-
         generatePPELists(PPEButtons,PPETexts);
         for (DatabaseConnector.PPE ppe : PPEButtons.keySet()) {
             //for final implementation, there will be logic to decide if the button should be enabled
@@ -51,10 +49,15 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             Button PPEButton = PPEButtons.get(ppe);
             TextView PPEText = PPETexts.get(ppe);
             PPEButton.setVisibility(View.VISIBLE);
-            PPEButton.setBackground(ppe.Image);
+            if (ppe.Image != null) {
+                PPEButton.setBackground(ppe.Image);
+            }
             PPEButton.setOnClickListener(this);
-            PPEText.setText(ppe.name);
-            PPEText.setVisibility(View.VISIBLE);
+            if (ppe.name != null) {
+                PPEText.setText(ppe.name);
+                PPEText.setVisibility(View.VISIBLE);
+            }
+
 
         }
         PPECount = PPEButtons.size();

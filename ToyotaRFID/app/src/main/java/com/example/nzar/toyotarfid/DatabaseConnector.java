@@ -3,6 +3,7 @@
 //2017
 package com.example.nzar.toyotarfid;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -72,6 +73,7 @@ class DatabaseConnector extends AppCompatActivity {
     @Nullable
     private static synchronized JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
         final String TILT_API_KEY = "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==";
+
         Log.d("TILTAPI", "Using key: " + TILT_API_KEY);
         connection.setRequestMethod(method);
         connection.setRequestProperty("Authorization", TILT_API_KEY);
@@ -114,6 +116,13 @@ class DatabaseConnector extends AppCompatActivity {
     //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
         final String TAG = "TILTPOSTUser";
+
+        Context context;
+
+        public void setContext(Context ctx) {
+            context = ctx;
+        }
+
         @Override
         protected synchronized String doInBackground(String... params) {
 
@@ -212,7 +221,14 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
+
         final String TAG = "TILTPOSTTech";
+        Context context;
+
+        public void setContext(Context ctx) {
+            context = ctx;
+        }
+
         @Override
         protected synchronized Boolean doInBackground(String... params) {
 
@@ -255,7 +271,14 @@ class DatabaseConnector extends AppCompatActivity {
     }
 
     static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
+
         final String TAG = "TILTGETTech";
+        Context context;
+
+        public void setContext(Context ctx) {
+            context = ctx;
+        }
+
         @Override
         protected synchronized Void doInBackground(Void... params) {
 
