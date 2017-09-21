@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -91,7 +90,9 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             case R.id.CheckActivityCancelButton:
                 PPECount = 0;
                 DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                Job.execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
+                Job.setLoggingOut(true);
+                Job.setSessionID(DatabaseConnector.currentSessionID);
+                Job.execute(DatabaseConnector.currentBadgeID);
                 Intent x = new Intent(CheckActivity.this, MainActivity.class);
                 startActivity(x);
                 break;

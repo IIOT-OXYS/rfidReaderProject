@@ -126,6 +126,16 @@ class DatabaseConnector extends AppCompatActivity {
     //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
         final String TAG = "TILTPOSTUser";
+        int sessionID = -1;
+        boolean isLoggingOut = false;
+
+        public void setLoggingOut(boolean loggingOut) {
+            isLoggingOut = loggingOut;
+        }
+
+        public void setSessionID(int sessionID) {
+            this.sessionID = sessionID;
+        }
 
         Context context;
 
@@ -155,33 +165,22 @@ class DatabaseConnector extends AppCompatActivity {
         protected synchronized String doInBackground(String... params) {
 
             String badgeID = params[0];
-            String isLoggingOut, sessionID;
-            if (params.length == 2) {
-                sessionID = params[1];
-                isLoggingOut = "true";
-            } else if (params.length == 1) {
-                currentSessionID = new Random().nextInt();
-                sessionID = String.valueOf(currentSessionID);
-                currentBadgeID = badgeID;
-                isLoggingOut = "false";
-            } else {
-                return null;
-            }
+
+            currentSessionID = sessionID;
 
             final String APIConnectionUrl = "http://" +
                     baseServerUrl +
                     "/TILTWebApi/api/Users" +
-                    "?sessionID=" + sessionID +
+                    "?sessionID=" + String.valueOf(sessionID) +
                     "&machineIP=" + machineID +
                     "&badgeID=" + badgeID +
-                    "&isLoggingOut=" + isLoggingOut;
+                    "&isLoggingOut=" + String.valueOf(isLoggingOut);
 
 
             try {
 
                 URL url = new URL(APIConnectionUrl);
                 Log.d(TAG, url.toString());
-
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -192,13 +191,19 @@ class DatabaseConnector extends AppCompatActivity {
                     Log.d(TAG, "JSON response was null");
                 }
                 assert Response != null;
+                currentBadgeID = badgeID;
+                if (isLoggingOut) {
+                    return "Logout";
+                }
                 boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
                 Response.beginObject();
                 while (Response.hasNext()) {
                     if (Response.peek() != JsonToken.NULL) {
                         switch (Response.nextName()) {
                             case "MachinePPE":
-                                Response = PPEJsonParse(Response);
+                                if (Response.peek() == JsonToken.BEGIN_ARRAY) {
+                                    Response = PPEJsonParse(Response);
+                                }
                                 Log.d(TAG, "Found information for " + String.valueOf(DatabaseConnector.PPEList.size()) + "PPEs");
                                 break;
                             case "UserHasCerts":

@@ -16,10 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "BadgeID: " + badgeNumber);//log ID for debugging
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.setOnFinishedParsingListener(this);
+            Job.setLoggingOut(false);
+            Job.setSessionID(new Random().nextInt());
             Job.execute(badgeNumber);//execute the query on a separate thread
 
         } else {//delimeter not detected, log input and proceed

@@ -46,8 +46,10 @@ private final String TAG = "SecondaryBadgeIn";
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.SecondaryBadgeInCancel:
-                new DatabaseConnector.TILTPostUserTask()
-                        .execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
+                DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+                Job.setLoggingOut(true);
+                Job.setSessionID(DatabaseConnector.currentSessionID);
+                        Job.execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.SecondaryBadgeInContactTech:
@@ -70,7 +72,9 @@ private final String TAG = "SecondaryBadgeIn";
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.setOnFinishedParsingListener(this);
-            Job.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));//execute the query on a separate thread
+            Job.setLoggingOut(false);
+            Job.setSessionID(DatabaseConnector.currentSessionID);
+            Job.execute(badgeNumber);//execute the query on a separate thread
 
 
 

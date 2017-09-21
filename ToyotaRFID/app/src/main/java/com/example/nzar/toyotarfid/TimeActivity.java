@@ -11,7 +11,6 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -117,7 +116,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
                 DatabaseConnector.TILTPostUserTask logoutTask = new DatabaseConnector.TILTPostUserTask();
                 logoutTask.setOnFinishedParsingListener(this);
-                logoutTask.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
+                logoutTask.setLoggingOut(true);
+                logoutTask.setSessionID(DatabaseConnector.currentSessionID);
+                logoutTask.execute(badgeNumber);
 
 
 
@@ -211,7 +212,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask logoutTask) {
         try {
-            if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
+            if (logoutTask.get().equals("Logout")) {
 
                 relayDevice.write(RELAY_OFF.getBytes("ASCII"));
                 Log.d(TAG, RELAY_OFF);
