@@ -104,7 +104,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
                     break;
                 default:
-                    //ping.setBackground();
+                    ping.setBackgroundColor(0x88E55125);
                     techContainer.setVisibility(View.INVISIBLE);
                     tech2Container.setVisibility(View.INVISIBLE);
                     Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();
@@ -125,6 +125,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
 
             case R.id.tech_page_button:
+                v.setBackgroundColor(0x88E55125);
 
                 try {
                     DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
@@ -137,11 +138,13 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                         Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
+                        v.setBackgroundColor(0xFFE55125);
                         break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
+                    v.setBackgroundColor(0xFFE55125);
                     break;
                 }
 

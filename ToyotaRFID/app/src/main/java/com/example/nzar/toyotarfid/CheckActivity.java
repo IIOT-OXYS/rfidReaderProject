@@ -70,7 +70,11 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         }
         PPECount = PPEButtons.size();
         Log.d(TAG, "Found " + String.valueOf(PPECount) + " PPEs");
-        if (PPECount <= 0) yes.setEnabled(true);
+        if (PPECount <= 0) {
+            yes.setEnabled(true);
+        } else {
+            yes.setBackgroundColor(0x88659941);
+        }
 
     }
 
@@ -106,6 +110,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                     if (PPECount <= 0) {
                         PPECount = 0;
                         findViewById(R.id.Yes).setEnabled(true);
+                        findViewById(R.id.Yes).setBackgroundColor(0xff659941);
                     }
                 }
                 break;
