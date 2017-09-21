@@ -98,10 +98,13 @@ class DatabaseConnector extends AppCompatActivity {
     private static synchronized Drawable ImageParser(String jsonImage) {
         try {
             if (jsonImage != null) {
-                if (jsonImage.length() > 25) {
-                    byte encodedImage[] = jsonImage.getBytes();
                     Log.d("TILTJSON", "Parsing image...");
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, 15, (encodedImage.length - 16));
+                    int offset = jsonImage.indexOf(',');
+                    byte encodedImage[] = jsonImage.getBytes();
+                    int length = encodedImage.length - offset - 1;
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, offset, length);
+                if (bitmap != null) {
+                    Log.d("TILTJSON", "Image parsed successfully");
                     return new BitmapDrawable(Resources.getSystem(), bitmap);
                 } else {
                     Log.d("TILTJSON", "Image field did not contain a valid image");
@@ -112,7 +115,7 @@ class DatabaseConnector extends AppCompatActivity {
                 return null;
             }
         } catch (Exception e) {
-            Log.d("TILTJSON", "Image parseing failed, printing stack trace:");
+            Log.d("TILTJSON", "Image parsing failed, printing stack trace:");
             e.printStackTrace();
             return null;
         }
