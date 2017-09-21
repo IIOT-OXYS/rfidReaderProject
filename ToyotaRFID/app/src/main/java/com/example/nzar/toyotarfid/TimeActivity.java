@@ -40,7 +40,7 @@ In this activity, the relay is closed, and the elapsed time is shown on the UI.
 When the user is finished with the equipement, they hit the finish button, and are prompted to re-scan
 their badge to prevent accidental logout
  */
-public class TimeActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimeActivity extends AppCompatActivity implements View.OnClickListener, DatabaseConnector.TILTPostUserTask.OnFinishedParsingListener {
 
     private static boolean Finished;
     final private String TAG = "TimeActivity";
@@ -116,30 +116,18 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "BadgeID: " + badgeNumber);
 
                 DatabaseConnector.TILTPostUserTask logoutTask = new DatabaseConnector.TILTPostUserTask();
+                logoutTask.setOnFinishedParsingListener(this);
                 logoutTask.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));
-                try {
-                    if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
 
-                        relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                        Log.d(TAG, RELAY_OFF);
-                        startActivity(new Intent(this, MainActivity.class));
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
 
             } else {
-                ID.delete(0, ID.length());
-                Toast.makeText(this, "Only the user which accessed the machine or a tech may badge out.", Toast.LENGTH_SHORT).show();
+                char c = (char) event.getUnicodeChar();
+                ID.append(c);
             }
 
-        } else {
-            char c = (char) event.getUnicodeChar();
-            ID.append(c);
-        }
 
+        }
         return super.onKeyDown(keyCode, event);
 
     }
@@ -220,6 +208,23 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onFinishedParsing(DatabaseConnector.TILTPostUserTask logoutTask) {
+        try {
+            if (logoutTask.get().equals("UserIsTech") || logoutTask.get().equals("UserIsAllowed")) {
+
+                relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                Log.d(TAG, RELAY_OFF);
+                startActivity(new Intent(this, MainActivity.class));
+
+            } else {
+                ID.delete(0, ID.length());
+                Toast.makeText(this, "Only the user which accessed the machine or a tech may badge out.", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
