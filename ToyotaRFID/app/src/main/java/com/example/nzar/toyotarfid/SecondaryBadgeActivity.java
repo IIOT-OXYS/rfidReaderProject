@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
-public class SecondaryBadgeActivity extends AppCompatActivity implements View.OnClickListener {
+public class SecondaryBadgeActivity extends AppCompatActivity implements View.OnClickListener, DatabaseConnector.TILTPostUserTask.OnFinishedParsingListener{
 
     private StringBuilder ID = new StringBuilder();
 private final String TAG = "SecondaryBadgeIn";
@@ -69,23 +69,10 @@ private final String TAG = "SecondaryBadgeIn";
             Log.d(TAG, ID.toString().trim());//log ID for debugging
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+            Job.setOnFinishedParsingListener(this);
             Job.execute(badgeNumber, String.valueOf(DatabaseConnector.currentSessionID));//execute the query on a separate thread
 
-            try {
-                String Authorization = Job.get();
-                switch (Authorization) {
-                    case "CheckPPE":
-                        startActivity(new Intent(this, CheckActivity.class));
-                        break;
-                    default:
-                        startActivity(new Intent(this, DeniedActivity.class));
-                        break;
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                ID.delete(0,ID.length());
-                Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
-            }
+
 
 
         } else {//delimeter not detected, log input and proceed
@@ -93,6 +80,25 @@ private final String TAG = "SecondaryBadgeIn";
             ID.append(c);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onFinishedParsing(DatabaseConnector.TILTPostUserTask Job) {
+        try {
+            String Authorization = Job.get();
+            switch (Authorization) {
+                case "CheckPPE":
+                    startActivity(new Intent(this, CheckActivity.class));
+                    break;
+                default:
+                    startActivity(new Intent(this, DeniedActivity.class));
+                    break;
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            ID.delete(0,ID.length());
+            Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
+        }
     }
 }
 
