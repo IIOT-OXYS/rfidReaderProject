@@ -132,7 +132,16 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
         ConstraintLayout tech2Container = (ConstraintLayout) findViewById(R.id.constraintLayout2);
         Button ping = (Button) findViewById(R.id.tech_page_button);
+        if (DatabaseConnector.LabTechList.isEmpty()) {
+            ping.setBackgroundColor(0x88E55125);
+            techContainer.setVisibility(View.INVISIBLE);
+            tech2Container.setVisibility(View.INVISIBLE);
+            Toast.makeText(this, "No lab techs currently active.", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "no lab techs to display");
+            return;
+        }
         switch (DatabaseConnector.LabTechList.size()){
+            default:
 
             case 2:
                 tech2Container.setVisibility(View.VISIBLE);
@@ -178,7 +187,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
                 ping.setOnClickListener(this);
 
                 break;
-            default:
+            case 0:
                 ping.setBackgroundColor(0x88E55125);
                 techContainer.setVisibility(View.INVISIBLE);
                 tech2Container.setVisibility(View.INVISIBLE);

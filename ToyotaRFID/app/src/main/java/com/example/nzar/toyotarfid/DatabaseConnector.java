@@ -100,7 +100,7 @@ class DatabaseConnector extends AppCompatActivity {
         try {
             if (jsonImage != null) {
                     Log.d("TILTJSON", "Parsing image...");
-                    int offset = jsonImage.indexOf(',');
+                    int offset = jsonImage.indexOf(',') + 1;
                     byte encodedImage[] = jsonImage.getBytes();
                     int length = encodedImage.length - offset;
                     Bitmap bitmap = BitmapFactory.decodeByteArray(encodedImage, offset, length);
@@ -127,7 +127,6 @@ class DatabaseConnector extends AppCompatActivity {
         final String TAG = "TILTPOSTUser";
 
         Context context;
-
 
         public interface OnFinishedParsingListener{
             void onFinishedParsing(TILTPostUserTask Job);
