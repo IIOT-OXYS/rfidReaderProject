@@ -5,7 +5,9 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -105,7 +107,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default:
                 if (findViewById(v.getId()).getVisibility() == View.VISIBLE) {
-                    v.setBackgroundColor(Color.GREEN);
+                    v.setBackground(ContextCompat.getDrawable(this, R.drawable.round_button_fill));
                     v.setEnabled(false);
                     PPECount--;
                     if (PPECount <= 0) {
