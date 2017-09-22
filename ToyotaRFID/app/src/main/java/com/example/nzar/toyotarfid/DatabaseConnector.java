@@ -191,11 +191,11 @@ class DatabaseConnector extends AppCompatActivity {
                     Log.d(TAG, "JSON response was null");
                     return "Exception";
                 }
-                currentBadgeID = badgeID;
                 if (isLoggingOut) {
                     Log.d(TAG, "Received valid response for logout request, user will be logged out.");
                     return "Logout";
                 }
+                currentBadgeID = badgeID;
                 boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
                 Response.beginObject();
                 while (Response.hasNext()) {
