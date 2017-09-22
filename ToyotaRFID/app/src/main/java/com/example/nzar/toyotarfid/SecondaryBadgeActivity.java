@@ -63,10 +63,7 @@ private final String TAG = "SecondaryBadgeIn";
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (ID.length() == 1) {//inform the user their tap was registered
-            TextView tv = (TextView) findViewById(R.id.main_activity_text);
-            tv.setText("Checking certifications. . .");
-        }
+
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             Log.d(TAG, ID.toString().trim());//log ID for debugging
             String badgeNumber = ID.toString().trim(); // builds the string from the string builder
@@ -91,11 +88,12 @@ private final String TAG = "SecondaryBadgeIn";
         try {
             String Authorization = Job.get();
             switch (Authorization) {
-                case "CheckPPE":
+                case "UserIsTech":
                     startActivity(new Intent(this, CheckActivity.class));
                     break;
                 default:
-                    startActivity(new Intent(this, DeniedActivity.class));
+                    Log.d(TAG, "Badge scan did not return Tech");
+                    ID.delete(0,ID.length());
                     break;
             }
         } catch (InterruptedException | ExecutionException e) {
