@@ -79,7 +79,7 @@ class DatabaseConnector extends AppCompatActivity {
         int ResponseCode = connection.getResponseCode();
         Log.d("TILTAPI", "Respose code: " + String.valueOf(ResponseCode));
 
-        if (ResponseCode < 404) {
+        if (ResponseCode < 400) {
             Log.d("TILTAPI", "Received valid response");
             InputStream RawResponse = connection.getInputStream();
             InputStreamReader Response = new InputStreamReader(RawResponse, "UTF-8");
@@ -129,22 +129,22 @@ class DatabaseConnector extends AppCompatActivity {
         int sessionID = -1;
         boolean isLoggingOut = false;
 
-        public void setLoggingOut(boolean loggingOut) {
+        void setLoggingOut(boolean loggingOut) {
             isLoggingOut = loggingOut;
         }
 
-        public void setSessionID(int sessionID) {
+         void setSessionID(int sessionID) {
             this.sessionID = sessionID;
         }
 
         Context context;
 
-        public interface OnFinishedParsingListener{
+         interface OnFinishedParsingListener{
             void onFinishedParsing(TILTPostUserTask Job);
         }
-        public OnFinishedParsingListener onFinishedParsingListener;
+         OnFinishedParsingListener onFinishedParsingListener;
 
-        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
+         void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
             this.onFinishedParsingListener = onFinishedParsingListener;
         }
 
@@ -189,10 +189,11 @@ class DatabaseConnector extends AppCompatActivity {
 
                 if (Response == null) {
                     Log.d(TAG, "JSON response was null");
+                    return "Exception";
                 }
-                assert Response != null;
                 currentBadgeID = badgeID;
                 if (isLoggingOut) {
+                    Log.d(TAG, "Received valid response for logout request, user will be logged out.");
                     return "Logout";
                 }
                 boolean UserHasCerts = false, UserIsTech = false, MachineNeedsTech = false;
@@ -203,6 +204,8 @@ class DatabaseConnector extends AppCompatActivity {
                             case "MachinePPE":
                                 if (Response.peek() == JsonToken.BEGIN_ARRAY) {
                                     Response = PPEJsonParse(Response);
+                                } else {
+                                    Response.skipValue();
                                 }
                                 Log.d(TAG, "Found information for " + String.valueOf(DatabaseConnector.PPEList.size()) + "PPEs");
                                 break;
@@ -228,12 +231,12 @@ class DatabaseConnector extends AppCompatActivity {
                 Response.close();
                 connection.disconnect();
 
-                if (UserHasCerts && MachineNeedsTech) {
-                    Log.d(TAG,"The user with Badge Number: " + badgeID + " requires tech badge");
-                    return "RequiresTech";
-                } else if (UserIsTech) {
+                if (UserIsTech) {
                     Log.d(TAG, "The user with Badge Number: " + badgeID +  " is a Tech");
                     return "UserIsTech";
+                } else if ( UserHasCerts && MachineNeedsTech) {
+                    Log.d(TAG,"The user with Badge Number: " + badgeID + " requires tech badge");
+                    return "RequiresTech";
                 } else if (UserHasCerts) {
                     Log.d(TAG, "The user with Badge Number: " + badgeID +  " was allowed");
                     return "UserIsAllowed";
@@ -257,10 +260,10 @@ class DatabaseConnector extends AppCompatActivity {
 
         final String TAG = "TILTPOSTTech";
         Context context;
-        public interface OnFinishedParsingListener{
+         interface OnFinishedParsingListener{
             void onFinishedParsing();
         }
-        public OnFinishedParsingListener onFinishedParsingListener;
+         OnFinishedParsingListener onFinishedParsingListener;
 
         public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
             this.onFinishedParsingListener = onFinishedParsingListener;
@@ -305,7 +308,7 @@ class DatabaseConnector extends AppCompatActivity {
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                TILTAPITask(connection, "POST");
+                assert  TILTAPITask(connection, "POST") != null;
 
                 connection.disconnect();
 
@@ -326,12 +329,12 @@ class DatabaseConnector extends AppCompatActivity {
         final String TAG = "TILTGETTech";
         Context context;
 
-        public interface OnFinishedParsingListener{
+         interface OnFinishedParsingListener{
             void onFinishedParsing();
         }
-        public OnFinishedParsingListener onFinishedParsingListener;
+         OnFinishedParsingListener onFinishedParsingListener;
 
-        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
+         void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
             this.onFinishedParsingListener = onFinishedParsingListener;
         }
 
@@ -365,9 +368,9 @@ class DatabaseConnector extends AppCompatActivity {
 
                 if (ResponseReader == null) {
                     Log.d(TAG, "JSON response was null");
+                    return null;
                 }
 
-                assert ResponseReader != null;
                 LabTechList.clear();
                 ResponseReader.beginArray();
                 while (ResponseReader.hasNext()) {
