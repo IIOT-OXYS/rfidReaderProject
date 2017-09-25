@@ -260,20 +260,20 @@ class DatabaseConnector extends AppCompatActivity {
 
         final String TAG = "TILTPOSTTech";
         Context context;
-         interface OnFinishedParsingListener{
-            void onFinishedParsing();
+         interface OnSentEmailListener{
+            void onSentEmail(DatabaseConnector.TILTPostTechTask TechEmail);
         }
-         OnFinishedParsingListener onFinishedParsingListener;
+         OnSentEmailListener onSentEmailListener;
 
-        public void setOnFinishedParsingListener(OnFinishedParsingListener onFinishedParsingListener) {
-            this.onFinishedParsingListener = onFinishedParsingListener;
+        public void setOnSentEmailListener(OnSentEmailListener onSentEmailListener) {
+            this.onSentEmailListener = onSentEmailListener;
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (onFinishedParsingListener != null) {
+            if (onSentEmailListener != null) {
 
-                onFinishedParsingListener.onFinishedParsing();
+                onSentEmailListener.onSentEmail(this);
             }
             super.onPostExecute(aBoolean);
 
