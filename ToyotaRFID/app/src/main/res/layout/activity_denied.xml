@@ -69,7 +69,9 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -81,8 +83,7 @@
         app:srcCompat="@drawable/tiltlab_banner"
         app:layout_constraintHorizontal_bias="0.0"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginTop="0dp" />
+        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/UnauthorizedReturnButton"
@@ -102,13 +103,13 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginBottom="24dp"
         android:layout_marginTop="24dp"
         android:background="#BE1E2D"
         android:gravity="center"
-        android:text="@string/unauhorized_user_message"
+        android:text="Missing \n Certification requirements \n to operate device"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
@@ -117,6 +118,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.479"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
@@ -133,7 +135,9 @@
         app:layout_constraintLeft_toLeftOf="@+id/textClock"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/textClock"
-        android:id="@+id/view" />
+        android:id="@+id/view"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/TextDate"
@@ -147,6 +151,8 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/textClock"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textClock" />
+        app:layout_constraintLeft_toLeftOf="@+id/textClock"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
 </android.support.constraint.ConstraintLayout>

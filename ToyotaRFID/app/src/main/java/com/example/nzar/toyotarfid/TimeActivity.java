@@ -52,7 +52,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     private UsbSerialDevice relayDevice;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected synchronized void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -64,7 +64,9 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         //ready the USB relay
-        setupRelay();
+        for (int i = 0; i < 3; i++) {
+            setupRelay();
+        }
 
         //set up our UI elements
         chron = (Chronometer) findViewById(R.id.chronometer2);
@@ -180,7 +182,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     attachUsbSerial:
     Uses a library to set up a serial terminal with the relay device
      */
-    private UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
+    private synchronized UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
         if (deviceName != null) {
 
             UsbDevice device = deviceList.get(deviceName);
