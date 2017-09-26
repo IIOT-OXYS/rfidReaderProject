@@ -306,7 +306,9 @@ class DatabaseConnector extends AppCompatActivity {
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                TILTAPITask(connection, "POST");
+                JsonReader Response = TILTAPITask(connection, "POST");
+
+                assert Response != null;
 
                 connection.disconnect();
 
