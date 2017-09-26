@@ -237,10 +237,10 @@
 
     <TextView
         android:id="@+id/PPERequirements"
-        android:layout_width="946dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Verify that you are following the PPE requirements of this device:"
+        android:text="To enable START, Tap to verify you meet the following PPE requirements of this device"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textSize="32sp"
         android:textStyle="italic"
