@@ -286,12 +286,10 @@ class DatabaseConnector extends AppCompatActivity {
         @Override
         protected synchronized Boolean doInBackground(String... params) {
 
-            String sessionID;
+            String sessionID = "0";
 
             if (params.length >= 1) {
                 sessionID = params[0];
-            } else {
-                sessionID = String.valueOf(new Random().nextInt());
             }
 
             final String content = "testContent";//content of the email message
@@ -308,7 +306,7 @@ class DatabaseConnector extends AppCompatActivity {
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                assert  TILTAPITask(connection, "POST") != null;
+                TILTAPITask(connection, "POST");
 
                 connection.disconnect();
 
