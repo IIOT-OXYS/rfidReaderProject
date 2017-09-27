@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Timer screenSaverTimer = new Timer();
 
-        screenSaverTimer.schedule(screenSaver, 300000);
+        screenSaverTimer.schedule(screenSaver, 3000);
     }
 
     /*
