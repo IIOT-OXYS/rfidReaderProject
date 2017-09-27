@@ -104,8 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (ID.length() == 1) {//inform the user their tap was registered
-            TextView tv = (TextView) findViewById(R.id.main_activity_text);
-            tv.setText("Checking certifications. . .");
+
         }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
@@ -115,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Job.setLoggingOut(false);
             Job.setSessionID(new Random().nextInt());
             Job.execute(badgeNumber);//execute the query on a separate thread
+            TextView tv = (TextView) findViewById(R.id.main_activity_text);
+            tv.setText("Checking certifications. . .");
+            findViewById(R.id.parent).setBackgroundColor(0xFF207ABE);
 
         } else {//delimeter not detected, log input and proceed
             char c = (char) event.getUnicodeChar();
