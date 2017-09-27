@@ -38,6 +38,7 @@ public class BlankFragment extends Fragment {
                 android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.remove(BlankFragment.this);
                 ft.commit();
+                getActivity().onBackPressed();
             }
         });
     }
