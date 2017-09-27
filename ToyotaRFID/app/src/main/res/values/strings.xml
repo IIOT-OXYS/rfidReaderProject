@@ -100,4 +100,7 @@
     <string name="tilt_lab_logo">tilt lab logo</string>
     <string name="email_me_requirements">email me requirements</string>
     <string name="unauhorized_user_message">Unauthorized to use this device</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
