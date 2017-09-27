@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 Fragment screensaver = new BlankFragment();
+
                 android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.MainActivityParent, screensaver, "screenSaver");
-                ft.addToBackStack("screenSaver");
                 ft.commit();
             }
         };

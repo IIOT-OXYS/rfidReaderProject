@@ -17,11 +17,20 @@ import android.widget.FrameLayout;
  */
 public class BlankFragment extends Fragment {
 
+    OnScreenSaverClosedListener onScreenSaverClosedListener;
+
 
     public BlankFragment() {
         // Required empty public constructor
     }
 
+    interface OnScreenSaverClosedListener {
+         void onScreenSaverClosed();
+    }
+
+    public void setOnScreenSaverClosedListener(OnScreenSaverClosedListener onScreenSaverClosedListener) {
+        this.onScreenSaverClosedListener = onScreenSaverClosedListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,10 +46,9 @@ public class BlankFragment extends Fragment {
         view.findViewById(R.id.blackfill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.remove(BlankFragment.this);
-//                ft.commit();
-                getActivity().onBackPressed();
+                android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.remove(BlankFragment.this);
+                ft.commit();
             }
         });
     }
