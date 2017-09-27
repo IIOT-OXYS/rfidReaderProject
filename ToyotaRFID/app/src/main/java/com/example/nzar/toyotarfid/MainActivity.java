@@ -3,6 +3,7 @@
 //2017
 package com.example.nzar.toyotarfid;
 
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -98,7 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TimerTask screenSaver = new TimerTask() {
             @Override
             public void run() {
-
+                Fragment screensaver = new BlankFragment();
+                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.BlankFragmentParent, screensaver, "screenSaver");
+                ft.commit();
             }
         };
 
