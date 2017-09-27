@@ -29,6 +29,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
@@ -92,6 +94,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         setupRelay();
+
+        TimerTask screenSaver = new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        };
+
+        Timer screenSaverTimer = new Timer();
+
+        screenSaverTimer.schedule(screenSaver, 300000);
     }
 
     /*
