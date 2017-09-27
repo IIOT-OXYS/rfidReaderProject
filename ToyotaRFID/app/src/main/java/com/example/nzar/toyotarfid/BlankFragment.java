@@ -31,7 +31,7 @@ public class BlankFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.BlankFragmentParent).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.blackfill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onDestroyView();
