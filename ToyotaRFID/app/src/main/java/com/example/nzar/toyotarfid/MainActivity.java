@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView tv = (TextView) findViewById(R.id.main_activity_text);
             tv.setText("Checking certifications. . .");
             findViewById(R.id.parent).setBackgroundColor(0xFF207ABE);
+            Button Contact = (Button) findViewById(R.id.Contact);
+            Contact.setBackgroundColor(0x88E55125);
+            Contact.setEnabled(false);
 
         } else {//delimeter not detected, log input and proceed
             char c = (char) event.getUnicodeChar();
