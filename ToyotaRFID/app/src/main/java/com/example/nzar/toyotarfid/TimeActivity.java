@@ -64,9 +64,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
         //ready the USB relay
-        for (int i = 0; i < 3; i++) {
-            setupRelay();
-        }
+        setupRelay();
 
         //set up our UI elements
         chron = (Chronometer) findViewById(R.id.chronometer2);
