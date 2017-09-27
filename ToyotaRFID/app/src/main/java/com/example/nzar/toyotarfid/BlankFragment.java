@@ -1,6 +1,7 @@
 package com.example.nzar.toyotarfid;
 
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,7 +35,9 @@ public class BlankFragment extends Fragment {
         view.findViewById(R.id.blackfill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDestroyView();
+                android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.remove(BlankFragment.this);
+                ft.commit();
             }
         });
     }
