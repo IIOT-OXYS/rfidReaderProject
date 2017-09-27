@@ -306,15 +306,24 @@ class DatabaseConnector extends AppCompatActivity {
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                JsonReader Response = TILTAPITask(connection, "POST");
 
-                assert Response != null;
+                final String TILT_API_KEY = "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==";
 
-                connection.disconnect();
+                Log.d("TILTAPI", "Using key: " + TILT_API_KEY);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Authorization", TILT_API_KEY);
+                int ResponseCode = connection.getResponseCode();
+                Log.d("TILTAPI", "Respose code: " + String.valueOf(ResponseCode));
 
-                Log.d(TAG, "User successfully sent an email request");
-
-                return true;
+                if (ResponseCode == 204) {
+                    Log.d(TAG, "email sent successfully");
+                    connection.disconnect();
+                    return true;
+                } else {
+                    Log.d(TAG, "invalid response code for POSTTech method");
+                    connection.disconnect();
+                    return false;
+                }
 
             } catch (Exception e) {
                 Log.d(TAG, "problem contacting API, printing stack trace:");
