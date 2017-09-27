@@ -60,6 +60,10 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
             case R.id.tech_page_button:
                 v.setBackgroundColor(0x88E55125);
+                findViewById(R.id.pagingTechText).setVisibility(View.VISIBLE);
+                findViewById(R.id.ContactTechParent).setBackgroundColor(0xFF207ABE);
+                findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
+                findViewById(R.id.constraintLayout2).setVisibility(View.INVISIBLE);
 
                 try {
                     DatabaseConnector.TILTPostTechTask TechEmail = new DatabaseConnector.TILTPostTechTask();
@@ -204,16 +208,13 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onSentEmail(DatabaseConnector.TILTPostTechTask TechEmail) {
         try {
-            if (TechEmail.get().equals(true)) {
-                Toast.makeText(this, "Email sent successfully", Toast.LENGTH_SHORT).show();
-                contextSwitch(getIntent().getStringExtra("return"));
-            } else {
+            if (TechEmail.get().equals(false)) {
                 Toast.makeText(this, "There was a problem attempting to contact the technicians", Toast.LENGTH_SHORT).show();
-                findViewById(R.id.tech_page_button).setBackgroundColor(0xFFE55125);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        contextSwitch(getIntent().getStringExtra("return"));
+
     }
 }
