@@ -35,9 +35,9 @@ public class BlankFragment extends Fragment {
         view.findViewById(R.id.blackfill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.remove(BlankFragment.this);
-                ft.commit();
+//                android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.remove(BlankFragment.this);
+//                ft.commit();
                 getActivity().onBackPressed();
             }
         });
