@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Job.execute(badgeNumber);//execute the query on a separate thread
             TextView tv = (TextView) findViewById(R.id.main_activity_text);
             tv.setText("Checking certifications. . .");
-            findViewById(R.id.parent).setBackgroundColor(0xFF207ABE);
+            findViewById(R.id.MainActivityParent).setBackgroundColor(0xFF207ABE);
             Button Contact = (Button) findViewById(R.id.Contact);
             Contact.setBackgroundColor(0x88E55125);
             Contact.setEnabled(false);
