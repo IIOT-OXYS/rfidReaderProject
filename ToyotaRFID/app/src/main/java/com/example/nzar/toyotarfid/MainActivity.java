@@ -3,8 +3,13 @@
 //2017
 package com.example.nzar.toyotarfid;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbDeviceConnection;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +21,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.felhr.usbserial.UsbSerialDevice;
+
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final String TAG = "MainActivity";
     SharedPreferences settings;
+    private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
+    private final String RELAY_ON = "relay on 0\r";
+    private final String RELAY_OFF = "relay off 0\r";
     /*
     ID: a string builder that gets the keystrokes from the RFID reader to be parsed and queried
     TAG: the debug tag used in Log statements
@@ -76,13 +88,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupRelay();
+    }
+
     /*
-    onKeyDown:
-    This method grabs any keypresses to the system and runs this code when the key is pressed.
-    This is used to get the badge scan from the RFID reader without a UI object to collect it.
-    Once a specific delimiter character is detected, the method launches the query which checks
-    if the user has the clearances to proceed, then launches either the check or denied activities.
-     */
+        onKeyDown:
+        This method grabs any keypresses to the system and runs this code when the key is pressed.
+        This is used to get the badge scan from the RFID reader without a UI object to collect it.
+        Once a specific delimiter character is detected, the method launches the query which checks
+        if the user has the clearances to proceed, then launches either the check or denied activities.
+         */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (ID.length() == 1) {//inform the user their tap was registered
@@ -177,6 +195,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             ID.delete(0, ID.length());
             Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
+        }
+    }
+    private synchronized void setupRelay() {
+        UsbSerialDevice relayDevice;
+        //these objects are used to iterate through the active USB devices
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+        //this iterates the hashmap and looks for a supported USB device
+        for (UsbDevice device : deviceList.values()) {
+            //if a compatible device is found, we ask for permission and attempt to close the relay
+            if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
+                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                manager.requestPermission(device, mPermissionIntent);
+                relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
+                try {
+                    assert relayDevice != null;
+                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                    Log.d(TAG, RELAY_OFF);
+                } catch (Exception e) {
+                    Log.d(TAG, "problem with relay controller, printing stack trace:");
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+
+    /*
+    attachUsbSerial:
+    Uses a library to set up a serial terminal with the relay device
+     */
+    private synchronized UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
+        if (deviceName != null) {
+
+            UsbDevice device = deviceList.get(deviceName);
+            UsbDeviceConnection connection = manager.openDevice(device);
+            UsbSerialDevice serialDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
+
+            if (serialDevice != null) {
+
+                try {
+                    serialDevice.open();
+
+                    return serialDevice;
+                } catch (NullPointerException se) {
+                    Log.d(TAG, "serial device connection lost");
+                    se.printStackTrace();
+                    return null;
+                }
+            } else {
+                Log.d(TAG, "driver incorrect for rfid reader");
+                return null;
+            }
+
+        } else {
+            Log.d(TAG, "no viable target device was found");
+            return null;
         }
     }
 }
