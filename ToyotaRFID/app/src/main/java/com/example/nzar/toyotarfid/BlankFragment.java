@@ -1,15 +1,12 @@
 package com.example.nzar.toyotarfid;
 
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 
 /**
@@ -24,7 +21,7 @@ public class BlankFragment extends Fragment {
         // Required empty public constructor
     }
 
-    interface OnScreenSaverClosedListener {
+    public interface OnScreenSaverClosedListener {
          void onScreenSaverClosed();
     }
 
@@ -36,7 +33,6 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_blank, container, false);
     }
 
@@ -49,6 +45,9 @@ public class BlankFragment extends Fragment {
                 android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.remove(BlankFragment.this);
                 ft.commit();
+                if (onScreenSaverClosedListener != null) {
+                    onScreenSaverClosedListener.onScreenSaverClosed();
+                }
             }
         });
     }

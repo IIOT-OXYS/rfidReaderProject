@@ -3,7 +3,6 @@
 //2017
 package com.example.nzar.toyotarfid;
 
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +12,6 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,7 +23,6 @@ import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDevice;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -57,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TAG: the debug tag used in Log statements
      */
     private StringBuilder ID = new StringBuilder();
+    private BlankFragment screensaver;
+    private Timer ScreenSaverTimer;
+
 
     @Override
     protected synchronized void onCreate(Bundle savedInstanceState) {
@@ -91,27 +90,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
+        setupRelay();
+
+        screensaver = new BlankFragment();
+        ScreenSaverTimer = new Timer();
+
+        screensaver.setOnScreenSaverClosedListener(new BlankFragment.OnScreenSaverClosedListener() {
+            @Override
+            public void onScreenSaverClosed() {
+                onStart();
+            }
+        });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setupRelay();
 
         TimerTask screenSaver = new TimerTask() {
             @Override
             public void run() {
-                Fragment screensaver = new BlankFragment();
-
+                Log.d(TAG, "showing screensaver");
                 android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.MainActivityParent, screensaver, "screenSaver");
+                ft.show(screensaver);
                 ft.commit();
             }
         };
 
-        Timer screenSaverTimer = new Timer();
 
-        screenSaverTimer.schedule(screenSaver, 3000);
+        ScreenSaverTimer.schedule(screenSaver, 3000);
     }
 
     /*
@@ -123,9 +131,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (ID.length() == 1) {//inform the user their tap was registered
+        ScreenSaverTimer.cancel();
 
-        }
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
             Log.d(TAG, "BadgeID: " + badgeNumber);//log ID for debugging
@@ -156,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        ScreenSaverTimer.cancel();
+
         int pointerCount = event.getPointerCount();
         long downTime = event.getDownTime();
 
@@ -176,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
 
         } else {
+            onStart();
             return super.onTouchEvent(event);
         }
 
@@ -191,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Contact:
+                ScreenSaverTimer.cancel();
 
                 Intent contact = new Intent(this, TechContact.class);
                 contact.putExtra("return", "MainActivity");
