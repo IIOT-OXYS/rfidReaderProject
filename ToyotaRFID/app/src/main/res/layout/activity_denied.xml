@@ -109,7 +109,7 @@
         android:layout_marginTop="24dp"
         android:background="#BE1E2D"
         android:gravity="center"
-        android:text="Missing \n Certification requirements \n to operate device"
+        android:text="Missing \n certification requirements \n to operate device "
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
@@ -118,7 +118,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.479"
+        app:layout_constraintVertical_bias="0.466"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
