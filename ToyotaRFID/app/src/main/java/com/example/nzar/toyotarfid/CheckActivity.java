@@ -107,7 +107,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default:
                 if (findViewById(v.getId()).getVisibility() == View.VISIBLE) {
-                    LayerDrawable ld = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),v.getBackground()});
+                    LayerDrawable ld = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),ContextCompat.getDrawable(this,R.drawable.ic_done_white_128dp_1x)});
                     v.setBackground(ld);
                     v.setEnabled(false);
                     PPECount--;
