@@ -108,6 +108,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             default:
                 if (findViewById(v.getId()).getVisibility() == View.VISIBLE) {
                     LayerDrawable ld = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),v.getBackground()});
+                    v.setBackground(ld);
                     v.setEnabled(false);
                     PPECount--;
                     if (PPECount <= 0) {
