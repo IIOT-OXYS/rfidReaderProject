@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private StringBuilder ID = new StringBuilder();
     private BlankFragment screensaver;
+    private TimerTask screenSaver;
     private Timer ScreenSaverTimer;
 
 
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (DatabaseConnector.BindPreferences(settings)) {
             Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, SettingsActivity.class));
+            return;
         } else {
             Log.d(TAG, "Using serverIP: " + settings.getString("baseServerUrl", "null"));
             Log.d(TAG, "Using machineID: " + settings.getString("machineID", "null"));
@@ -92,6 +94,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setupRelay();
 
+        startTimer();
+
+    }
+
+
+
+    private void startTimer(){
         screensaver = new BlankFragment();
         ScreenSaverTimer = new Timer();
 
@@ -102,20 +111,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-    }
-
-    private TimerTask screenSaver = new TimerTask() {
-        @Override
-        public void run() {
-            Log.d(TAG, "showing screensaver");
-            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainActivityParent,screensaver);
-            ft.commit();
-        }
-    };
-
-    private void startTimer(){
-        ScreenSaverTimer.schedule(screenSaver, 3000);
+        screenSaver = new TimerTask() {
+            @Override
+            public void run() {
+                Log.d(TAG, "showing screensaver");
+                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.MainActivityParent,screensaver);
+                ft.commit();
+            }
+        };
+        ScreenSaverTimer.schedule(screenSaver, 300000);
     }
 
 
