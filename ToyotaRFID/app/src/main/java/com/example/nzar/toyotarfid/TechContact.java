@@ -32,7 +32,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     private final String TAG = "TechContact";   // set Log tag
 
-    private final int TIMEOUT = 3000;
+    private final int TIMEOUT = 300000;
     private Timer timer;
 
     @Override

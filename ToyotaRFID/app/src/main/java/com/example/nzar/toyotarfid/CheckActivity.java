@@ -30,7 +30,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     private final String TAG = "CzechActivity";
 
     private LayerDrawable PPECheck;
-    private final int TIMEOUT = 3000;
+    private final int TIMEOUT = 300000;
     private Timer timer;
 
     @Override

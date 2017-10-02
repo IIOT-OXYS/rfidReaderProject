@@ -25,7 +25,7 @@ If the users ID is not found in the database, they will also land there.
 
 public class DeniedActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final int TIMEOUT = 3000;
+    private final int TIMEOUT = 300000;
     private Timer timer;
 
     @Override

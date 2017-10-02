@@ -23,7 +23,7 @@ public class SecondaryBadgeActivity extends AppCompatActivity implements View.On
 
     private StringBuilder ID = new StringBuilder();
 private final String TAG = "SecondaryBadgeIn";
-    private final int TIMEOUT = 3000;
+    private final int TIMEOUT = 300000;
 private Timer timer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
