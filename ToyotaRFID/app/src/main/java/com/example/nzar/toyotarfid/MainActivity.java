@@ -98,29 +98,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         screensaver.setOnScreenSaverClosedListener(new BlankFragment.OnScreenSaverClosedListener() {
             @Override
             public void onScreenSaverClosed() {
-                onStart();
+                startTimer();
             }
         });
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private TimerTask screenSaver = new TimerTask() {
+        @Override
+        public void run() {
+            Log.d(TAG, "showing screensaver");
+            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainActivityParent,screensaver);
+            ft.commit();
+        }
+    };
 
-        TimerTask screenSaver = new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "showing screensaver");
-                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.show(screensaver);
-                ft.commit();
-            }
-        };
-
-
+    private void startTimer(){
         ScreenSaverTimer.schedule(screenSaver, 3000);
     }
+
 
     /*
         onKeyDown:
@@ -132,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         ScreenSaverTimer.cancel();
+        ScreenSaverTimer.purge();
 
         if (keyCode == KeyEvent.KEYCODE_BACKSLASH || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SEMICOLON) {//checks for ascii delimiter
             final String badgeNumber = ID.toString().trim(); // builds the string from the string builder
@@ -164,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         ScreenSaverTimer.cancel();
+        ScreenSaverTimer.purge();
 
         int pointerCount = event.getPointerCount();
         long downTime = event.getDownTime();
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
 
         } else {
-            onStart();
+            startTimer();
             return super.onTouchEvent(event);
         }
 
@@ -202,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.Contact:
                 ScreenSaverTimer.cancel();
+                ScreenSaverTimer.purge();
 
                 Intent contact = new Intent(this, TechContact.class);
                 contact.putExtra("return", "MainActivity");
@@ -231,8 +231,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             ID.delete(0, ID.length());
             Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
+            startTimer();
         }
     }
+
     private synchronized void setupRelay() {
         UsbSerialDevice relayDevice;
         //these objects are used to iterate through the active USB devices
