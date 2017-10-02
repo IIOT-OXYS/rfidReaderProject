@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private StringBuilder ID = new StringBuilder();
     private BlankFragment screensaver;
-    private final int TIMEOUT = 3000;
+    private final int TIMEOUT = 300000;
     private TimerTask screenSaver;
     private Timer ScreenSaverTimer;
 
@@ -174,14 +174,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (pointerCount == 3
                 && SystemClock.uptimeMillis() - downTime >= 3000) {
 
-//            MotionEvent.PointerCoords pointer0 = new MotionEvent.PointerCoords();
-//            MotionEvent.PointerCoords pointer1 = new MotionEvent.PointerCoords();
-//            MotionEvent.PointerCoords pointer2 = new MotionEvent.PointerCoords();
-//            event.getPointerCoords(0, pointer0);
-//            event.getPointerCoords(1, pointer1);
-//            event.getPointerCoords(2, pointer2);
+            for (int i = 0; i < pointerCount; i++) {
+                MotionEvent.PointerCoords pc = new MotionEvent.PointerCoords();
+                event.getPointerCoords(i,pc);
+                if (pc.x < 900 &&
+                        pc.x > 100 ||
+                        pc.y > 100 &&
+                        pc.y < 500) {
+                    return super.onTouchEvent(event);
+                }
+            }
 
-            //TODO add check for coordinates to be in correct area
 
             this.startActivity(new Intent(this, SettingsActivity.class));
             Log.d(TAG, "User has entered the admin settings");
