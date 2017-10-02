@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
                 try {
                     assert relayDevice != null;
+                    relayDevice.setBaudRate(2400);
                     relayDevice.write(RELAY_OFF.getBytes("ASCII"));
                     Log.d(TAG, RELAY_OFF);
                 } catch (Exception e) {

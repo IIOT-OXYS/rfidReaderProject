@@ -165,6 +165,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 manager.requestPermission(device, mPermissionIntent);
                 relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
                 try {
+                    assert relayDevice != null;
+                    relayDevice.setBaudRate(2400);
                     relayDevice.write(RELAY_ON.getBytes("ASCII"));
                     Log.d(TAG, RELAY_ON);
                 } catch (UnsupportedEncodingException | NullPointerException e) {
