@@ -18,6 +18,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -30,6 +32,8 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     private final String TAG = "TechContact";   // set Log tag
 
+    private final int TIMEOUT = 3000;
+    private Timer timer;
 
     @Override
     protected synchronized void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,20 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         DatabaseConnector.TILTGetTechTask refreshTechs = new DatabaseConnector.TILTGetTechTask();
         refreshTechs.setOnFinishedParsingListener(this);
         refreshTechs.execute();
+
+        startTimer();
+
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                contextSwitch(getIntent().getStringExtra("return"));
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT);
     }
 
     @Override

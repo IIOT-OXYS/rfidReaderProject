@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -28,6 +30,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     private final String TAG = "CzechActivity";
 
     private LayerDrawable PPECheck;
+    private final int TIMEOUT = 3000;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,30 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
         PPECheck = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),ContextCompat.getDrawable(this,R.drawable.ic_done_white_128dp_1x)});
 
+        startTimer();
+
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                logout();
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT);
+    }
+
+    private void logout() {
+        timer.cancel();
+        PPECount = 0;
+        DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+        Job.setLoggingOut(true);
+        Job.setSessionID(DatabaseConnector.currentSessionID);
+        Job.execute(DatabaseConnector.currentBadgeID);
+        Intent x = new Intent(CheckActivity.this, MainActivity.class);
+        startActivity(x);
     }
 
     //This method is for programming all the buttons
@@ -89,21 +117,17 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             //starts the activity with timer
             case R.id.Yes:
+                timer.cancel();
                 Intent i = new Intent(CheckActivity.this, TimeActivity.class);
                 startActivity(i);
                 break;
             //brings you back to the main screen (employee is not following PPE guidelines)
             case R.id.CheckActivityCancelButton:
-                PPECount = 0;
-                DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                Job.setLoggingOut(true);
-                Job.setSessionID(DatabaseConnector.currentSessionID);
-                Job.execute(DatabaseConnector.currentBadgeID);
-                Intent x = new Intent(CheckActivity.this, MainActivity.class);
-                startActivity(x);
+                logout();
                 break;
             //goes to the contact tech page
             case R.id.Contact:
+                timer.cancel();
                 PPECount = 0;
                 Intent contact = new Intent(CheckActivity.this, TechContact.class);
                 contact.putExtra("return", "CheckActivity");

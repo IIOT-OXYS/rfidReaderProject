@@ -13,6 +13,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
@@ -21,7 +23,8 @@ public class SecondaryBadgeActivity extends AppCompatActivity implements View.On
 
     private StringBuilder ID = new StringBuilder();
 private final String TAG = "SecondaryBadgeIn";
-
+    private final int TIMEOUT = 3000;
+private Timer timer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         View decorView = getWindow().getDecorView();
@@ -40,19 +43,39 @@ private final String TAG = "SecondaryBadgeIn";
 
         Cancel.setOnClickListener(this);
         ContactTech.setOnClickListener(this);
+
+        startTimer();
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                logout();
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT);
+    }
+
+    private void logout() {
+        timer.cancel();
+        DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+        Job.setLoggingOut(true);
+        Job.setSessionID(DatabaseConnector.currentSessionID);
+        Job.execute(DatabaseConnector.currentBadgeID);
+        Intent x = new Intent(this, MainActivity.class);
+        startActivity(x);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.SecondaryBadgeInCancel:
-                DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                Job.setLoggingOut(true);
-                Job.setSessionID(DatabaseConnector.currentSessionID);
-                        Job.execute(DatabaseConnector.currentBadgeID, String.valueOf(DatabaseConnector.currentSessionID));
-                startActivity(new Intent(this, MainActivity.class));
+                logout();
                 break;
             case R.id.SecondaryBadgeInContactTech:
+                timer.cancel();
 
                 Intent contactTech = new Intent(this, TechContact.class);
                 contactTech.putExtra("return", "SecondaryBadgeIn");

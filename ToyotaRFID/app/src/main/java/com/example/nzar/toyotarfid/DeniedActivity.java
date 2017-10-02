@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -22,6 +24,9 @@ If the users ID is not found in the database, they will also land there.
  */
 
 public class DeniedActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private final int TIMEOUT = 3000;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,29 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         TextView dateText = (TextView) findViewById(R.id.TextDate);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
+
+        startTimer();
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                logout();
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT);
+    }
+
+    private void logout() {
+        timer.cancel();
+        DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
+        Job.setLoggingOut(true);
+        Job.setSessionID(DatabaseConnector.currentSessionID);
+        Job.execute(DatabaseConnector.currentBadgeID);
+        Intent x = new Intent(this, MainActivity.class);
+        startActivity(x);
     }
 
     @Override
@@ -45,14 +73,10 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         //switch to navigate based on button pressed
         switch (v.getId()) {
             case R.id.UnauthorizedReturnButton:
-                DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
-                Job.setSessionID(DatabaseConnector.currentSessionID);
-                Job.setLoggingOut(true);
-                Job.execute(DatabaseConnector.currentBadgeID);
-                Intent main = new Intent(DeniedActivity.this, MainActivity.class);
-                DeniedActivity.this.startActivity(main);
+                logout();
                 break;
             case R.id.Contact:
+                timer.cancel();
                 Intent contact = new Intent(DeniedActivity.this, TechContact.class);
                 contact.putExtra("return", "DeniedActivity");
                 DeniedActivity.this.startActivity(contact);

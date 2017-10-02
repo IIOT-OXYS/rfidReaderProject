@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private StringBuilder ID = new StringBuilder();
     private BlankFragment screensaver;
+    private final int TIMEOUT = 3000;
     private TimerTask screenSaver;
     private Timer ScreenSaverTimer;
 
@@ -98,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
     private void startTimer(){
         screensaver = new BlankFragment();
         ScreenSaverTimer = new Timer();
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ft.commit();
             }
         };
-        ScreenSaverTimer.schedule(screenSaver, 300000);
+        ScreenSaverTimer.schedule(screenSaver, TIMEOUT);
     }
 
 
