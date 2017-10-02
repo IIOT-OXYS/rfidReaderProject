@@ -27,6 +27,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     private static int PPECount = 0;
     private final String TAG = "CzechActivity";
 
+    private LayerDrawable PPECheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             yes.setBackgroundColor(0x88659941);
         }
 
+        PPECheck = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),ContextCompat.getDrawable(this,R.drawable.ic_done_white_128dp_1x)});
+
     }
 
     //This method is for programming all the buttons
@@ -107,8 +111,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default:
                 if (findViewById(v.getId()).getVisibility() == View.VISIBLE) {
-                    LayerDrawable ld = new LayerDrawable(new Drawable[]{ContextCompat.getDrawable(this, R.drawable.round_button_fill),ContextCompat.getDrawable(this,R.drawable.ic_done_white_128dp_1x)});
-                    v.setBackground(ld);
+                    v.setBackground(PPECheck);
                     v.setEnabled(false);
                     PPECount--;
                     if (PPECount <= 0) {
