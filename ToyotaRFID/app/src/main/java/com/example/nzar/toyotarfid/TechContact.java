@@ -73,6 +73,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public synchronized void onClick(View v) {
+
         switch (v.getId()) {
 
 
@@ -116,6 +117,8 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
     }
 
     private void contextSwitch(String context) {
+        timer.cancel();
+        timer.purge();
         if (context != null) {
             Log.d(TAG, context);
             switch (context) {
