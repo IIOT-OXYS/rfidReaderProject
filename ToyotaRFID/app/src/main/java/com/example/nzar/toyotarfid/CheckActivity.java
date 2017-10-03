@@ -118,6 +118,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             //starts the activity with timer
             case R.id.Yes:
                 timer.cancel();
+                timer.purge();
                 Intent i = new Intent(CheckActivity.this, TimeActivity.class);
                 startActivity(i);
                 break;
