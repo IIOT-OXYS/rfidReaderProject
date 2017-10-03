@@ -121,7 +121,6 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 logoutTask.execute(badgeNumber);
 
 
-
             } else {
                 char c = (char) event.getUnicodeChar();
                 ID.append(c);
@@ -215,9 +214,19 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask logoutTask) {
         try {
             if (logoutTask.get().equals("Logout")) {
+                try {
+                    assert relayDevice != null;
+                } catch (NullPointerException e) {
+                    Log.d(TAG, "lost relay, attempting to re-establish...");
+                    setupRelay();
+                } finally {
+                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+                    Log.d(TAG, RELAY_OFF);
 
-                relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                Log.d(TAG, RELAY_OFF);
+                }
+
                 startActivity(new Intent(this, MainActivity.class));
 
             } else {
