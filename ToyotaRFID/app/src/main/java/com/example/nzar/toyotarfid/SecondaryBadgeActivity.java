@@ -125,5 +125,12 @@ private Timer timer;
             Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    protected void onStop() {
+        timer.cancel();
+        timer.purge();
+        super.onStop();
+    }
 }
 

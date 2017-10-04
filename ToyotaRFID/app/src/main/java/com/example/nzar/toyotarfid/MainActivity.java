@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ft.replace(R.id.MainActivityParent, screensaver);
                     ft.commit();
                 } catch (Exception e) {
+                    ScreenSaverTimer.cancel();
+                    ScreenSaverTimer.purge();
                     Log.d(TAG, "could not show screensaver");
                 }
             }
@@ -305,6 +307,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "no viable target device was found");
             return null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        ScreenSaverTimer.purge();
+        ScreenSaverTimer.cancel();
+        super.onStop();
     }
 }
 

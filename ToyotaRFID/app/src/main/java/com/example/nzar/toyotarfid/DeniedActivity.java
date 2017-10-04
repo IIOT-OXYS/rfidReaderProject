@@ -84,6 +84,13 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    protected void onStop() {
+        timer.cancel();
+        timer.purge();
+        super.onStop();
+    }
+
 
 }
 

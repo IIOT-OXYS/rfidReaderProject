@@ -184,6 +184,13 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onStop() {
+        timer.cancel();
+        timer.purge();
+        super.onStop();
+    }
+
 }
 
 

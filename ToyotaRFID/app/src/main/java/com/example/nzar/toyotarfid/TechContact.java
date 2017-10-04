@@ -3,7 +3,6 @@
 //2017
 package com.example.nzar.toyotarfid;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -237,5 +236,12 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         }
         contextSwitch(getIntent().getStringExtra("return"));
 
+    }
+
+    @Override
+    protected void onStop() {
+        timer.cancel();
+        timer.purge();
+        super.onStop();
     }
 }
