@@ -224,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask Job) {
+        ScreenSaverTimer.cancel();
+        ScreenSaverTimer.purge();
         try {
         String Authorization = Job.get();
         switch (Authorization) {
