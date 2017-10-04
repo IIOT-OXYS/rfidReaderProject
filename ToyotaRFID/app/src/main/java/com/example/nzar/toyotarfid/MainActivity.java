@@ -113,10 +113,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         screenSaver = new TimerTask() {
             @Override
             public void run() {
-                Log.d(TAG, "showing screensaver");
-                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.MainActivityParent,screensaver);
-                ft.commit();
+                try {
+                    Log.d(TAG, "showing screensaver");
+                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.MainActivityParent, screensaver);
+                    ft.commit();
+                } catch (Exception e) {
+                    Log.d(TAG, "could not show screensaver");
+                }
             }
         };
         ScreenSaverTimer.schedule(screenSaver, TIMEOUT);
