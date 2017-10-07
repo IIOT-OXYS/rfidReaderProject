@@ -69,15 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get preferences and set network settings accordingly
         settings = getSharedPreferences("ConnectivitySettings", 0);
 
-        if (DatabaseConnector.BindPreferences(settings)) {
-            Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, SettingsActivity.class));
-            return;
-        } else {
-            Log.d(TAG, "Using serverIP: " + settings.getString("baseServerUrl", "null"));
-            Log.d(TAG, "Using machineID: " + settings.getString("machineID", "null"));
-        }
-
         //set up buttons with click listeners
         final Button Contact = (Button) findViewById(R.id.Contact);
         Contact.setOnClickListener(this);
@@ -128,14 +119,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ScreenSaverTimer.schedule(screenSaver, TIMEOUT);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (DatabaseConnector.BindPreferences(settings)) {
+            Toast.makeText(this, "WARNING: \n there are blank connection properties! \n The application will not work without these fields filled!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else {
+            Log.d(TAG, "Using serverIP: " + settings.getString("baseServerUrl", "null"));
+            Log.d(TAG, "Using machineID: " + settings.getString("machineID", "null"));
+        }
+    }
 
     /*
-        onKeyDown:
-        This method grabs any keypresses to the system and runs this code when the key is pressed.
-        This is used to get the badge scan from the RFID reader without a UI object to collect it.
-        Once a specific delimiter character is detected, the method launches the query which checks
-        if the user has the clearances to proceed, then launches either the check or denied activities.
-         */
+            onKeyDown:
+            This method grabs any keypresses to the system and runs this code when the key is pressed.
+            This is used to get the badge scan from the RFID reader without a UI object to collect it.
+            Once a specific delimiter character is detected, the method launches the query which checks
+            if the user has the clearances to proceed, then launches either the check or denied activities.
+             */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         ScreenSaverTimer.cancel();
