@@ -24,7 +24,6 @@ import android.widget.ToggleButton;
 
 import com.felhr.usbserial.UsbSerialDevice;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -158,74 +157,37 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         //this iterates the hashmap and looks for a supported USB device
         for (UsbDevice device : deviceList.values()) {
+            Log.d(TAG, "Found USB device");
+            Log.d(TAG, "VID: " + String.valueOf(device.getVendorId()));
+            Log.d(TAG, "PID: " + String.valueOf(device.getProductId()));
             //if a compatible device is found, we ask for permission and attempt to close the relay
-            if ((device.getProductId() == 0x0C05 && device.getVendorId() == 0x2A19) || device.getProductId() == 1155) {
+            if (device.getProductId() == 1155) {
                 PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
                 manager.requestPermission(device, mPermissionIntent);
-                relayDevice = attachUsbSerial(device.getDeviceName(), deviceList, manager);
+                UsbDeviceConnection connection = manager.openDevice(device);
+                relayDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
+
                 try {
                     assert relayDevice != null;
+                    relayDevice.open();
                     relayDevice.setBaudRate(2400);
                     relayDevice.write(RELAY_ON.getBytes("ASCII"));
                     Log.d(TAG, RELAY_ON);
-                } catch (UnsupportedEncodingException | NullPointerException e) {
+                    return;
+
+                } catch (Exception e) {
                     Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-                break;
             }
         }
     }
 
-    /*
-    attachUsbSerial:
-    Uses a library to set up a serial terminal with the relay device
-     */
-    private synchronized UsbSerialDevice attachUsbSerial(String deviceName, HashMap<String, UsbDevice> deviceList, UsbManager manager) {
-        if (deviceName != null) {
-
-            UsbDevice device = deviceList.get(deviceName);
-            UsbDeviceConnection connection = manager.openDevice(device);
-            UsbSerialDevice serialDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
-
-            if (serialDevice != null) {
-
-                try {
-                    serialDevice.open();
-
-                    return serialDevice;
-                } catch (NullPointerException se) {
-                    Log.d(TAG, "serial device connection lost");
-                    se.printStackTrace();
-                    return null;
-                }
-            } else {
-                Log.d(TAG, "driver incorrect for rfid reader");
-                return null;
-            }
-
-        } else {
-            Log.d(TAG, "no viable target device was found");
-            return null;
-        }
-    }
 
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask logoutTask) {
         try {
             if (logoutTask.get().equals("Logout")) {
-                try {
-                    assert relayDevice != null;
-                } catch (NullPointerException e) {
-                    Log.d(TAG, "lost relay, attempting to re-establish...");
-                    setupRelay();
-                } finally {
-                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                    Log.d(TAG, RELAY_OFF);
-
-                }
 
                 startActivity(new Intent(this, MainActivity.class));
 
