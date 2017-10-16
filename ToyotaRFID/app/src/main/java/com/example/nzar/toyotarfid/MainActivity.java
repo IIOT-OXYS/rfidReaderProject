@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
-       // setupRelay();
-
         startTimer();
 
     }
@@ -250,41 +248,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
             Toast.makeText(this, "Couldn't contact API server for certifications", Toast.LENGTH_LONG).show();
             startTimer();
-        }
-    }
-
-    private synchronized void setupRelay() {
-        UsbSerialDevice relayDevice;
-        //these objects are used to iterate through the active USB devices
-        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-        //this iterates the hashmap and looks for a supported USB device
-        for (UsbDevice device : deviceList.values()) {
-            Log.d(TAG, "Found USB device");
-            Log.d(TAG, "VID: " + String.valueOf(device.getVendorId()));
-            Log.d(TAG, "PID: " + String.valueOf(device.getProductId()));
-            //if a compatible device is found, we ask for permission and attempt to close the relay
-            if (device.getProductId() == 1155) {
-                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                manager.requestPermission(device, mPermissionIntent);
-                UsbDeviceConnection connection = manager.openDevice(device);
-                relayDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
-
-                try {
-                    assert relayDevice != null;
-                    relayDevice.open();
-                    relayDevice.setBaudRate(2400);
-                    relayDevice.write(RELAY_OFF.getBytes("ASCII"));
-                    Log.d(TAG, RELAY_OFF);
-                    relayDevice.close();
-                    connection.close();
-                    return;
-
-                } catch (Exception e) {
-                    Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
