@@ -99,13 +99,19 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        relayOn();
+    }
+
     /*
-    onKeyDown:
-    This method grabs any keypresses to the system and runs this code when the key is pressed.
-    This is used to get the badge scan from the RFID reader without a UI object to collect it.
-    Once a specific delimiter character is detected, the method launches the query which checks
-    if the user has the clearances to proceed, then launches either the check or denied activities.
-     */
+        onKeyDown:
+        This method grabs any keypresses to the system and runs this code when the key is pressed.
+        This is used to get the badge scan from the RFID reader without a UI object to collect it.
+        Once a specific delimiter character is detected, the method launches the query which checks
+        if the user has the clearances to proceed, then launches either the check or denied activities.
+         */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Finished) {
@@ -166,20 +172,33 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 manager.requestPermission(device, mPermissionIntent);
                 UsbDeviceConnection connection = manager.openDevice(device);
                 relayDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
+                relayDevice.setBaudRate(2400);
+                relayDevice.open();
 
-                try {
-                    assert relayDevice != null;
-                    relayDevice.open();
-                    relayDevice.setBaudRate(2400);
-                    relayDevice.write(RELAY_ON.getBytes("ASCII"));
-                    Log.d(TAG, RELAY_ON);
-                    return;
-
-                } catch (Exception e) {
-                    Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
+                return;
             }
+        }
+    }
+
+    private synchronized void relayOn(){
+        try {
+            assert relayDevice != null;
+            relayDevice.write(RELAY_ON.getBytes("ASCII"));
+            Log.d(TAG, RELAY_ON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void relayOff(){
+        try {
+            assert relayDevice != null;
+            relayDevice.write(RELAY_OFF.getBytes("ASCII"));
+            Log.d(TAG, RELAY_OFF);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Relay controller failed, contact administrator.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -189,6 +208,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         try {
             if (logoutTask.get().equals("Logout")) {
 
+                relayOff();
                 startActivity(new Intent(this, MainActivity.class));
 
             } else {
