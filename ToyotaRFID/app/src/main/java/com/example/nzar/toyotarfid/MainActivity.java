@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDevice;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ID.delete(0, ID.length());
         }
 
-        setupRelay();
+       // setupRelay();
 
         startTimer();
 
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
             Job.setOnFinishedParsingListener(this);
             Job.setLoggingOut(false);
-            Job.setSessionID(new Random().nextInt());
+            Job.setSessionID(new SecureRandom().nextInt());
             Job.execute(badgeNumber);//execute the query on a separate thread
             TextView tv = (TextView) findViewById(R.id.main_activity_text);
             tv.setText("Checking certifications. . .");
