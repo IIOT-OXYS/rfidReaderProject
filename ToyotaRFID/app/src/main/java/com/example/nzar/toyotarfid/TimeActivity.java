@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
@@ -49,6 +51,8 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     long startTime = -1;
     private StringBuilder ID = new StringBuilder();
     private UsbSerialDevice relayDevice;
+    private int TIMEOUT = 3600000;
+    private Timer timer;
 
     @Override
     protected synchronized void onCreate(Bundle savedInstanceState) {
@@ -99,10 +103,28 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+            refresh();
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT);
+    }
+
+    private void refresh() {
+        Intent self = new Intent(this, getClass());
+        self.putExtra("timeTracker", startTime);
+        startActivity(self);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         relayOn();
+        startTimer();
     }
 
     /*
@@ -171,9 +193,13 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
                 PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
                 manager.requestPermission(device, mPermissionIntent);
                 UsbDeviceConnection connection = manager.openDevice(device);
-                relayDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
-                relayDevice.setBaudRate(2400);
-                relayDevice.open();
+                try {
+                    relayDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
+                    relayDevice.setBaudRate(2400);
+                    relayDevice.open();
+                } catch (Exception e) {
+                    refresh();
+                }
 
                 return;
             }
@@ -218,6 +244,13 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        timer.cancel();
+        timer.purge();
     }
 }
 
