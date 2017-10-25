@@ -137,7 +137,6 @@ class DatabaseConnector extends AppCompatActivity {
             this.sessionID = sessionID;
         }
 
-        Context context;
 
          interface OnFinishedParsingListener{
             void onFinishedParsing(TILTPostUserTask Job);
@@ -157,9 +156,6 @@ class DatabaseConnector extends AppCompatActivity {
 
         }
 
-        public void setContext(Context ctx) {
-            context = ctx;
-        }
 
         @Override
         protected synchronized String doInBackground(String... params) {
@@ -259,13 +255,12 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
 
         final String TAG = "TILTPOSTTech";
-        Context context;
          interface OnSentEmailListener{
             void onSentEmail(DatabaseConnector.TILTPostTechTask TechEmail);
         }
          OnSentEmailListener onSentEmailListener;
 
-        public void setOnSentEmailListener(OnSentEmailListener onSentEmailListener) {
+        void setOnSentEmailListener(OnSentEmailListener onSentEmailListener) {
             this.onSentEmailListener = onSentEmailListener;
         }
 
@@ -279,9 +274,6 @@ class DatabaseConnector extends AppCompatActivity {
 
         }
 
-        public void setContext(Context ctx) {
-            context = ctx;
-        }
 
         @Override
         protected synchronized Boolean doInBackground(String... params) {
@@ -336,7 +328,6 @@ class DatabaseConnector extends AppCompatActivity {
     static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
 
         final String TAG = "TILTGETTech";
-        Context context;
 
          interface OnFinishedParsingListener{
             void onFinishedParsing();
@@ -356,9 +347,6 @@ class DatabaseConnector extends AppCompatActivity {
 
         }
 
-        public void setContext(Context ctx) {
-            context = ctx;
-        }
 
         @Override
         protected synchronized Void doInBackground(Void... params) {
