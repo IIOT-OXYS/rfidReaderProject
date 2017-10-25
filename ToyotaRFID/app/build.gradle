@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "27.0.0"
     defaultConfig {
         applicationId "com.example.nzar.toyotarfid"
         minSdkVersion 19
@@ -19,9 +19,9 @@ android {
 
 dependencies {
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.felHR85:UsbSerial:4.5'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:support-v4:25.4.0'
     testCompile 'junit:junit:4.12'
 }
