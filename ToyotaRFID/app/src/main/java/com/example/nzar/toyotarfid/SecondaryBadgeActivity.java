@@ -47,6 +47,7 @@ private Timer timer;
         startTimer();
     }
 
+    //  return to main screen after 5 minutes of inactivity
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -58,6 +59,7 @@ private Timer timer;
         timer.schedule(timerTask, TIMEOUT);
     }
 
+    //  return cleanly to main screen
     private void logout() {
         timer.cancel();
         DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
@@ -84,6 +86,7 @@ private Timer timer;
         }
     }
 
+    //intercept RFID scan and query badge number
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -106,6 +109,7 @@ private Timer timer;
         return super.onKeyDown(keyCode, event);
     }
 
+    //  listen for API task to complete then execute
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask Job) {
         try {
@@ -126,6 +130,7 @@ private Timer timer;
         }
     }
 
+    // cleanly stop activity
     @Override
     protected void onStop() {
         timer.cancel();
