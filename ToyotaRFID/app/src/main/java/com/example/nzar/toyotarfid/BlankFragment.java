@@ -29,6 +29,7 @@ public class BlankFragment extends Fragment {
         this.onScreenSaverClosedListener = onScreenSaverClosedListener;
     }
 
+    // black out screen & wait for input
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
