@@ -103,6 +103,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //  stop USB inteface from closing and crashing the application
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -114,12 +115,14 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         timer.schedule(timerTask, TIMEOUT);
     }
 
+    // refresh to keep USB interface alive
     private void refresh() {
         Intent self = new Intent(this, getClass());
         self.putExtra("timeTracker", startTime);
         startActivity(self);
     }
 
+    //  start relay after activity is created
     @Override
     protected void onStart() {
         super.onStart();
@@ -179,6 +182,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // ready the USB connection to the relay
     private synchronized void setupRelay() {
         //these objects are used to iterate through the active USB devices
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -206,6 +210,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //  activate the relay
     private synchronized void relayOn(){
         try {
             assert relayDevice != null;
@@ -216,6 +221,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //  deactivate the relay
     private synchronized void relayOff(){
         try {
             assert relayDevice != null;
@@ -229,6 +235,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    // listen for response to user logout request
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask logoutTask) {
         try {
@@ -246,6 +253,7 @@ public class TimeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // cleanly stop the activity before moving on
     @Override
     protected void onStop() {
         super.onStop();
