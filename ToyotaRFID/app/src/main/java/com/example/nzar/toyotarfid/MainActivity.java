@@ -3,13 +3,8 @@
 //2017
 package com.example.nzar.toyotarfid;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -21,14 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.felhr.usbserial.UsbSerialDevice;
-
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
@@ -49,10 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String ACTION_USB_PERMISSION = "com.android.example.nzar.toyotarfid.USB_PERMISSION";
     private final String RELAY_ON = "relay on 0\r";
     private final String RELAY_OFF = "relay off 0\r";
-    /*
-    ID: a string builder that gets the keystrokes from the RFID reader to be parsed and queried
-    TAG: the debug tag used in Log statements
-     */
     private StringBuilder ID = new StringBuilder();
     private BlankFragment screensaver;
     private final int TIMEOUT = 300000;
@@ -89,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //  blackout screen after 5 minutes of inactivity
     private void startTimer(){
         screensaver = new BlankFragment();
         ScreenSaverTimer = new Timer();
@@ -118,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ScreenSaverTimer.schedule(screenSaver, TIMEOUT);
     }
 
+    //  check preferences for null values after activity is created
     @Override
     protected void onStart() {
         super.onStart();
@@ -225,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    //  listener for API task to be executed after completion
     @Override
     public void onFinishedParsing(DatabaseConnector.TILTPostUserTask Job) {
         ScreenSaverTimer.cancel();
@@ -251,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //  ensure activity is stopped cleanly
     @Override
     protected void onStop() {
         ScreenSaverTimer.purge();
