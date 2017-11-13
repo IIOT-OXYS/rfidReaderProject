@@ -47,6 +47,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         startTimer();
     }
 
+    // blackout screen after 5 minutes
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -58,6 +59,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         timer.schedule(timerTask, TIMEOUT);
     }
 
+    // cleanup and return to main screen
     private void logout() {
         timer.cancel();
         DatabaseConnector.TILTPostUserTask Job = new DatabaseConnector.TILTPostUserTask();
@@ -68,6 +70,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         startActivity(x);
     }
 
+    // handle user touch
     @Override
     public void onClick(View v) {
         //switch to navigate based on button pressed
@@ -84,6 +87,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    //  ensure activity stops cleanly
     @Override
     protected void onStop() {
         timer.cancel();
