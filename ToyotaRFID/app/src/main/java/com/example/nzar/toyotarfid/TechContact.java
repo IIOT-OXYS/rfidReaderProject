@@ -50,7 +50,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         dateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
-
+        // get current tech list
         DatabaseConnector.TILTGetTechTask refreshTechs = new DatabaseConnector.TILTGetTechTask();
         refreshTechs.setOnFinishedParsingListener(this);
         refreshTechs.execute();
@@ -59,6 +59,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    // return to main screen after 5 minutes
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -75,7 +76,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
         switch (v.getId()) {
 
-
+            //  change colors and visibility of elements for paging tech UI
             case R.id.tech_page_button:
                 v.setBackgroundColor(0x88E55125);
                 findViewById(R.id.pagingTechText).setVisibility(View.VISIBLE);
@@ -115,6 +116,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    //  go to the activity where contact tech was last pressed
     private void contextSwitch(String context) {
         timer.cancel();
         timer.purge();
@@ -151,6 +153,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+    // listen for when tech list is finished loading
     @Override
     public void onFinishedParsing() {
         ConstraintLayout techContainer = (ConstraintLayout) findViewById(R.id.constraintLayout);
@@ -224,7 +227,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-
+    // listen for when email task is finished
     @Override
     public void onSentEmail(DatabaseConnector.TILTPostTechTask TechEmail) {
         try {
@@ -238,6 +241,7 @@ public class TechContact extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    // cleanup and destroy activity
     @Override
     protected void onStop() {
         timer.cancel();
