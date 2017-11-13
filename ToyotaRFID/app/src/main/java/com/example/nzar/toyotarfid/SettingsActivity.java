@@ -5,7 +5,6 @@ package com.example.nzar.toyotarfid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-import static android.view.View.combineMeasuredStates;
 
 /*
 SettingsActivity:
@@ -87,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    //  save the settings to application's file
     private void applySettings() {
         HashMap<String, EditText> SettingsFields = new HashMap<>();
         ConstraintLayout rootLayout = (ConstraintLayout) findViewById(R.id.activity_settings_root_layout);
@@ -108,12 +107,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    // clear all settings in the application's file
     private void clearSettings() {
         SharedPreferences.Editor editor = settings.edit();
         editor.clear().apply();
     }
 
-
+    //  ensure main screen will re-check for valid settings
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //run DB query to set equiment specs
