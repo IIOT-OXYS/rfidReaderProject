@@ -47,7 +47,7 @@ public class DeniedActivity extends AppCompatActivity implements View.OnClickLis
         startTimer();
     }
 
-    // blackout screen after 5 minutes
+    // return to main screen after 5 minutes
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
