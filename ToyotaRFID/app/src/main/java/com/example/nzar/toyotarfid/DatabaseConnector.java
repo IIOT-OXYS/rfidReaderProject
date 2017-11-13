@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.JsonReader;
 import android.util.JsonToken;
@@ -24,19 +23,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by cravers on 6/29/2017.
  */
 
-/*
-The Database Connector class is where all interactions with the designated database for this project will happen
-This class grabs the data for the equipment being used, the person who is trying to badge in, the ppe requirements
-and is also responsible for sending the appropriate data back to the database for keeping logs
-*/
-class DatabaseConnector extends AppCompatActivity {
+//  this class formerly was an interface to interact with JDBC.
+//  The class was re-worked to use the TILT API.
+class DatabaseConnector {
 
+//  all members are static, as this class is never instantiated.
     public static ArrayList<PPE> PPEList = new ArrayList<>();
     public static ArrayList<LabTech> LabTechList = new ArrayList<>();
     public static int currentSessionID;
@@ -44,6 +40,7 @@ class DatabaseConnector extends AppCompatActivity {
     public static String baseServerUrl;
     public static String currentBadgeID = "";
 
+    // simple POD to hold labTech info
     static class LabTech {
         int LabTechID = -1;
         String firstName = null;
@@ -53,6 +50,7 @@ class DatabaseConnector extends AppCompatActivity {
         Drawable Image = null;
     }
 
+    //  simple POD to hold
     static class PPE {
         int PPEID = -1;
         String name = null;
@@ -61,6 +59,7 @@ class DatabaseConnector extends AppCompatActivity {
         boolean Restricted = false;
     }
 
+    //  pull in a preferences object for API connectivity
     public static boolean BindPreferences(SharedPreferences prefs) {
         machineID = prefs.getString("machineID", null);
         baseServerUrl = prefs.getString("baseServerUrl", null);
@@ -68,7 +67,7 @@ class DatabaseConnector extends AppCompatActivity {
         return (machineID == null || baseServerUrl == null);
     }
 
-
+//  boilerplate http connectivity needed for all API calls
     @Nullable
     private static synchronized JsonReader TILTAPITask(HttpURLConnection connection, String method) throws Exception {
         final String TILT_API_KEY = "basic VElMVFdlYkFQSToxM1RJTFRXZWJBUEkxMw==";
@@ -94,6 +93,7 @@ class DatabaseConnector extends AppCompatActivity {
 
     }
 
+    //  turn JSON data into drawable images
     private static synchronized Drawable ImageParser(String jsonImage) {
         try {
             if (jsonImage != null) {
@@ -123,7 +123,7 @@ class DatabaseConnector extends AppCompatActivity {
 
     }
 
-    //give the badge number as a string, provide progress messages as Strings, and return a Boolean if the user is allowed
+//  query API for user access on another thread
     static class TILTPostUserTask extends AsyncTask<String, String, String> {
         final String TAG = "TILTPOSTUser";
         int sessionID = -1;
@@ -256,6 +256,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
+//  ping API to send an email to a tech
     static class TILTPostTechTask extends AsyncTask<String, Void, Boolean> {
 
         final String TAG = "TILTPOSTTech";
@@ -269,6 +270,7 @@ class DatabaseConnector extends AppCompatActivity {
             this.onSentEmailListener = onSentEmailListener;
         }
 
+        // callback after task executes
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (onSentEmailListener != null) {
@@ -283,6 +285,7 @@ class DatabaseConnector extends AppCompatActivity {
             context = ctx;
         }
 
+        //  execute query on another thread
         @Override
         protected synchronized Boolean doInBackground(String... params) {
 
@@ -333,6 +336,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
+    //  query API for list of techs on another thread
     static class TILTGetTechTask extends AsyncTask<Void, Void, Void> {
 
         final String TAG = "TILTGETTech";
@@ -347,6 +351,7 @@ class DatabaseConnector extends AppCompatActivity {
             this.onFinishedParsingListener = onFinishedParsingListener;
         }
 
+        //  callback after task execution
         @Override
         protected void onPostExecute(Void avoid) {
             if (onFinishedParsingListener != null) {
@@ -360,6 +365,7 @@ class DatabaseConnector extends AppCompatActivity {
             context = ctx;
         }
 
+        //  execute query on a seperate thread
         @Override
         protected synchronized Void doInBackground(Void... params) {
 
@@ -447,6 +453,7 @@ class DatabaseConnector extends AppCompatActivity {
         }
     }
 
+    //  Parsing logic for TILTPostUser PPE JSON data
     static synchronized JsonReader PPEJsonParse(JsonReader Response) throws IOException {
         Response.beginArray();
 
