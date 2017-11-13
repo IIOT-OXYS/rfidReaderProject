@@ -28,6 +28,10 @@ import java.util.ArrayList;
  * Created by cravers on 6/29/2017.
  */
 
+//TODO: remove all public keywords
+//TODO: remove all contexts from static classes
+//TODO: migrate classes to separate .java files, delete this class
+
 //  this class formerly was an interface to interact with JDBC.
 //  The class was re-worked to use the TILT API.
 class DatabaseConnector {
