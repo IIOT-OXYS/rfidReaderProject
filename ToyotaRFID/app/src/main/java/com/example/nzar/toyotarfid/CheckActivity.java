@@ -54,6 +54,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         final Button contact = (Button) findViewById(R.id.Contact);
         contact.setOnClickListener(this);
 
+        //map structures to hold the PPE data in an indexable way
         HashMap<DatabaseConnector.PPE, Button> PPEButtons = new HashMap<>();
         HashMap<DatabaseConnector.PPE, TextView> PPETexts = new HashMap<>();
 
@@ -75,6 +76,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
 
         }
+
+        // activate all PPEs required
         PPECount = PPEButtons.size();
         Log.d(TAG, "Found " + String.valueOf(PPECount) + " PPEs");
         if (PPECount <= 0) {
@@ -89,6 +92,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    // return to main screen after 5 minutes of inactivity
     private void startTimer(){
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -100,6 +104,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         timer.schedule(timerTask, TIMEOUT);
     }
 
+    // ensure a clean return to main screen
     private void logout() {
         timer.cancel();
         PPECount = 0;
@@ -184,6 +189,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    // cleanup before proceeding to next activity
     @Override
     protected void onStop() {
         timer.cancel();
